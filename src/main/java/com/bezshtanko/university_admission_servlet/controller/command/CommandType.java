@@ -1,0 +1,24 @@
+package com.bezshtanko.university_admission_servlet.controller.command;
+
+public enum CommandType {
+    LOGIN_GET,
+    LOGIN_POST,
+    LOGOUT_GET,
+    REGISTER_GET,
+    REGISTER_POST,
+    PROFILE_GET,
+    USER_GET,
+    USER_BLOCK_GET,
+    USER_UNBLOCK_GET,
+    FACULTIES_GET,
+    FACULTY_NEW_GET,
+    FACULTY_NEW_POST,
+    FACULTY_GET,
+    FACULTY_EDIT_GET,
+    FACULTY_EDIT_POST,
+    FACULTY_DELETE_GET,
+    FACULTY_ENROLL_GET,
+    FACULTY_ENROLL_POST,
+    FACULTY_ENROLLMENT_APPROVE_GET,
+    FACULTY_FINALIZE_GET
+}
