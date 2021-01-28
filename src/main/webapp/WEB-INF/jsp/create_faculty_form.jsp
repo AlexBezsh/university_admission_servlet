@@ -4,6 +4,7 @@
     <title>Title</title>
 </head>
 <body>
+<h1>Create Faculty Form</h1>
 
 </body>
 </html>

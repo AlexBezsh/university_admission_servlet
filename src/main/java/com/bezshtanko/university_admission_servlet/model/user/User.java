@@ -1,15 +1,15 @@
 package com.bezshtanko.university_admission_servlet.model.user;
 
+import com.bezshtanko.university_admission_servlet.model.AbstractEntity;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
-public class User {
+public class User extends AbstractEntity {
 
-    private Long id;
     private String fullName;
     private String email;
     private String password;
@@ -130,19 +130,6 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(email, user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(email);
-    }
-
-    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
@@ -154,14 +141,6 @@ public class User {
                 ", region='" + region + '\'' +
                 ", education='" + education + '\'' +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFullName() {
@@ -197,6 +176,9 @@ public class User {
     }
 
     public Set<UserRole> getRoles() {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
         return roles;
     }
 

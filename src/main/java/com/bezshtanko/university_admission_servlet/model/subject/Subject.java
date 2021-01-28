@@ -1,10 +1,9 @@
 package com.bezshtanko.university_admission_servlet.model.subject;
 
-import java.util.Objects;
+import com.bezshtanko.university_admission_servlet.model.AbstractEntity;
 
-public class Subject {
+public class Subject extends AbstractEntity {
 
-    private Long id;
     private SubjectType type;
     private String nameEn;
     private String nameUa;
@@ -62,19 +61,6 @@ public class Subject {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Subject subject = (Subject) o;
-        return type == subject.type && Objects.equals(nameUa, subject.nameUa);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, nameUa);
-    }
-
-    @Override
     public String toString() {
         return "Subject{" +
                 "id=" + id +
@@ -82,14 +68,6 @@ public class Subject {
                 ", nameEn='" + nameEn + '\'' +
                 ", nameUa='" + nameUa + '\'' +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public SubjectType getType() {

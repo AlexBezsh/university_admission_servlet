@@ -4,6 +4,7 @@
     <title>Title</title>
 </head>
 <body>
+<h1>registration form</h1>
 
 </body>
 </html>

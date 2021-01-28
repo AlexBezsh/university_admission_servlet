@@ -1,6 +1,7 @@
 package com.bezshtanko.university_admission_servlet.controller.command;
 
 public enum CommandType {
+    HOME_GET,
     LOGIN_GET,
     LOGIN_POST,
     LOGOUT_GET,
@@ -20,5 +21,6 @@ public enum CommandType {
     FACULTY_ENROLL_GET,
     FACULTY_ENROLL_POST,
     FACULTY_ENROLLMENT_APPROVE_GET,
-    FACULTY_FINALIZE_GET
+    FACULTY_FINALIZE_GET,
+    ERROR_GET;
 }

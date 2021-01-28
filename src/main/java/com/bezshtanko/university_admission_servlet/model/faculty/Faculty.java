@@ -1,15 +1,14 @@
 package com.bezshtanko.university_admission_servlet.model.faculty;
 
+import com.bezshtanko.university_admission_servlet.model.AbstractEntity;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
 import com.bezshtanko.university_admission_servlet.model.subject.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class Faculty {
+public class Faculty extends AbstractEntity {
 
-    private Long id;
     private String nameEn;
     private String nameUa;
     private FacultyStatus status;
@@ -131,19 +130,6 @@ public class Faculty {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Faculty faculty = (Faculty) o;
-        return Objects.equals(nameUa, faculty.nameUa);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(nameUa);
-    }
-
-    @Override
     public String toString() {
         return "Faculty{" +
                 "id=" + id +
@@ -154,16 +140,8 @@ public class Faculty {
                 ", descriptionUa='" + descriptionUa + '\'' +
                 ", stateFundedPlaces=" + stateFundedPlaces +
                 ", contractPlaces=" + contractPlaces +
-                ", totalPlaces=" + totalPlaces +
+                ", totalPlaces=" + getTotalPlaces() +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNameEn() {

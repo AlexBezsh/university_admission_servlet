@@ -1,5 +1,6 @@
 package com.bezshtanko.university_admission_servlet.model.enrollment;
 
+import com.bezshtanko.university_admission_servlet.model.AbstractEntity;
 import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import com.bezshtanko.university_admission_servlet.model.mark.Mark;
 import com.bezshtanko.university_admission_servlet.model.user.User;
@@ -7,11 +8,9 @@ import com.bezshtanko.university_admission_servlet.model.user.User;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class Enrollment {
+public class Enrollment extends AbstractEntity {
 
-    private Long id;
     private User user;
     private Faculty faculty;
     private EnrollmentStatus status;
@@ -80,19 +79,6 @@ public class Enrollment {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Enrollment that = (Enrollment) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
     public String toString() {
         return "Enrollment{" +
                 "id=" + id +
@@ -101,14 +87,6 @@ public class Enrollment {
                 ", status=" + status +
                 ", marksSum=" + getMarksSum() +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public User getUser() {
