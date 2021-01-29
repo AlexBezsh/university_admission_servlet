@@ -3,7 +3,7 @@ package com.bezshtanko.university_admission_servlet.dao.jdbc_impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public abstract class JDBCDao implements AutoCloseable {
+public abstract class JDBCDao {
 
     protected Connection connection;
 

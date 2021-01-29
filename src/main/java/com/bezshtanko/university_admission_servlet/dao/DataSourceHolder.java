@@ -20,6 +20,7 @@ public final class DataSourceHolder {
         synchronized (DataSourceHolder.class) {
             if (dataSource == null) {
                 BasicDataSource ds = new BasicDataSource();
+                ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
                 ds.setUrl("jdbc:mysql://localhost:3306/university_admission");
                 ds.setUsername("root");
                 ds.setPassword("root");

@@ -175,6 +175,15 @@ public class User extends AbstractEntity {
         this.status = status;
     }
 
+    public boolean hasRole(UserRole role) {
+        for (UserRole userRole : roles) {
+            if (userRole == role) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Set<UserRole> getRoles() {
         if (roles == null) {
             roles = new HashSet<>();
