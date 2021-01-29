@@ -52,12 +52,10 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
         Optional<User> result = Optional.empty();
         try(PreparedStatement ps = connection.prepareStatement(Queries.SELECT_USER_BY_EMAIL)) {
             ps.setString(1, email);
-
-            System.out.println("query is about to be executed");
+            log.info("prepared statement created for user with email {}", email);
 
             ResultSet resultSet = ps.executeQuery();
-
-            System.out.println("query is executed");
+            log.info("query executed for user with email {}", email);
 
             UserMapper mapper = new UserMapper();
             if (resultSet.next()) {

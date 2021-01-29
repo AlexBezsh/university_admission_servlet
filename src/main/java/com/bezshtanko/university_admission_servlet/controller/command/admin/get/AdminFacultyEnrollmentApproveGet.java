@@ -1,7 +1,6 @@
 package com.bezshtanko.university_admission_servlet.controller.command.admin.get;
 
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
-import com.bezshtanko.university_admission_servlet.controller.command.all.post.LoginPost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

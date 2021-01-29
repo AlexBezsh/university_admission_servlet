@@ -1,4 +1,4 @@
-package com.bezshtanko.university_admission_servlet.controller.command.user.get;
+package com.bezshtanko.university_admission_servlet.controller.command.entrant.get;
 
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
 import org.slf4j.Logger;
@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class UserFacultyGet implements Command {
+public class EntrantFacultyEnrollGet implements Command {
 
-    private static final Logger log = LoggerFactory.getLogger(UserFacultyGet.class);
+    private static final Logger log = LoggerFactory.getLogger(EntrantFacultyEnrollGet.class);
 
     @Override
     public String execute(HttpServletRequest request) {
-        return "user/faculty";
+        return null;
     }
 }

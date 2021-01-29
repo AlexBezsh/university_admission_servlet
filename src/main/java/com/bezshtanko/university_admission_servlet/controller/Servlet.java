@@ -1,18 +1,17 @@
 package com.bezshtanko.university_admission_servlet.controller;
 
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
-import com.bezshtanko.university_admission_servlet.controller.command.CommandType;
 import com.bezshtanko.university_admission_servlet.controller.command.admin.get.*;
 import com.bezshtanko.university_admission_servlet.controller.command.admin.post.AdminFacultyEditPost;
 import com.bezshtanko.university_admission_servlet.controller.command.admin.post.AdminFacultyNewPost;
 import com.bezshtanko.university_admission_servlet.controller.command.all.get.*;
 import com.bezshtanko.university_admission_servlet.controller.command.all.post.LoginPost;
 import com.bezshtanko.university_admission_servlet.controller.command.all.post.RegisterPost;
-import com.bezshtanko.university_admission_servlet.controller.command.user.get.UserFacultiesGet;
-import com.bezshtanko.university_admission_servlet.controller.command.user.get.UserFacultyEnrollGet;
-import com.bezshtanko.university_admission_servlet.controller.command.user.get.UserFacultyGet;
-import com.bezshtanko.university_admission_servlet.controller.command.user.get.UserProfileGet;
-import com.bezshtanko.university_admission_servlet.controller.command.user.post.UserFacultyEnrollPost;
+import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantFacultiesGet;
+import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantFacultyEnrollGet;
+import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantFacultyGet;
+import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantProfileGet;
+import com.bezshtanko.university_admission_servlet.controller.command.entrant.post.EntrantFacultyEnrollPost;
 import com.bezshtanko.university_admission_servlet.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,53 +28,53 @@ public class Servlet extends HttpServlet {
 
     private static final Logger log = LoggerFactory.getLogger(Servlet.class);
 
-    private final Map<CommandType, Command> commands = new HashMap<>();
+    private final Map<String, Command> commands = new HashMap<>();
     private static final String TEMPLATES_PATH = "/WEB-INF/jsp/";
 
     @Override
     public void init() {
-        commands.put(CommandType.HOME_GET, new HomeGet());
-        commands.put(CommandType.LOGIN_GET, new LoginGet());
-        commands.put(CommandType.LOGIN_POST, new LoginPost(new UserService()));
-        commands.put(CommandType.LOGOUT_GET, new LogoutGet());
-        commands.put(CommandType.REGISTER_GET, new RegisterGet());
-        commands.put(CommandType.REGISTER_POST, new RegisterPost());
-        commands.put(CommandType.ERROR_GET, new ErrorGet());
+        commands.put("/ get", new HomeGet());
+        commands.put("/login get", new LoginGet());
+        commands.put("/login post", new LoginPost(new UserService()));
+        commands.put("/logout get", new LogoutGet());
+        commands.put("/register get", new RegisterGet());
+        commands.put("/register post", new RegisterPost());
+        commands.put("/error get", new ErrorGet());
 
-        commands.put(CommandType.USER_PROFILE_GET, new UserProfileGet());
-        commands.put(CommandType.USER_FACULTIES_GET, new UserFacultiesGet());
-        commands.put(CommandType.USER_FACULTY_GET, new UserFacultyGet());
-        commands.put(CommandType.USER_FACULTY_ENROLL_GET, new UserFacultyEnrollGet());
-        commands.put(CommandType.USER_FACULTY_ENROLL_POST, new UserFacultyEnrollPost());
+        commands.put("/entrant/profile get", new EntrantProfileGet());
+        commands.put("/entrant/faculties get", new EntrantFacultiesGet());
+        commands.put("/entrant/faculty get", new EntrantFacultyGet());
+        commands.put("/entrant/faculty/enroll get", new EntrantFacultyEnrollGet());
+        commands.put("/entrant/faculty/enroll post", new EntrantFacultyEnrollPost());
 
-        commands.put(CommandType.ADMIN_FACULTIES_GET, new AdminFacultiesGet());
-        commands.put(CommandType.ADMIN_FACULTY_GET, new AdminFacultyGet());
-        commands.put(CommandType.ADMIN_FACULTY_NEW_GET, new AdminFacultyNewGet());
-        commands.put(CommandType.ADMIN_FACULTY_NEW_POST, new AdminFacultyNewPost());
-        commands.put(CommandType.ADMIN_FACULTY_EDIT_GET, new AdminFacultyEditGet());
-        commands.put(CommandType.ADMIN_FACULTY_EDIT_POST, new AdminFacultyEditPost());
-        commands.put(CommandType.ADMIN_FACULTY_DELETE_GET, new AdminFacultyDeleteGet());
-        commands.put(CommandType.ADMIN_FACULTY_ENROLLMENT_APPROVE_GET, new AdminFacultyEnrollmentApproveGet());
-        commands.put(CommandType.ADMIN_FACULTY_FINALIZE_GET, new AdminFacultyFinalizeGet());
-        commands.put(CommandType.ADMIN_USER_GET, new AdminUserGet());
-        commands.put(CommandType.ADMIN_USER_BLOCK_GET, new AdminUserBlockGet());
-        commands.put(CommandType.ADMIN_USER_UNBLOCK_GET, new AdminUserUnblockGet());
+        commands.put("/admin/faculties get", new AdminFacultiesGet());
+        commands.put("/admin/faculty get", new AdminFacultyGet());
+        commands.put("/admin/faculty/new get", new AdminFacultyNewGet());
+        commands.put("/admin/faculty/new post", new AdminFacultyNewPost());
+        commands.put("/admin/faculty/edit get", new AdminFacultyEditGet());
+        commands.put("/admin/faculty/edit post", new AdminFacultyEditPost());
+        commands.put("/admin/faculty/delete get", new AdminFacultyDeleteGet());
+        commands.put("/admin/faculty/enrollment/approve get", new AdminFacultyEnrollmentApproveGet());
+        commands.put("/admin/faculty/finalize get", new AdminFacultyFinalizeGet());
+        commands.put("/admin/user get", new AdminUserGet());
+        commands.put("admin/user/block get", new AdminUserBlockGet());
+        commands.put("admin/user/unblock get", new AdminUserUnblockGet());
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("get request received");
-        processRequest(request, response, "_GET");
+        processRequest(request, response, " get");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("post request received");
-        processRequest(request, response, "_POST");
+        processRequest(request, response, " post");
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response, String commandSuffix) throws ServletException, IOException {
-        String page = commands.get(getCommandType(request, commandSuffix)).execute(request);
+    private void processRequest(HttpServletRequest request, HttpServletResponse response, String requestMethod) throws ServletException, IOException {
+        String page = commands.get(request.getRequestURI() + requestMethod).execute(request);
         log.info("page \"{}\" was created", page);
 
         if (page.startsWith("redirect:")) {
@@ -84,24 +83,6 @@ public class Servlet extends HttpServlet {
         } else {
             log.info("forwarding");
             request.getRequestDispatcher( TEMPLATES_PATH + page + ".jsp").forward(request, response);
-        }
-    }
-
-    private CommandType getCommandType(HttpServletRequest request, String commandSuffix) {
-        String URI = request.getRequestURI();
-        log.info("request URI: {}", URI);
-
-        if (URI.equals("/")) {
-            return CommandType.HOME_GET;
-        }
-
-        try {
-            return CommandType.valueOf(URI
-                    .substring(1)
-                    .replaceAll("/", "_")
-                    .toUpperCase() + commandSuffix);
-        } catch (IllegalArgumentException e) {
-            return CommandType.ERROR_GET;
         }
     }
 

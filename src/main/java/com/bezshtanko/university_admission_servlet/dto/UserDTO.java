@@ -182,6 +182,15 @@ public class UserDTO {
         return roles;
     }
 
+    public boolean hasRole(UserRole role) {
+        for (UserRole userRole : roles) {
+            if (userRole == role) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
     }

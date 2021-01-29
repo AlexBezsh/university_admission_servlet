@@ -24,7 +24,8 @@ public class LoginPost implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        try {
+        try { //todo check email password not null and their size
+            log.info("executing login post command");
             User userFromDB = userService.login(request.getParameter("email"), request.getParameter("password"));
             log.info("user {} was found in database", userFromDB);
             HttpSession session = request.getSession();
@@ -32,7 +33,7 @@ public class LoginPost implements Command {
             log.info("redirecting to faculties");
             return userFromDB.hasRole(UserRole.ADMIN)
                     ? "redirect:/admin/faculties"
-                    : "redirect:/user/faculties";
+                    : "redirect:/entrant/faculties";
         } catch (AuthenticationException e) {
             log.info("user with email \"{}\" was not found", request.getParameter("email"));
             return "redirect:/login?error";
