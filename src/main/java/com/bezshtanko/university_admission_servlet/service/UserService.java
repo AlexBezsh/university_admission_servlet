@@ -15,7 +15,9 @@ public class UserService extends Service {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public User login(String email, String password) {
+        log.info("creating user dao");
         try (UserDao userDao = daoFactory.createUserDao()) {
+            log.info("getting user with email {} from database", email);
             Optional<User> user = userDao.findByEmail(email);
             if (!user.isPresent() || !encodePassword(password).matches(user.get().getPassword())) {
                 throw new AuthenticationException();
@@ -25,7 +27,7 @@ public class UserService extends Service {
     }
 
     public static String encodePassword(String password) {
-        MessageDigest messageDigest = null;
+        MessageDigest messageDigest;
         try {
             messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(password.getBytes());
@@ -36,7 +38,6 @@ public class UserService extends Service {
                 stringBuilder.append(Character.forDigit((oneByte >> 4) & 0xf, 16))
                         .append(Character.forDigit((oneByte & 0xf), 16));
             }
-            System.out.println("Password: " + password + " is " + stringBuilder.toString());
             return stringBuilder.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);

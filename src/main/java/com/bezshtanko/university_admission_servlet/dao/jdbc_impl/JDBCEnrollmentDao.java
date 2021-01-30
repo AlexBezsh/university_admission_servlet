@@ -10,7 +10,6 @@ import java.util.Set;
 
 public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
 
-    private static final Logger log = LoggerFactory.getLogger(JDBCEnrollmentDao.class);
 
     public JDBCEnrollmentDao(Connection connection) {
         super(connection);

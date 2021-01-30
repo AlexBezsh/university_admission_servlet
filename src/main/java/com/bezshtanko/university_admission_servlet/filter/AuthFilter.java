@@ -22,18 +22,35 @@ public class AuthFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
+        log.info("request received");
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
 
+        String requestURI = servletRequest.getRequestURI();
         HttpSession session = servletRequest.getSession(false);
-        if (session == null
-                || session.getAttribute("user") == null
-                || (((UserDTO) session.getAttribute("user")).hasRole(UserRole.ADMIN) && !servletRequest.getRequestURI().startsWith("/admin"))
-                || (((UserDTO) session.getAttribute("user")).hasRole(UserRole.ENTRANT) && !servletRequest.getRequestURI().startsWith("/entrant"))) {
-            // Todo request.setAttribute("message", "You have no access to requested page. Please sigh up or log in");
-            // servletRequest.getServletContext().getRequestDispatcher(servletRequest.getContextPath() + "/").forward(servletRequest, servletResponse);
+        UserDTO user = null;
+
+        if (session != null && (user = (UserDTO) session.getAttribute("user")) != null) {
+            if (!requestURI.equals("/logout")) {
+                if (user.hasRole(UserRole.ADMIN) && !requestURI.startsWith("/admin")) {
+                    log.error("User {} has no access to page \"{}\"", user, requestURI);
+                    servletResponse.sendRedirect("/admin/faculties");
+                    return;
+                }
+                if (user.hasRole(UserRole.ENTRANT) && !requestURI.startsWith("/entrant")) {
+                    log.error("User {} has no access to page \"{}\"", user, requestURI);
+                    servletResponse.sendRedirect("/entrant/faculties");
+                    return;
+                }
+            }
+        } else {
+            if (requestURI.startsWith("/entrant") || requestURI.startsWith("/admin") || requestURI.equals("/logout")) {
+                log.error("User {} has no access to page \"{}\"", user, requestURI);
+                servletResponse.sendRedirect("/");
+                return;
+            }
         }
+        log.info("User {} has access to page \"{}\"", user, requestURI);
         chain.doFilter(request, response);
     }
 

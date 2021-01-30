@@ -18,11 +18,10 @@
   </properties>
 
   <dependencies>
-
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.6</version>
+      <version>8.0.23</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -62,8 +61,6 @@
       <artifactId>slf4j-simple</artifactId>
       <version>1.7.30</version>
     </dependency>
-
-
   </dependencies>
 
   <build>
