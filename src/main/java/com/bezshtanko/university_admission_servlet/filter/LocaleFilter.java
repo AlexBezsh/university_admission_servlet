@@ -4,30 +4,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Locale;
 
 public class LocaleFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(LocaleFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        /*String locale = servletRequest.getParameter("lang");
-        if (servletRequest.getParameter("lang") != null) {
-            servletResponse.setLocale(new Locale(locale));
-        }*/
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        log.info("request received");
+        HttpServletRequest req = (HttpServletRequest) request;
 
-        filterChain.doFilter(servletRequest,servletResponse);
+        String locale = req.getParameter("lang");
+        if (locale != null) {
+            req.getSession().setAttribute("lang", locale);
+            log.info("locale has been changed to \"{}\"", locale);
+        }
+
+        chain.doFilter(request, response);
     }
 
     @Override
     public void destroy() {
-
     }
 }

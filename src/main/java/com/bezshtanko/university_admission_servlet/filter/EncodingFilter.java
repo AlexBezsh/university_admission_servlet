@@ -1,27 +1,21 @@
 package com.bezshtanko.university_admission_servlet.filter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.servlet.*;
 import java.io.IOException;
 
 public class EncodingFilter implements Filter {
 
-    private static final Logger log = LoggerFactory.getLogger(EncodingFilter.class);
-
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
-                         FilterChain filterChain) throws IOException, ServletException {
-        servletResponse.setContentType("text/html");
-        servletResponse.setCharacterEncoding("UTF-8");
-        servletRequest.setCharacterEncoding("UTF-8");
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
-        filterChain.doFilter(servletRequest,servletResponse);
+        chain.doFilter(request, response);
     }
 
     @Override

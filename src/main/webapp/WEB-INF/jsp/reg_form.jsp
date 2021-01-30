@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="${param.lang}"/>
+<fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="i18n.messages"/>
 
 <html>
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<%--<header th:insert="fragments/bodyHeader.html"></header>--%>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 
 <div class="container" style="margin-top: 60px">
     <div class="row">

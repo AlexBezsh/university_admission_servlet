@@ -16,8 +16,7 @@ public class AuthFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(AuthFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override
@@ -56,6 +55,5 @@ public class AuthFilter implements Filter {
 
     @Override
     public void destroy() {
-
     }
 }

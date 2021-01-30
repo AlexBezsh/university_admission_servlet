@@ -3,38 +3,50 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="${param.lang}"/>
+<fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="i18n.messages"/>
 
-<html>
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
-    <a class="navbar-brand" href="${pageContext.request.contextPath}/faculties"><fmt:message key="navbar.title"/> </a>
+
+    <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+        <fmt:message key="navbar.title"/>
+    </a>
+
     <div class="row" style="margin-right: 10px">
-        <div style="margin-right: 30px">
-            <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
-            <a class="btn btn-default" th:href="${urlBuilder.replaceQueryParam('lang', 'ua').toUriString()}">
-                <fmt:message key="lang.ua.label"/> </a>
-            <a class="btn btn-default" th:href="${urlBuilder.replaceQueryParam('lang', 'en').toUriString()}">
-                <fmt:message key="lang.en.label"/></a>
-            </span>
+        <div style="margin-right: 20px">
+            <a class="btn btn-default" href="?lang=ua">
+                <fmt:message key="lang.ua.label"/>
+            </a>
+            <a class="btn btn-default" href="?lang=en">
+                <fmt:message key="lang.en.label"/>
+            </a>
         </div>
-        <div sec:authorize="hasAuthority('ENTRANT')">
+
+        <c:if test="${sessionScope.user.hasRole(UserRole.ENTRANT)}">
             <a class="btn btn-success" style="margin-right: 5px; margin-left: 20px;"
-               href="${pageContext.request.contextPath}/profile">
-                <fmt:message key="user.profile"/></a>
-        </div>
-        <div sec:authorize="isAuthenticated()">
-            <a class="btn btn-primary" href="${pageContext.request.contextPath}/logout"><fmt:message key="navbar.logout"/></a>
-        </div>
-        <div sec:authorize="isAnonymous()">
-            <a class="btn btn-success" href="${pageContext.request.contextPath}/login"><fmt:message key="login.button"/></a>
-            <a class="btn btn-primary" href="${pageContext.request.contextPath}/register"><fmt:message key="registration.button"/></a>
-        </div>
+               href="${pageContext.request.contextPath}/entrant/profile">
+                <fmt:message key="user.profile"/>
+            </a>
+        </c:if>
+
+        <c:if test="${sessionScope.user ne null}">
+            <a class="btn btn-primary" href="${pageContext.request.contextPath}/logout">
+                <fmt:message key="navbar.logout"/>
+            </a>
+        </c:if>
+
+        <c:if test="${sessionScope.user == null}">
+            <div style="margin-left: 5px; margin-right: 5px;">
+                <a class="btn btn-success" href="${pageContext.request.contextPath}/login">
+                    <fmt:message key="login.button"/>
+                </a>
+            </div>
+            <div style="margin-left: 5px; margin-right: 5px;">
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/register">
+                    <fmt:message key="registration.button"/>
+                </a>
+            </div>
+        </c:if>
+
     </div>
 </nav>
-</html>

@@ -1,9 +1,27 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
+
+<fmt:setLocale value="${sessionScope.lang}"/>
+<fmt:setBundle basename="i18n.messages"/>
+
 <html>
 <head>
-    <title>Title</title>
+    <meta charset="UTF-8">
+    <title><fmt:message key="enrollment.congratulation.title"/></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<h1>Congratulation</h1>
+
+<jsp:include page="../fragments/bodyHeader.jsp"/>
+
+<div style="margin-top: 15px; margin-bottom: 15px; margin-left: 40px; margin-right: 40px;"
+     class="alert alert-success">
+    <span th:if="${status == status.ENROLLED_CONTRACT}"><fmt:message key="enrollment.congratulation.contract"/></span>
+    <span th:if="${status == status.ENROLLED_STATE_FUNDED}"><fmt:message key="enrollment.congratulation.stateFunded"/></span>
+</div>
+
 </body>
 </html>
