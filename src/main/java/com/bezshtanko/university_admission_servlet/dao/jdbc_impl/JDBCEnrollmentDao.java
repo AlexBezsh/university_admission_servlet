@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.util.Set;
+import java.util.List;
 
 public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
 
@@ -26,7 +26,7 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
     }
 
     @Override
-    public Set<Enrollment> findAll() {
+    public List<Enrollment> findAll() {
         return null;
     }
 

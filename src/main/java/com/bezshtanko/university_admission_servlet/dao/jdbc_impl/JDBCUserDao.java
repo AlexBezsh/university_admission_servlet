@@ -10,8 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class JDBCUserDao extends JDBCDao implements UserDao {
 
@@ -55,7 +55,7 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
     }
 
     @Override
-    public Set<User> findAll() {
+    public List<User> findAll() {
         return null;
     }
 

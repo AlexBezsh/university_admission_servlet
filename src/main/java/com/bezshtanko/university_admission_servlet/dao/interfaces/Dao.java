@@ -1,11 +1,11 @@
 package com.bezshtanko.university_admission_servlet.dao.interfaces;
 
-import java.util.Set;
+import java.util.List;
 
 public interface Dao<T> extends AutoCloseable {
     void save(T entity);
     T findById(Integer id);
-    Set<T> findAll();
+    List<T> findAll();
     void update(T entity);
     void deleteById(Integer id);
     void close();

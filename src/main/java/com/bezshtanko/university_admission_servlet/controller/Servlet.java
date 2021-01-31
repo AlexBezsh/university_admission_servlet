@@ -12,6 +12,8 @@ import com.bezshtanko.university_admission_servlet.controller.command.entrant.ge
 import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantFacultyGet;
 import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantProfileGet;
 import com.bezshtanko.university_admission_servlet.controller.command.entrant.post.EntrantFacultyEnrollPost;
+import com.bezshtanko.university_admission_servlet.service.FacultyService;
+import com.bezshtanko.university_admission_servlet.service.Services;
 import com.bezshtanko.university_admission_servlet.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,15 +37,15 @@ public class Servlet extends HttpServlet {
     public void init() {
         commands.put("/ get", new HomeGet());
         commands.put("/login get", new LoginGet());
-        commands.put("/login post", new LoginPost(new UserService()));
+        commands.put("/login post", new LoginPost((UserService) Services.USER_SERVICE.get()));
         commands.put("/logout get", new LogoutGet());
         commands.put("/register get", new RegisterGet());
-        commands.put("/register post", new RegisterPost(new UserService()));
+        commands.put("/register post", new RegisterPost((UserService) Services.USER_SERVICE.get()));
         commands.put("/error get", new ErrorGet());
 
         commands.put("/entrant/profile get", new EntrantProfileGet());
-        commands.put("/entrant/faculties get", new EntrantFacultiesGet());
-        commands.put("/entrant/faculty get", new EntrantFacultyGet());
+        commands.put("/entrant/faculties get", new EntrantFacultiesGet((FacultyService) Services.FACULTY_SERVICE.get()));
+        commands.put("/entrant/faculty get", new EntrantFacultyGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/entrant/faculty/enroll get", new EntrantFacultyEnrollGet());
         commands.put("/entrant/faculty/enroll post", new EntrantFacultyEnrollPost());
 

@@ -13,7 +13,7 @@ public class EntrantFacultyEnrollGet implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         log.info("executing entrant faculty enroll get command");
-
+        //TODO take id from session attribute, not from request - in fact it is useless in request
         return null;
     }
 }

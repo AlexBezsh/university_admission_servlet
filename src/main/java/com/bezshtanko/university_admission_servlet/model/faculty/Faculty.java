@@ -164,6 +164,10 @@ public class Faculty extends AbstractEntity {
         return status;
     }
 
+    public boolean isActive() {
+        return status == FacultyStatus.ACTIVE;
+    }
+
     public void setStatus(FacultyStatus status) {
         this.status = status;
     }
@@ -200,7 +204,7 @@ public class Faculty extends AbstractEntity {
         this.contractPlaces = contractPlaces;
     }
 
-    private Integer getTotalPlaces() {
+    public Integer getTotalPlaces() {
         if (totalPlaces == null) {
             totalPlaces = stateFundedPlaces + contractPlaces;
         }

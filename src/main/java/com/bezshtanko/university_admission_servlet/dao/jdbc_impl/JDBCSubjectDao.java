@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.util.Set;
+import java.util.List;
 
 public class JDBCSubjectDao extends JDBCDao implements SubjectDao {
 
@@ -27,7 +27,7 @@ public class JDBCSubjectDao extends JDBCDao implements SubjectDao {
     }
 
     @Override
-    public Set<Subject> findAll() {
+    public List<Subject> findAll() {
         return null;
     }
 

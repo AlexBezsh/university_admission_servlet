@@ -25,7 +25,7 @@
 
     <div th:if="${enrollments.empty}">
         <p style="text-align: center">
-            <fmt:message key="faculty.empty.message"/>
+            <fmt:message key="faculties.empty.message"/>
         </p>
     </div>
 

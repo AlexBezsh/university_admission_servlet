@@ -24,7 +24,13 @@ public class LocaleFilter implements Filter {
         if (locale != null) {
             req.getSession().setAttribute("lang", locale);
             log.info("locale has been changed to \"{}\"", locale);
+        } else {
+            if (req.getSession().getAttribute("lang") == null) {
+                req.getSession().setAttribute("lang", "en");
+            }
         }
+        //TODO here we create session for unauthorized user - after adding listeners it is important to check
+        // whether everything works fine with two users from different browsers
 
         chain.doFilter(request, response);
     }

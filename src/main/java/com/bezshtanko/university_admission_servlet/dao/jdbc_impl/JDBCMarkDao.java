@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.util.Set;
+import java.util.List;
 
 public class JDBCMarkDao extends JDBCDao implements MarkDao {
 
@@ -27,7 +27,7 @@ public class JDBCMarkDao extends JDBCDao implements MarkDao {
     }
 
     @Override
-    public Set<Mark> findAll() {
+    public List<Mark> findAll() {
         return null;
     }
 
