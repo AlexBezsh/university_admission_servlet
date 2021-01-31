@@ -10,8 +10,13 @@ public class EntrantProfileGet implements Command {
 
     private static final Logger log = LoggerFactory.getLogger(EntrantProfileGet.class);
 
+
+
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("executing entrant profile get command");
+
+
         return "entrant/profile";
     }
 }

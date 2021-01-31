@@ -24,12 +24,18 @@ public class LoginPost implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        try { //todo check email password not null and their size
+        try {
             log.info("executing login post command");
-            User userFromDB = userService.login(request.getParameter("email"), request.getParameter("password"));
+
+            String password = request.getParameter("password");
+            String email = request.getParameter("email");
+
+            User userFromDB = userService.login(email, password);
             log.info("user {} was found in database", userFromDB);
+
             HttpSession session = request.getSession();
             session.setAttribute("user", new UserDTO(userFromDB));
+
             log.info("redirecting to faculties");
             return userFromDB.hasRole(UserRole.ADMIN)
                     ? "redirect:/admin/faculties"

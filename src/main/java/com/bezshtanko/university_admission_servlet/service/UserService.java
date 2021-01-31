@@ -26,6 +26,14 @@ public class UserService extends Service {
         }
     }
 
+    public void saveNewUser(User user) {
+        log.info("saving new user: {}", user);
+        user.setPassword(encodePassword(user.getPassword()));
+        try (UserDao userDao = daoFactory.createUserDao()) {
+           userDao.save(user);
+        }
+    }
+
     public static String encodePassword(String password) {
         MessageDigest messageDigest;
         try {

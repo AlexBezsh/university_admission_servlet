@@ -13,6 +13,7 @@ public class AdminFacultiesGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("executing admin faculties get command");
         return "admin/faculties";
     }
 }

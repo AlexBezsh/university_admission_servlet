@@ -27,15 +27,24 @@
                     <span><fmt:message key="login.error"/></span>
                 </div>
             </c:if>
+            <c:if test="${param.registrationSuccess ne null}">
+                <div class="alert alert-success">
+                    <span><fmt:message key="registration.success"/></span>
+                </div>
+            </c:if>
             <form style="margin-bottom: 30px" autocomplete="off" action="${pageContext.request.contextPath}/login"
                   method="post">
                 <div class="form-group">
                     <label for="email"><fmt:message key="user.email"/></label>
+                    <c:if test="${param.emailError ne null}">
+                        <div class="alert alert-danger">
+                            <span><fmt:message key="Email.user.email"/></span>
+                        </div>
+                    </c:if>
                     <input id="email"
                            name="email"
                            type="email"
                            class="form-control"
-                           placeholder="Email"
                            required>
                 </div>
                 <div class="form-group">
@@ -44,7 +53,6 @@
                            name="password"
                            type="password"
                            class="form-control"
-                           placeholder="Password"
                            required>
                 </div>
                 <div class="row">

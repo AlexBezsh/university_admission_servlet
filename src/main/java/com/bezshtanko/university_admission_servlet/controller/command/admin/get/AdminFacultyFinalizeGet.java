@@ -12,6 +12,7 @@ public class AdminFacultyFinalizeGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("executing admin faculty finalize get command");
         return null;
     }
 }

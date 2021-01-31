@@ -12,6 +12,8 @@ public class EntrantFacultyEnrollGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("executing entrant faculty enroll get command");
+
         return null;
     }
 }

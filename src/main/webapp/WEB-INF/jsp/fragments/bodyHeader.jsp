@@ -22,7 +22,7 @@
             </a>
         </div>
 
-        <c:if test="${sessionScope.user.hasRole(UserRole.ENTRANT)}">
+        <c:if test="${sessionScope.user.entrant}">
             <a class="btn btn-success" style="margin-right: 5px; margin-left: 20px;"
                href="${pageContext.request.contextPath}/entrant/profile">
                 <fmt:message key="user.profile"/>
@@ -36,12 +36,12 @@
         </c:if>
 
         <c:if test="${sessionScope.user == null}">
-            <div style="margin-left: 5px; margin-right: 5px;">
+            <div style="margin-left: 20px; margin-right: 3px;">
                 <a class="btn btn-success" href="${pageContext.request.contextPath}/login">
                     <fmt:message key="login.button"/>
                 </a>
             </div>
-            <div style="margin-left: 5px; margin-right: 5px;">
+            <div style="margin-left: 3px; margin-right: 5px;">
                 <a class="btn btn-primary" href="${pageContext.request.contextPath}/register">
                     <fmt:message key="registration.button"/>
                 </a>

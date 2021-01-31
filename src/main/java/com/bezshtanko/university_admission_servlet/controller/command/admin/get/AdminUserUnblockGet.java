@@ -12,6 +12,7 @@ public class AdminUserUnblockGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("executing admin user unblock get command");
         return null;
     }
 }

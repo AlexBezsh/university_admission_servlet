@@ -22,65 +22,83 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <h2 class="page-header"><fmt:message key="registration.form.header"/></h2>
-            <form style="margin-bottom: 30px" name="form" autocomplete="off" action="${pageContext.request.contextPath}/register" <%--th:object="${user}"--%> method="post">
+            <form style="margin-bottom: 30px" name="form" autocomplete="off" action="${pageContext.request.contextPath}/register" method="post">
                 <div class="form-group">
                     <label for="fullName"><fmt:message key="user.fullName"/></label>
-                    <br/><span class="error" style="color:red" <%--th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"--%>></span>
+                    <c:if test="${param.fullNameError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Size.user.fullName"/></span>
+                        </div>
+                    </c:if>
                     <input id="fullName"
                            type="text"
+                           name="fullName"
                            class="form-control"
-                           <%--th:field="*{fullName}"
-                           th:placeholder="#{user.fullName}"--%>
                            required>
                 </div>
                 <div class="form-group">
                     <label for="email"><fmt:message key="user.email"/></label>
-                    <br/><span class="error" style="color:red" <%--th:if="${#fields.hasErrors('email')}" th:errors="*{email}"--%>></span>
+                    <c:if test="${param.emailError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Email.user.email"/></span>
+                        </div>
+                    </c:if>
                     <input id="email"
                            type="email"
+                           name="email"
                            class="form-control"
-                           <%--th:field="*{email}"
-                           th:placeholder="#{user.email}"--%>
                            required>
                 </div>
                 <div class="form-group">
                     <label for="password"><fmt:message key="user.password"/></label>
-                    <br/><span class="error" style="color:red" <%--th:if="${#fields.hasErrors('password')}" th:errors="*{password}"--%>></span>
+                    <c:if test="${param.passwordError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Pattern.user.password"/></span>
+                        </div>
+                    </c:if>
                     <input id="password"
                            type="password"
+                           name="password"
                            class="form-control"
-                           <%--th:field="*{password}"
-                           th:placeholder="#{user.password}"--%>
                            required>
                 </div>
                 <div class="form-group">
                     <label for="city"><fmt:message key="user.city"/></label>
-                    <br/><span class="error" style="color:red" <%--th:if="${#fields.hasErrors('city')}" th:errors="*{city}"--%>></span>
+                    <c:if test="${param.cityError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Size.user.city"/></span>
+                        </div>
+                    </c:if>
                     <input id="city"
                            type="text"
+                           name="city"
                            class="form-control"
-                           <%--th:field="*{city}"
-                           th:placeholder="#{user.city}"--%>
                            required>
                 </div>
                 <div class="form-group">
                     <label for="region"><fmt:message key="user.region"/></label>
-                    <br/><span class="error" style="color:red" <%--th:if="${#fields.hasErrors('region')}" th:errors="*{region}"--%>></span>
+                    <c:if test="${param.regionError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Size.user.region"/></span>
+                        </div>
+                    </c:if>
                     <input id="region"
                            type="text"
+                           name="region"
                            class="form-control"
-                           <%--th:field="*{region}"
-                           th:placeholder="#{user.region}"--%>
                            required>
                 </div>
                 <div class="form-group">
                     <label for="education"><fmt:message key="user.education"/></label>
-                    <br/><span class="error" style="color:red" <%--th:if="${#fields.hasErrors('education')}" th:errors="*{education}"--%>></span>
+                    <c:if test="${param.educationError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Size.user.education"/></span>
+                        </div>
+                    </c:if>
                     <input id="education"
                            type="text"
+                           name="education"
                            class="form-control"
-                           <%--th:field="*{education}"
-                           th:placeholder="#{user.education}"--%>
                            required>
                 </div>
                 <button type="submit" class="btn btn-default" style="margin-top:30px">

@@ -12,6 +12,7 @@ public class RegisterGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("executing register get command");
         return "reg_form";
     }
 }

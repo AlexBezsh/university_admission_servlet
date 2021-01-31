@@ -17,10 +17,14 @@
 
 <jsp:include page="../fragments/bodyHeader.jsp"/>
 
-<div style="margin-top: 15px; margin-bottom: 15px; margin-left: 40px; margin-right: 40px;"
-     class="alert alert-success">
-    <span th:if="${status == status.ENROLLED_CONTRACT}"><fmt:message key="enrollment.congratulation.contract"/></span>
-    <span th:if="${status == status.ENROLLED_STATE_FUNDED}"><fmt:message key="enrollment.congratulation.stateFunded"/></span>
+<div style="margin-top: 15px; margin-bottom: 15px; margin-left: 40px; margin-right: 40px;" class="alert alert-success">
+    <c:if test="${sessionScope.user.enrolledContract}">
+        <span><fmt:message key="enrollment.congratulation.contract"/></span>
+    </c:if>
+    <c:if test="${sessionScope.user.enrolledStateFunded}">
+    <span><fmt:message key="enrollment.congratulation.stateFunded"/></span>
+    </c:if>
+
 </div>
 
 </body>

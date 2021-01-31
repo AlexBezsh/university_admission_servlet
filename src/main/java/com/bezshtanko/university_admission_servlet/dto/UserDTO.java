@@ -174,6 +174,23 @@ public class UserDTO {
         return status;
     }
 
+    public boolean isActive() {
+        return status == UserStatus.ACTIVE;
+    }
+
+    public boolean isBlocked() {
+        return status == UserStatus.BLOCKED;
+    }
+
+    public boolean isEnrolledContract() {
+        return status == UserStatus.ENROLLED_CONTRACT;
+    }
+
+    public boolean isEnrolledStateFunded() {
+        return status == UserStatus.ENROLLED_STATE_FUNDED;
+    }
+
+
     public void setStatus(UserStatus status) {
         this.status = status;
     }
@@ -189,6 +206,14 @@ public class UserDTO {
             }
         }
         return false;
+    }
+
+    public boolean isAdmin() {
+        return hasRole(UserRole.ADMIN);
+    }
+
+    public boolean isEntrant() {
+        return hasRole(UserRole.ENTRANT);
     }
 
     public void setRoles(Set<UserRole> roles) {

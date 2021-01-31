@@ -19,7 +19,7 @@
 
 <div style="margin-left: 30px; margin-right: 30px;">
     <div class="card" style="margin-bottom: 10px; margin-top: 10px">
-        <a class="card-header" th:text="${user.fullName}"></a>
+        <a class="card-header">${user.fullName}</a>
         <div class="card-body">
             <div class="list-view" style="width: 30rem">
                 <p class="card-text" style="margin-right: 10px"
@@ -32,20 +32,6 @@
                    th:text="#{user.region} + ${': ' + user.region}"></p>
                 <p class="card-text" style="margin-right: 10px"
                    th:text="#{user.education} + ${': ' + user.education}"></p>
-                <div>
-                    <div class="row" sec:authorize="hasAuthority('ADMIN')">
-                        <a class="btn btn-danger" style="margin-right: 5px; margin-left: 20px;"
-                           th:if="${user.status == user.status.ACTIVE}"
-                           th:href="@{'/user/' + ${user.id} + '/block'}">
-                            <fmt:message key="user.block"/>
-                        </a>
-                        <a class="btn btn-warning" style="margin-right: 5px; margin-left: 20px;"
-                           th:if="${user.status == user.status.BLOCKED}"
-                           th:href="@{'/user/' + ${user.id} + '/unblock'}">
-                            <fmt:message key="user.unblock"/>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

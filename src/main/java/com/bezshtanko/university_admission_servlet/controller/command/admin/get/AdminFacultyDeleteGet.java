@@ -13,6 +13,8 @@ public class AdminFacultyDeleteGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("executing admin faculty delete get command");
+        //todo forbid deleting faculty if it has enrollments
         return null;
     }
 }

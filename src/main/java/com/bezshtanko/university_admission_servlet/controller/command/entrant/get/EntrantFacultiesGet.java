@@ -12,6 +12,9 @@ public class EntrantFacultiesGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("executing entrant faculties get command");
+
+
         return "entrant/faculties";
     }
 }

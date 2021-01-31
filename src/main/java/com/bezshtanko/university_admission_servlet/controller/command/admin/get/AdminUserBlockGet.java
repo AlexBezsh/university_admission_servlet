@@ -12,6 +12,8 @@ public class AdminUserBlockGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("executing admin user block get command");
+
         return null;
     }
 }
