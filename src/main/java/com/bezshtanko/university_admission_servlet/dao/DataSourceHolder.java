@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public final class DataSourceHolder {
 
@@ -24,11 +27,12 @@ public final class DataSourceHolder {
         synchronized (DataSourceHolder.class) {
             if (dataSource == null) {
                 log.info("initializing data source");
+                Properties properties = getProperties();
                 BasicDataSource ds = new BasicDataSource();
-                ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-                ds.setUrl("jdbc:mysql://localhost:3306/university_admission");
-                ds.setUsername("root");
-                ds.setPassword("root");
+                ds.setDriverClassName(properties.getProperty("datasource.driverClassName"));
+                ds.setUrl(properties.getProperty("datasource.url"));
+                ds.setUsername(properties.getProperty("datasource.username"));
+                ds.setPassword(properties.getProperty("datasource.password"));
                 ds.setMinIdle(5);
                 ds.setMaxIdle(10);
                 ds.setMaxOpenPreparedStatements(100);
@@ -37,6 +41,18 @@ public final class DataSourceHolder {
             }
         }
         return dataSource;
+    }
+
+    private static Properties getProperties() {
+        Properties properties = new Properties();
+        InputStream inputStream = DataSourceHolder.class.getClassLoader().getResourceAsStream("application.properties");
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            log.error("properties initialization error");
+            throw new RuntimeException(e);
+        }
+        return properties;
     }
 
 }

@@ -27,8 +27,31 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
     }
 
     @Override
-    public Faculty findById(Integer id) {
-        return null;
+    public Optional<Faculty> findById(Long id) {
+        String query = "SELECT faculty.id AS f_id, " +
+                "faculty.name_en AS f_name_en, " +
+                "faculty.name_ua AS f_name_ua, " +
+                "faculty.status AS f_status, " +
+                "description_en, " +
+                "description_ua, " +
+                "state_funded_places, " +
+                "contract_places, " +
+                "subject.id AS s_id, " +
+                "subject.type AS s_type, " +
+                "subject.name_en AS s_name_en, " +
+                "subject.name_ua AS s_name_ua " +
+                "FROM faculty " +
+                "JOIN faculty_subjects ON faculty.id = faculty_subjects.faculty_id " +
+                "JOIN subject ON faculty_subjects.subjects_id = subject.id " +
+                "WHERE faculty.id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setLong(1, id);
+            log.info("prepared statement for finding faculty created");
+            return Optional.of(findFaculties(ps).get(0));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -51,42 +74,42 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             log.info("prepared statement for finding all faculties created");
-            ResultSet resultSet = ps.executeQuery();
-            log.info("query successfully executed");
-
-            log.info("faculties mapping started");
-            Map<Long, Faculty> faculties = new HashMap<>();
-            Map<Long, Subject> subjects = new HashMap<>();
-
-            FacultyMapper facultyMapper = new FacultyMapper();
-            SubjectMapper subjectMapper = new SubjectMapper();
-
-            Faculty faculty;
-            Subject subject;
-            while (resultSet.next()) {
-                faculty = facultyMapper.get(resultSet);
-                subject = subjectMapper.get(resultSet);
-                faculty = facultyMapper.makeUnique(faculties, faculty);
-                subject = subjectMapper.makeUnique(subjects, subject);
-                faculty.getSubjects().add(subject);
-            }
-            return new ArrayList<>(faculties.values());
+            return findFaculties(ps);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private List<Faculty> findFaculties(PreparedStatement ps) throws SQLException {
+        ResultSet resultSet = ps.executeQuery();
+        log.info("query successfully executed");
+
+        log.info("mapping started");
+        Map<Long, Faculty> faculties = new HashMap<>();
+        Map<Long, Subject> subjects = new HashMap<>();
+
+        FacultyMapper facultyMapper = new FacultyMapper();
+        SubjectMapper subjectMapper = new SubjectMapper();
+
+        Faculty faculty;
+        Subject subject;
+        while (resultSet.next()) {
+            faculty = facultyMapper.get(resultSet);
+            subject = subjectMapper.get(resultSet);
+            faculty = facultyMapper.makeUnique(faculties, faculty);
+            subject = subjectMapper.makeUnique(subjects, subject);
+            faculty.getSubjects().add(subject);
+        }
+        return new ArrayList<>(faculties.values());
+    }
+
 
     @Override
     public void update(Faculty entity) {
     }
 
     @Override
-    public void deleteById(Integer id) {
-    }
-
-    @Override
-    public Optional<Faculty> getByIdWithEnrollments(Long id) {
-        return null;
+    public void deleteById(Long id) {
     }
 
 }

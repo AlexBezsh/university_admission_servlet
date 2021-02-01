@@ -1,28 +1,87 @@
 package com.bezshtanko.university_admission_servlet.dao.jdbc_impl;
 
 import com.bezshtanko.university_admission_servlet.dao.interfaces.EnrollmentDao;
+import com.bezshtanko.university_admission_servlet.dao.mapper.EnrollmentMapper;
+import com.bezshtanko.university_admission_servlet.dao.mapper.FacultyMapper;
+import com.bezshtanko.university_admission_servlet.dao.mapper.MarkMapper;
+import com.bezshtanko.university_admission_servlet.dao.mapper.UserMapper;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
+import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
+import com.bezshtanko.university_admission_servlet.model.mark.Mark;
+import com.bezshtanko.university_admission_servlet.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
 
+    private static final Logger log = LoggerFactory.getLogger(JDBCEnrollmentDao.class);
 
     public JDBCEnrollmentDao(Connection connection) {
         super(connection);
     }
 
     @Override
-    public void save(Enrollment entity) {
+    public void save(Enrollment enrollment) {
+        String insertEnrollment = "INSERT INTO enrollment(user_id, faculty_id, status) VALUES(?, ?, ?)";
+        try (PreparedStatement insertEnrollmentStmt = connection.prepareStatement(insertEnrollment, Statement.RETURN_GENERATED_KEYS)) {
+            insertEnrollmentStmt.setLong(1, enrollment.getUser().getId());
+            insertEnrollmentStmt.setLong(2, enrollment.getFaculty().getId());
+            insertEnrollmentStmt.setString(3, enrollment.getStatus().toString());
+            log.info("Prepared statement created for new enrollment: {}", enrollment);
 
+            connection.setAutoCommit(false);
+            log.info("Transaction has been opened");
+            int affectedRows = insertEnrollmentStmt.executeUpdate();
+            log.info("Insert new enrollment query successfully executed.");
+            if (affectedRows == 0) {
+                log.error("Saving enrollment failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = insertEnrollmentStmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    enrollment.setId(generatedKeys.getLong(1));
+                }
+                else {
+                    log.error("Saving enrollment failed, no ID obtained.");
+                }
+            }
+
+            StringBuilder insertMarks = new StringBuilder("INSERT INTO marks(enrollment_id, subject_id, mark) VALUES");
+            enrollment.getMarks().forEach(m ->
+                    insertMarks.append('(').append(enrollment.getId()).append(',').append(' ')
+                            .append(m.getSubject().getId()).append(',').append(' ')
+                            .append(m.getMark()).append("), "));
+            insertMarks.setLength(insertMarks.length() - 2);
+
+            try (PreparedStatement insertMarksStmt = connection.prepareStatement(insertMarks.toString())) {
+                log.info("Saving enrollment marks");
+                System.out.println(insertMarks.toString());
+                insertMarksStmt.execute();
+                connection.commit();
+            }
+            log.info("enrollment {} have been successfully saved", enrollment);
+        } catch (SQLException e) {
+            log.error("exception occurred during saving new enrollment");
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                log.error("exception occurred during connection rollback execution");
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                log.error("an attempt to set connection in auto commit mode failed");
+            }
+        }
     }
 
     @Override
-    public Enrollment findById(Integer id) {
-        return null;
+    public Optional<Enrollment> findById(Long id) {
+        return Optional.empty();
     }
 
     @Override
@@ -31,13 +90,123 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
     }
 
     @Override
-    public void update(Enrollment entity) {
+    public List<Enrollment> findAllByUserId(Long id) {
+        String query = "SELECT enrollment.id AS e_id, " +
+                "enrollment.status AS e_status, " +
+                "faculty.id AS f_id, " +
+                "faculty.name_en AS f_name_en, " +
+                "faculty.name_ua AS f_name_ua, " +
+                "faculty.status AS f_status, " +
+                "description_en, " +
+                "description_ua, " +
+                "state_funded_places, " +
+                "contract_places, " +
+                "marks.id AS m_id, " +
+                "marks.mark " +
+                "FROM enrollment " +
+                "JOIN faculty ON enrollment.faculty_id = faculty.id " +
+                "JOIN marks ON enrollment.id = marks.enrollment_id " +
+                "WHERE enrollment.user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setLong(1, id);
+            log.info("prepared statement for finding all enrollments for user with id '{}' created", id);
 
+            ResultSet resultSet = ps.executeQuery();
+            log.info("query successfully executed");
+
+            log.info("enrollments mapping started");
+            Map<Long, Enrollment> enrollments = new HashMap<>();
+            Map<Long, Faculty> faculties = new HashMap<>();
+            Map<Long, Mark> marks = new HashMap<>();
+
+            EnrollmentMapper enrollmentMapper = new EnrollmentMapper();
+            FacultyMapper facultyMapper = new FacultyMapper();
+            MarkMapper markMapper = new MarkMapper();
+
+            Enrollment enrollment;
+            Faculty faculty;
+            Mark mark;
+            while (resultSet.next()) {
+                enrollment = enrollmentMapper.get(resultSet);
+                faculty = facultyMapper.get(resultSet);
+                mark = markMapper.get(resultSet);
+
+                enrollment = enrollmentMapper.makeUnique(enrollments, enrollment);
+                faculty = facultyMapper.makeUnique(faculties, faculty);
+                mark = markMapper.makeUnique(marks, mark);
+
+                enrollment.setFaculty(faculty);
+                enrollment.getMarks().add(mark);
+            }
+            return new ArrayList<>(enrollments.values());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public List<Enrollment> findAllByFacultyId(Long id) {
+        String query = "SELECT enrollment.id AS e_id, " +
+                "enrollment.status AS e_status, " +
+                "user.id AS u_id, " +
+                "user.full_name, " +
+                "user.email, " +
+                "user.password, " +
+                "user.status AS u_status, " +
+                "user.city, " +
+                "user.region, " +
+                "user.education, " +
+                "'ENTRANT' AS ROLES, " +
+                "marks.id AS m_id, " +
+                "marks.mark " +
+                "FROM enrollment " +
+                "JOIN user ON enrollment.user_id = user.id " +
+                "JOIN marks ON enrollment.id = marks.enrollment_id " +
+                "WHERE enrollment.faculty_id = ?";
 
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setLong(1, id);
+            log.info("prepared statement for finding all enrollments for faculty with id '{}' created", id);
+
+            ResultSet resultSet = ps.executeQuery();
+            log.info("query successfully executed");
+
+            log.info("enrollments mapping started");
+            Map<Long, Enrollment> enrollments = new HashMap<>();
+            Map<Long, User> users = new HashMap<>();
+            Map<Long, Mark> marks = new HashMap<>();
+
+            EnrollmentMapper enrollmentMapper = new EnrollmentMapper();
+            UserMapper userMapper = new UserMapper();
+            MarkMapper markMapper = new MarkMapper();
+
+            Enrollment enrollment;
+            User user;
+            Mark mark;
+            while (resultSet.next()) {
+                enrollment = enrollmentMapper.get(resultSet);
+                user = userMapper.get(resultSet);
+                mark = markMapper.get(resultSet);
+
+                enrollment = enrollmentMapper.makeUnique(enrollments, enrollment);
+                user = userMapper.makeUnique(users, user);
+                mark = markMapper.makeUnique(marks, mark);
+
+                enrollment.setUser(user);
+                enrollment.getMarks().add(mark);
+            }
+            return new ArrayList<>(enrollments.values());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void update(Enrollment entity) {
+    }
+
+    @Override
+    public void deleteById(Long id) {
     }
 
 }

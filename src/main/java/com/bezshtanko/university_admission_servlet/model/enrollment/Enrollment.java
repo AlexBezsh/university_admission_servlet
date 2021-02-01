@@ -109,6 +109,18 @@ public class Enrollment extends AbstractEntity {
         return status;
     }
 
+    public boolean isNew() {
+        return status == EnrollmentStatus.NEW;
+    }
+
+    public boolean isApproved() {
+        return status == EnrollmentStatus.APPROVED;
+    }
+
+    public boolean isFinalized() {
+        return status == EnrollmentStatus.FINALIZED;
+    }
+
     public void setStatus(EnrollmentStatus status) {
         this.status = status;
     }

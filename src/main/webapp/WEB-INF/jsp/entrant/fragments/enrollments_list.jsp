@@ -18,7 +18,7 @@
         <thead>
         <tr>
             <th scope="col"><fmt:message key="enrollment.id"/></th>
-            <th scope="col"><fmt:message key="enrollment.id"/></th>
+            <th scope="col"><fmt:message key="enrollment.user"/></th>
             <th scope="col"><fmt:message key="enrollment.user.status"/></th>
             <th scope="col"><fmt:message key="enrollment.marksSum"/></th>
             <th scope="col"><fmt:message key="enrollment.status"/></th>

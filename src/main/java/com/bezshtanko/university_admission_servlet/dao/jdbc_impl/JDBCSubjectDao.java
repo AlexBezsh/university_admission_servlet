@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Optional;
 
 public class JDBCSubjectDao extends JDBCDao implements SubjectDao {
 
@@ -18,12 +19,11 @@ public class JDBCSubjectDao extends JDBCDao implements SubjectDao {
 
     @Override
     public void save(Subject entity) {
-
     }
 
     @Override
-    public Subject findById(Integer id) {
-        return null;
+    public Optional<Subject> findById(Long id) {
+        return Optional.empty();
     }
 
     @Override
@@ -33,12 +33,10 @@ public class JDBCSubjectDao extends JDBCDao implements SubjectDao {
 
     @Override
     public void update(Subject entity) {
-
     }
 
     @Override
-    public void deleteById(Integer id) {
-
+    public void deleteById(Long id) {
     }
 
 }

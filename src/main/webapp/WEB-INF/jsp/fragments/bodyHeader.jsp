@@ -14,12 +14,30 @@
 
     <div class="row" style="margin-right: 10px">
         <div style="margin-right: 20px">
-            <a class="btn btn-default" href="?lang=ua">
-                <fmt:message key="lang.ua.label"/>
-            </a>
-            <a class="btn btn-default" href="?lang=en">
-                <fmt:message key="lang.en.label"/>
-            </a>
+            <c:url var="params" value="">
+                <c:forEach items="${param}" var="entry">
+                    <c:if test="${entry.key != 'lang'}">
+                        <c:param name="${entry.key}" value="${entry.value}" />
+                    </c:if>
+                </c:forEach>
+            </c:url>
+
+            <c:choose>
+                <c:when test="${not empty params}">
+                    <a class="btn btn-default" href="${params}&lang=ua"><fmt:message key="lang.ua.label"/></a>
+                </c:when>
+                <c:otherwise>
+                    <a class="btn btn-default" href="${params}?lang=ua"><fmt:message key="lang.ua.label"/></a>
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="${not empty params}">
+                    <a class="btn btn-default" href="${params}&lang=en"><fmt:message key="lang.en.label"/></a>
+                </c:when>
+                <c:otherwise>
+                    <a class="btn btn-default" href="${params}?lang=en"><fmt:message key="lang.en.label"/></a>
+                </c:otherwise>
+            </c:choose>
         </div>
 
         <c:if test="${sessionScope.user.entrant}">

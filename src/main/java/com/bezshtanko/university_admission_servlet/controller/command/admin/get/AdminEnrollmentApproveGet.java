@@ -6,13 +6,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class AdminFacultyEnrollmentApproveGet implements Command {
+public class AdminEnrollmentApproveGet implements Command {
 
-    private static final Logger log = LoggerFactory.getLogger(AdminFacultyEnrollmentApproveGet.class);
+    private static final Logger log = LoggerFactory.getLogger(AdminEnrollmentApproveGet.class);
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing admin faculty enrollment approve get command");
+        log.info("executing admin enrollment approve get command");
         return null;
     }
 }

@@ -45,13 +45,24 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
             connection.commit();
             log.info("queries successfully executed for user: {}", user);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            log.error("exception occurred during saving new user: {}", user);
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                log.error("exception occurred during connection rollback execution");
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                log.error("an attempt to set connection in auto commit mode failed");
+            }
         }
     }
 
     @Override
-    public User findById(Integer id) {
-        return null;
+    public Optional<User> findById(Long id) {
+        return Optional.empty();
     }
 
     @Override
@@ -61,12 +72,10 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
 
     @Override
     public void update(User entity) {
-
     }
 
     @Override
-    public void deleteById(Integer id) {
-
+    public void deleteById(Long id) {
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Optional;
 
 public class JDBCMarkDao extends JDBCDao implements MarkDao {
 
@@ -18,12 +19,11 @@ public class JDBCMarkDao extends JDBCDao implements MarkDao {
 
     @Override
     public void save(Mark entity) {
-
     }
 
     @Override
-    public Mark findById(Integer id) {
-        return null;
+    public Optional<Mark> findById(Long id) {
+        return Optional.empty();
     }
 
     @Override
@@ -33,12 +33,10 @@ public class JDBCMarkDao extends JDBCDao implements MarkDao {
 
     @Override
     public void update(Mark entity) {
-
     }
 
     @Override
-    public void deleteById(Integer id) {
-
+    public void deleteById(Long id) {
     }
 
 }

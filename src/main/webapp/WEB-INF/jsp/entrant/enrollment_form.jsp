@@ -21,35 +21,36 @@
 <div class="container" style="margin-top: 60px">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <h3 class="special-text" style="margin-bottom: 30px;" th:text="${enrollment.faculty.nameEn}"></h3>
+            <c:if test="${sessionScope.lang.equals('en')}">
+                <h3 class="special-text" style="margin-bottom: 30px;">${enrollment.faculty.nameEn}</h3>
+            </c:if>
+            <c:if test="${sessionScope.lang.equals('ua')}">
+                <h3 class="special-text" style="margin-bottom: 30px;">${enrollment.faculty.nameUa}</h3>
+
+            </c:if>
             <p><b><fmt:message key="faculty.enrollment.marks"/></b></p>
             <form style="margin-bottom: 30px" name="form" autocomplete="off"
-                  th:action="@{'/faculty/' + ${enrollment.faculty.id} + '/enroll'}"
-                  th:object="${enrollment}" method="post">
+                  action="${pageContext.request.contextPath}/entrant/enroll"
+                  method="post">
                 <label>
                     <input hidden
-                           name="faculty"
-                           th:value="${enrollment.faculty}"
-                           th:field="*{faculty}"
+                           name="facultyId"
+                           value="${enrollment.faculty.id}"
                     />
                 </label>
-                <div th:each="mark,i : ${enrollment.marks}">
-                    <p th:text="${' ' + mark.subject.nameEn + ' (' + mark.subject.type + ')'}"></p>
+                <c:forEach items="${enrollment.marks}" var="mark">
+                    <c:if test="${sessionScope.lang.equals('en')}">
+                        <p> ${mark.subject.nameEn} (${mark.subject.type})</p>
+                    </c:if>
+                    <c:if test="${sessionScope.lang.equals('ua')}">
+                        <p> ${mark.subject.nameUa} (${mark.subject.type})</p>
+                    </c:if>
                     <label>
-                        <input hidden th:value="${mark.id}" th:field="*{marks[__${i.index}__].id}"/>
+                        <input name="${mark.subject.nameEn} ${mark.subject.type}" type="number" min="0" step="0.01" required/>
                     </label>
-                    <label>
-                        <input hidden th:value="${mark.enrollment.id}"
-                               th:field="*{marks[__${i.index}__].enrollment.id}"/>
-                    </label>
-                    <label>
-                        <input hidden th:value="${mark.subject.id}" th:field="*{marks[__${i.index}__].subject.id}"/>
-                    </label>
-                    <label>
-                        <input type="number" min="0" step="0.01" th:field="*{marks[__${i.index}__].mark}"/>
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-default" style="margin-top:30px">
+                </c:forEach>
+                <br/>
+                <button type="submit" class="btn btn-success" style="margin-top:30px">
                     <fmt:message key="submit"/>
                 </button>
             </form>

@@ -19,47 +19,57 @@
 
 <div style="margin-left: 30px; margin-right: 30px;">
     <div class="card" style="margin-bottom: 10px; margin-top: 10px">
-        <a class="card-header">${user.fullName}</a>
+        <a class="card-header">${sessionScope.user.fullName}</a>
         <div class="card-body">
             <div class="list-view" style="width: 30rem">
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.status} + ${': ' + user.status}"></p>
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.email} + ${': ' + user.email}"></p>
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.city} + ${': ' + user.city}"></p>
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.region} + ${': ' + user.region}"></p>
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.education} + ${': ' + user.education}"></p>
+                <p class="card-text" style="margin-right: 10px"><fmt:message key="user.status"/>: ${sessionScope.user.status}</p>
+                <p class="card-text" style="margin-right: 10px"><fmt:message key="user.email"/>: ${sessionScope.user.email}</p>
+                <p class="card-text" style="margin-right: 10px"><fmt:message key="user.city"/>: ${sessionScope.user.city}</p>
+                <p class="card-text" style="margin-right: 10px"><fmt:message key="user.region"/>: ${sessionScope.user.region}</p>
+                <p class="card-text" style="margin-right: 10px"><fmt:message
+                        key="user.education"/>: ${sessionScope.user.education}</p>
             </div>
         </div>
     </div>
 
-    <h3 th:if="${!user.enrollments.empty}" class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px"><fmt:message key="user.enrollments"/></h3>
+    <c:if test="${empty enrollments}">
+        <h3 class="page-header"
+            style="text-align: center; margin-top: 30px; margin-bottom: 30px"><fmt:message
+                key="enrollments.empty.message"/></h3>
+    </c:if>
 
-    <table class="table" th:if="${!user.enrollments.empty}">
-        <thead>
-        <tr>
-            <th scope="col"><fmt:message key="enrollment.id"/></th>
-            <th scope="col"><fmt:message key="enrollment.faculty"/></th>
-            <th scope="col"><fmt:message key="enrollment.marksSum"/></th>
-            <th scope="col"><fmt:message key="enrollment.status"/></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:class="${enrollment.status == enrollment.status.FINALIZED} ? 'table-success' : ''"
-            th:each="enrollment : ${user.enrollments}">
-            <th scope="row" th:text="${enrollment.id}"></th>
-            <td>
-                <a th:href="@{'/faculty/' + ${enrollment.faculty.id}}" th:text="${enrollment.faculty.nameEn}">
-                </a>
-            </td>
-            <td th:text="${enrollment.marksSum}"></td>
-            <td th:text="${enrollment.status}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <c:if test="${not empty enrollments}">
+        <h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px"><fmt:message key="enrollments.header"/></h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col"><fmt:message key="enrollment.id"/></th>
+                <th scope="col"><fmt:message key="enrollment.faculty"/></th>
+                <th scope="col"><fmt:message key="enrollment.faculty.status"/></th>
+                <th scope="col"><fmt:message key="enrollment.marksSum"/></th>
+                <th scope="col"><fmt:message key="enrollment.status"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${enrollments}" var="enrollment">
+                <tr class="${enrollment.finalized ? 'table-success' : ''}">
+                    <th scope="row">${enrollment.id}</th>
+                    <td>
+                        <c:if test="${sessionScope.lang.equals('en')}">
+                            <a href="/entrant/faculty?facultyId=${faculty.id}">${faculty.nameEn}</a>
+                        </c:if>
+                        <c:if test="${sessionScope.lang.equals('ua')}">
+                            <a href="/entrant/faculty?facultyId=${faculty.id}">${faculty.nameUa}</a>
+                        </c:if>
+                    </td>
+                    <td>${enrollment.faculty.status}</td>
+                    <td>${enrollment.marksSum}</td>
+                    <td>${enrollment.status}</td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </c:if>
 </div>
 </body>
 </html>

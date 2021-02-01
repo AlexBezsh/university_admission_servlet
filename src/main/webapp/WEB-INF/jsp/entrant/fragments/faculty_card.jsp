@@ -8,10 +8,10 @@
 
 <div class="card" style="margin-bottom: 20px; margin-top: 20px">
     <c:if test="${sessionScope.lang.equals('en')}">
-        <a class="card-header" href="/entrant/faculty?facultyId=${faculty.id}">${faculty.nameEn}</a>
+        <a class="card-header" href="${pageContext.request.contextPath}/entrant/faculty?facultyId=${faculty.id}">${faculty.nameEn}</a>
     </c:if>
     <c:if test="${sessionScope.lang.equals('ua')}">
-        <a class="card-header" href="/entrant/faculty?facultyId=${faculty.id}">${faculty.nameUa}</a>
+        <a class="card-header" href="${pageContext.request.contextPath}/entrant/faculty?facultyId=${faculty.id}">${faculty.nameUa}</a>
     </c:if>
     <div class="card-body">
         <div class="row" style="justify-content: space-between">
@@ -31,9 +31,9 @@
                 <p class="card-text" style="margin-right: 10px"><fmt:message
                         key="faculty.totalPlaces"/>: ${faculty.totalPlaces}</p>
 
-                <c:if test="${faculty.active}">
+                <c:if test="${faculty.active && sessionScope.user.active}">
                     <a class="btn btn-success" style="margin-right: 5px; margin-left: 15px; margin-bottom: 5px;"
-                       href="${pageContext.request.contextPath}/entrant/faculty/enroll?facultyId=${faculty.id}">
+                       href="${pageContext.request.contextPath}/entrant/enroll?facultyId=${faculty.id}">
                         <fmt:message key="faculty.enroll"/>
                     </a>
                 </c:if>

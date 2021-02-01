@@ -8,10 +8,11 @@ import com.bezshtanko.university_admission_servlet.controller.command.all.get.*;
 import com.bezshtanko.university_admission_servlet.controller.command.all.post.LoginPost;
 import com.bezshtanko.university_admission_servlet.controller.command.all.post.RegisterPost;
 import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantFacultiesGet;
-import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantFacultyEnrollGet;
+import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantEnrollGet;
 import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantFacultyGet;
 import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantProfileGet;
-import com.bezshtanko.university_admission_servlet.controller.command.entrant.post.EntrantFacultyEnrollPost;
+import com.bezshtanko.university_admission_servlet.controller.command.entrant.post.EntrantEnrollPost;
+import com.bezshtanko.university_admission_servlet.service.EnrollmentService;
 import com.bezshtanko.university_admission_servlet.service.FacultyService;
 import com.bezshtanko.university_admission_servlet.service.Services;
 import com.bezshtanko.university_admission_servlet.service.UserService;
@@ -43,11 +44,12 @@ public class Servlet extends HttpServlet {
         commands.put("/register post", new RegisterPost((UserService) Services.USER_SERVICE.get()));
         commands.put("/error get", new ErrorGet());
 
-        commands.put("/entrant/profile get", new EntrantProfileGet());
+        commands.put("/entrant/profile get", new EntrantProfileGet((EnrollmentService) Services.ENROLLMENT_SERVICE.get()));
         commands.put("/entrant/faculties get", new EntrantFacultiesGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/entrant/faculty get", new EntrantFacultyGet((FacultyService) Services.FACULTY_SERVICE.get()));
-        commands.put("/entrant/faculty/enroll get", new EntrantFacultyEnrollGet());
-        commands.put("/entrant/faculty/enroll post", new EntrantFacultyEnrollPost());
+        commands.put("/entrant/enroll get", new EntrantEnrollGet((FacultyService) Services.FACULTY_SERVICE.get()));
+        commands.put("/entrant/enroll post", new EntrantEnrollPost((FacultyService) Services.FACULTY_SERVICE.get(),
+                (EnrollmentService) Services.ENROLLMENT_SERVICE.get()));
 
         commands.put("/admin/faculties get", new AdminFacultiesGet());
         commands.put("/admin/faculty get", new AdminFacultyGet());
@@ -56,7 +58,7 @@ public class Servlet extends HttpServlet {
         commands.put("/admin/faculty/edit get", new AdminFacultyEditGet());
         commands.put("/admin/faculty/edit post", new AdminFacultyEditPost());
         commands.put("/admin/faculty/delete get", new AdminFacultyDeleteGet());
-        commands.put("/admin/faculty/enrollment/approve get", new AdminFacultyEnrollmentApproveGet());
+        commands.put("/admin/enrollment/approve get", new AdminEnrollmentApproveGet());
         commands.put("/admin/faculty/finalize get", new AdminFacultyFinalizeGet());
         commands.put("/admin/user get", new AdminUserGet());
         commands.put("admin/user/block get", new AdminUserBlockGet());
