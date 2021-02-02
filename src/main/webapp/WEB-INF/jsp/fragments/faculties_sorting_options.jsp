@@ -1,16 +1,27 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: 1
-  Date: 2/1/2021
-  Time: 9:44 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
 
-</body>
-</html>
+<fmt:setLocale value="${sessionScope.lang}"/>
+<fmt:setBundle basename="i18n.messages"/>
+
+<div style="margin-left: 45px;">
+    <b style="font-size: 18px;"><fmt:message key="faculties.sort.label"/></b>
+    <a class="btn btn-default" style="margin-bottom: 5px;"
+       href="?sort=name_${sessionScope.lang}">
+        <fmt:message key="faculties.sort.a-z"/>
+    </a>
+    <a class="btn btn-default" style="margin-bottom: 5px;"
+       href="?sort=name_${sessionScope.lang},desc'}">
+        <fmt:message key="faculties.sort.z-a"/>
+    </a>
+    <a class="btn btn-default" style="margin-bottom: 5px;"
+       href="?sort=stateFundedPlaces,desc">
+        <fmt:message key="faculties.sort.stateFundedPlaces"/>
+    </a>
+    <a class="btn btn-default" style="margin-bottom: 5px;"
+       href="?sort=contractPlaces,desc">
+        <fmt:message key="faculties.sort.contractPlaces"/>
+    </a>
+</div>

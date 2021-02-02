@@ -22,25 +22,7 @@
 </h3>
 
 <div class="row" style="justify-content: space-between">
-    <div style="margin-left: 45px;">
-        <b style="font-size: 18px;"><fmt:message key="faculties.sort.label"/></b>
-        <a class="btn btn-default" style="margin-bottom: 5px;"
-           href="?sort=name_${sessionScope.lang}">
-            <fmt:message key="faculties.sort.a-z"/>
-        </a>
-        <a class="btn btn-default" style="margin-bottom: 5px;"
-           href="?sort=name_${sessionScope.lang},desc'}">
-            <fmt:message key="faculties.sort.z-a"/>
-        </a>
-        <a class="btn btn-default" style="margin-bottom: 5px;"
-           href="?sort=stateFundedPlaces,desc">
-            <fmt:message key="faculties.sort.stateFundedPlaces"/>
-        </a>
-        <a class="btn btn-default" style="margin-bottom: 5px;"
-           href="?sort=contractPlaces,desc">
-            <fmt:message key="faculties.sort.contractPlaces"/>
-        </a>
-    </div>
+    <jsp:include page="../fragments/faculties_sorting_options.jsp"/>
 </div>
 
 <div style="margin-left: 30px; margin-right: 30px;">
@@ -58,32 +40,7 @@
 
 </div>
 
-<%--<div th:if="${faculties.totalElements gt 0}">
-    <nav aria-label="Pagination">
-        <ul class="pagination justify-content-center font-weight-medium">
-
-            <li class="page-item" th:classappend="${faculties.number eq 0} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{'?page=' + ${faculties.number - 1} + '&size=' + ${faculties.size} + '&sort=' + ${faculties.sort.toString().replace(': ', ',')}}">
-                    <fmt:message key="pageable.previous"/>
-                </a>
-            </li>
-
-            <li class="page-item disabled">
-                <a class="page-link"
-                   th:href="@{'?page=' + ${faculties.number} + '&size=' + ${faculties.size} + '&sort=' + ${faculties.sort.toString().replace(': ', ',')}}"
-                   th:text="${faculties.number + 1} + ' / ' + ${faculties.totalPages}"></a>
-            </li>
-
-            <li class="page-item" th:classappend="${(faculties.number + 1) eq faculties.totalPages} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{'?page=' + ${faculties.number + 1} + '&size=' + ${faculties.size} + '&sort=' + ${faculties.sort.toString().replace(': ', ',')}}">
-                    <fmt:message key="pageable.next"/>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>--%>
+<jsp:include page="../fragments/pagination.jsp"/>
 
 </body>
 </html>

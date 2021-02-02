@@ -37,7 +37,7 @@
                         <fmt:message key="faculty.enroll"/>
                     </a>
                 </c:if>
-                <c:if test="${sessionScope.user.isEnrolled(faculty)}">
+                <c:if test="${sessionScope.user.isEnrolled(faculty) && faculty.active}">
                     <div class="alert alert-primary" role="alert">
                         <fmt:message key="faculty.message.alreadyRegistered"/>
                     </div>
