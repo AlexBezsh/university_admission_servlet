@@ -12,7 +12,7 @@ public class AdminEnrollmentApproveGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing admin enrollment approve get command");
+        log.info("Executing admin enrollment approve get command");
         return null;
     }
 }

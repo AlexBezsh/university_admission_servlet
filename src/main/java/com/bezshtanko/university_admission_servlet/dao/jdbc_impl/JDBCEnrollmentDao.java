@@ -58,23 +58,22 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
 
             try (PreparedStatement insertMarksStmt = connection.prepareStatement(insertMarks.toString())) {
                 log.info("Saving enrollment marks");
-                System.out.println(insertMarks.toString());
                 insertMarksStmt.execute();
                 connection.commit();
             }
-            log.info("enrollment {} have been successfully saved", enrollment);
+            log.info("Enrollment {} have been successfully saved", enrollment);
         } catch (SQLException e) {
-            log.error("exception occurred during saving new enrollment");
+            log.error("Exception occurred during saving new enrollment");
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("exception occurred during connection rollback execution");
+                log.error("Exception occurred during connection rollback execution");
             }
         } finally {
             try {
                 connection.setAutoCommit(true);
             } catch (SQLException e) {
-                log.error("an attempt to set connection in auto commit mode failed");
+                log.error("An attempt to set connection in auto commit mode failed");
             }
         }
     }
@@ -109,12 +108,12 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
                 "WHERE enrollment.user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setLong(1, id);
-            log.info("prepared statement for finding all enrollments for user with id '{}' created", id);
+            log.info("Prepared statement for finding all enrollments for user with id '{}' created", id);
 
             ResultSet resultSet = ps.executeQuery();
-            log.info("query successfully executed");
+            log.info("Query successfully executed");
 
-            log.info("enrollments mapping started");
+            log.info("Enrollments mapping started");
             Map<Long, Enrollment> enrollments = new HashMap<>();
             Map<Long, Faculty> faculties = new HashMap<>();
             Map<Long, Mark> marks = new HashMap<>();
@@ -166,12 +165,12 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setLong(1, id);
-            log.info("prepared statement for finding all enrollments for faculty with id '{}' created", id);
+            log.info("Prepared statement for finding all enrollments for faculty with id '{}' created", id);
 
             ResultSet resultSet = ps.executeQuery();
-            log.info("query successfully executed");
+            log.info("Query successfully executed");
 
-            log.info("enrollments mapping started");
+            log.info("Enrollments mapping started");
             Map<Long, Enrollment> enrollments = new HashMap<>();
             Map<Long, User> users = new HashMap<>();
             Map<Long, Mark> marks = new HashMap<>();

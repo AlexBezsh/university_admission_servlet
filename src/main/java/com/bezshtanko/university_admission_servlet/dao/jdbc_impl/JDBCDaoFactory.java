@@ -28,7 +28,7 @@ public final class JDBCDaoFactory extends DaoFactory {
 
         synchronized (JDBCDaoFactory.class) {
             if (instance == null) {
-                log.info("initializing JDBCDaoFactory singleton");
+                log.info("Initializing JDBCDaoFactory");
                 instance = new JDBCDaoFactory();
             }
             return instance;

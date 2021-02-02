@@ -27,7 +27,7 @@ public class FacultyService extends Service {
     }
 
     public Faculty getFacultyWithEnrollments(Long id) {
-        log.info("getting faculty with id: '{}' with enrollments", id);
+        log.info("Getting faculty with id: '{}' with enrollments", id);
         try (FacultyDao facultyDao = daoFactory.createFacultyDao();
              EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
             Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistsException::new);

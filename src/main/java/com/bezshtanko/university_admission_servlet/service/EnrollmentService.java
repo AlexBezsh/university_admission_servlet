@@ -18,14 +18,14 @@ public class EnrollmentService extends Service {
 
     public void save(Enrollment enrollment) {
         try (EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
-            log.info("saving new enrollment with faculty id '{}' and user id '{}'", enrollment.getFaculty().getId(), enrollment.getUser().getId());
+            log.info("Saving new enrollment with faculty id '{}' and user id '{}'", enrollment.getFaculty().getId(), enrollment.getUser().getId());
             enrollmentDao.save(enrollment);
         }
     }
 
     public List<Enrollment> findAllByUserId(Long id) {
         try (EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
-            log.info("getting enrollments for user with id '{}' from database", id);
+            log.info("Getting enrollments for user with id '{}' from database", id);
             return enrollmentDao.findAllByUserId(id);
         }
     }

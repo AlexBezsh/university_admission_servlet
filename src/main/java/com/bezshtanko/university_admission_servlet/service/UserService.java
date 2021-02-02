@@ -15,9 +15,9 @@ public class UserService extends Service {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public User login(String email, String password) {
-        log.info("creating user dao");
+        log.info("Creating user dao");
         try (UserDao userDao = daoFactory.createUserDao()) {
-            log.info("getting user with email {} from database", email);
+            log.info("Getting user with email {} from database", email);
             Optional<User> user = userDao.findByEmail(email);
             if (!user.isPresent() || !encodePassword(password).matches(user.get().getPassword())) {
                 throw new AuthenticationException();
@@ -27,7 +27,7 @@ public class UserService extends Service {
     }
 
     public void saveNewUser(User user) {
-        log.info("saving new user: {}", user);
+        log.info("Saving new user: {}", user);
         user.setPassword(encodePassword(user.getPassword()));
         try (UserDao userDao = daoFactory.createUserDao()) {
            userDao.save(user);

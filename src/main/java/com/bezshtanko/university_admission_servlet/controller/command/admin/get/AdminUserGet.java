@@ -12,7 +12,7 @@ public class AdminUserGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing admin user get command");
+        log.info("Executing admin user get command");
         return "admin/user";
     }
 }

@@ -43,19 +43,19 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
             saveUserStmt.execute();
             saveRolesStmt.execute();
             connection.commit();
-            log.info("queries successfully executed for user: {}", user);
+            log.info("Queries successfully executed for user: {}", user);
         } catch (SQLException e) {
-            log.error("exception occurred during saving new user: {}", user);
+            log.error("Exception occurred during saving new user: {}", user);
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("exception occurred during connection rollback execution");
+                log.error("Exception occurred during connection rollback execution");
             }
         } finally {
             try {
                 connection.setAutoCommit(true);
             } catch (SQLException e) {
-                log.error("an attempt to set connection in auto commit mode failed");
+                log.error("An attempt to set connection in auto commit mode failed");
             }
         }
     }
@@ -86,10 +86,10 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
         Optional<User> result = Optional.empty();
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, email);
-            log.info("prepared statement created for user with email {}", email);
+            log.info("Prepared statement created for user with email {}", email);
 
             ResultSet resultSet = ps.executeQuery();
-            log.info("query executed for user with email {}", email);
+            log.info("Query executed for user with email {}", email);
 
             UserMapper mapper = new UserMapper();
             if (resultSet.next()) {

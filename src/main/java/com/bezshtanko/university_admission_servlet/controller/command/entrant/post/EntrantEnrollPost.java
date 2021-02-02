@@ -31,8 +31,11 @@ public class EntrantEnrollPost implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing entrant enroll post command");
+        log.info("Executing entrant enroll post command");
         Long facultyId = Long.parseLong(request.getParameter("facultyId"));
+
+        System.out.println(request.getParameter("faculty"));
+
         Faculty faculty = facultyService.findById(facultyId);
         Enrollment enrollment = new Enrollment();
         enrollment.setFaculty(faculty);

@@ -12,7 +12,7 @@ public class LoginGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing login get command");
+        log.info("Executing login get command");
         return "login";
     }
 }

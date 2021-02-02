@@ -24,7 +24,7 @@ public class EntrantEnrollGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing entrant enroll get command");
+        log.info("Executing entrant enroll get command");
         Long facultyId = Long.parseLong(request.getParameter("facultyId"));
         Enrollment enrollment = new Enrollment();
         Faculty faculty = facultyService.findById(facultyId);

@@ -26,7 +26,7 @@ public final class DataSourceHolder {
 
         synchronized (DataSourceHolder.class) {
             if (dataSource == null) {
-                log.info("initializing data source");
+                log.info("Initializing data source");
                 Properties properties = getProperties();
                 BasicDataSource ds = new BasicDataSource();
                 ds.setDriverClassName(properties.getProperty("datasource.driverClassName"));
@@ -37,7 +37,7 @@ public final class DataSourceHolder {
                 ds.setMaxIdle(10);
                 ds.setMaxOpenPreparedStatements(100);
                 dataSource = ds;
-                log.info("data source initialized");
+                log.info("Data source initialized");
             }
         }
         return dataSource;
@@ -49,7 +49,7 @@ public final class DataSourceHolder {
         try {
             properties.load(inputStream);
         } catch (IOException e) {
-            log.error("properties initialization error");
+            log.error("Properties initialization error");
             throw new RuntimeException(e);
         }
         return properties;

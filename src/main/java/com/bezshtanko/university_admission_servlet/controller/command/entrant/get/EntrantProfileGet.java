@@ -20,7 +20,7 @@ public class EntrantProfileGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing entrant profile get command");
+        log.info("Executing entrant profile get command");
         UserDTO user = (UserDTO) request.getSession().getAttribute("user");
         request.setAttribute("enrollments", enrollmentService.findAllByUserId(user.getId()));
         return "entrant/profile";

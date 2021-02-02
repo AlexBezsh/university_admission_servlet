@@ -24,7 +24,7 @@ public class RegisterPost implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing register post command");
+        log.info("Executing register post command");
 
         String errors = "?";
 
@@ -60,7 +60,7 @@ public class RegisterPost implements Command {
         }
 
         if (!errors.equals("?")) {
-            log.info("there are errors in received data");
+            log.info("There are errors in received data");
             return "redirect:register" + errors;
         }
 

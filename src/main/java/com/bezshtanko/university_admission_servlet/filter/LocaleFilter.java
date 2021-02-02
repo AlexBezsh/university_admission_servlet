@@ -17,13 +17,13 @@ public class LocaleFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        log.info("request received");
+        log.info("Request received");
         HttpServletRequest req = (HttpServletRequest) request;
 
         String locale = req.getParameter("lang");
         if (locale != null) {
             req.getSession().setAttribute("lang", locale);
-            log.info("locale has been changed to \"{}\"", locale);
+            log.info("Locale has been changed to \"{}\"", locale);
         } else {
             if (req.getSession().getAttribute("lang") == null) {
                 req.getSession().setAttribute("lang", "en");

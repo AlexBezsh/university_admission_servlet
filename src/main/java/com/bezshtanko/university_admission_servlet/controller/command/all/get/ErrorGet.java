@@ -12,7 +12,7 @@ public class ErrorGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing error get command");
+        log.info("Executing error get command");
         return "error";
     }
 }

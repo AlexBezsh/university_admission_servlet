@@ -12,7 +12,7 @@ public class AdminFacultyEditPost implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing admin faculty edit post command");
+        log.info("Executing admin faculty edit post command");
         return null;
     }
 }

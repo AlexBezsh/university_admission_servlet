@@ -47,7 +47,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setLong(1, id);
-            log.info("prepared statement for finding faculty created");
+            log.info("Prepared statement for finding faculty created");
             return Optional.of(findFaculties(ps).get(0));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -73,7 +73,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
                 "JOIN subject ON faculty_subjects.subjects_id = subject.id";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            log.info("prepared statement for finding all faculties created");
+            log.info("Prepared statement for finding all faculties created");
             return findFaculties(ps);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -82,9 +82,9 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
 
     private List<Faculty> findFaculties(PreparedStatement ps) throws SQLException {
         ResultSet resultSet = ps.executeQuery();
-        log.info("query successfully executed");
+        log.info("Query successfully executed");
 
-        log.info("mapping started");
+        log.info("Mapping started");
         Map<Long, Faculty> faculties = new HashMap<>();
         Map<Long, Subject> subjects = new HashMap<>();
 

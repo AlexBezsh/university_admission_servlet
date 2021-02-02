@@ -19,7 +19,7 @@ public class EntrantFacultiesGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("executing entrant faculties get command");
+        log.info("Executing entrant faculties get command");
 
         //TODO if user already enrolled - redirect to congratulation
 

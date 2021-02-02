@@ -67,19 +67,19 @@ public class Servlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.info("get request received");
+        log.info("Get request received");
         processRequest(request, response, " get");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.info("post request received");
+        log.info("Post request received");
         processRequest(request, response, " post");
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response, String requestMethod) throws ServletException, IOException {
         String page = commands.get(request.getRequestURI() + requestMethod).execute(request);
-        log.info("page \"{}\" was created", page);
+        log.info("Page \"{}\" was created", page);
 
         if (page.startsWith("redirect:")) {
             log.info("redirecting");

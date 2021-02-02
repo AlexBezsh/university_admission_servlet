@@ -25,13 +25,13 @@ public class LoginPost implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         try {
-            log.info("executing login post command");
+            log.info("Executing login post command");
 
             String password = request.getParameter("password");
             String email = request.getParameter("email");
 
             User userFromDB = userService.login(email, password);
-            log.info("user {} was found in database", userFromDB);
+            log.info("User {} was found in database", userFromDB);
 
             HttpSession session = request.getSession();
             session.setAttribute("user", new UserDTO(userFromDB));
@@ -41,7 +41,7 @@ public class LoginPost implements Command {
                     ? "redirect:/admin/faculties"
                     : "redirect:/entrant/faculties";
         } catch (AuthenticationException e) {
-            log.info("user with email \"{}\" was not found", request.getParameter("email"));
+            log.info("User with email \"{}\" was not found", request.getParameter("email"));
             return "redirect:/login?error";
         }
     }
