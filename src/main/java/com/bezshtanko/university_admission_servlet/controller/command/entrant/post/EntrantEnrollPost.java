@@ -8,7 +8,6 @@ import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import com.bezshtanko.university_admission_servlet.model.mark.Mark;
 import com.bezshtanko.university_admission_servlet.model.user.User;
 import com.bezshtanko.university_admission_servlet.service.EnrollmentService;
-import com.bezshtanko.university_admission_servlet.service.FacultyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +49,9 @@ public class EntrantEnrollPost implements Command {
                         .build()));
 
         enrollmentService.save(enrollment);
+
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        user.getEnrollments().add(enrollment);
 
         return "redirect:/entrant/faculty?facultyId=" + faculty.getId();
     }

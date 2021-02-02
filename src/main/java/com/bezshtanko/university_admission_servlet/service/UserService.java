@@ -1,5 +1,6 @@
 package com.bezshtanko.university_admission_servlet.service;
 
+import com.bezshtanko.university_admission_servlet.dao.interfaces.EnrollmentDao;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.UserDao;
 import com.bezshtanko.university_admission_servlet.exception.AuthenticationException;
 import com.bezshtanko.university_admission_servlet.model.user.User;
@@ -16,12 +17,15 @@ public class UserService extends Service {
 
     public User login(String email, String password) {
         log.info("Creating user dao");
-        try (UserDao userDao = daoFactory.createUserDao()) {
+        try (UserDao userDao = daoFactory.createUserDao();
+             EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
             log.info("Getting user with email {} from database", email);
             Optional<User> user = userDao.findByEmail(email);
             if (!user.isPresent() || !encodePassword(password).matches(user.get().getPassword())) {
                 throw new AuthenticationException();
             }
+            User userFromDB = user.get();
+            userFromDB.setEnrollments(enrollmentDao.findAllByUserId(userFromDB.getId()));
             return user.get();
         }
     }

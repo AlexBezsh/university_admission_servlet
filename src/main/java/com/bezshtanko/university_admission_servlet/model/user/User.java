@@ -251,6 +251,15 @@ public class User extends AbstractEntity {
         return enrollments;
     }
 
+    public boolean isEnrolled(Faculty faculty) {
+        for (Enrollment enrollment : enrollments) {
+            if (enrollment.getFaculty().getNameEn().equals(faculty.getNameEn())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setEnrollments(List<Enrollment> enrollments) {
         this.enrollments = enrollments;
     }
