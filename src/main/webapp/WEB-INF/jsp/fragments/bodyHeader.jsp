@@ -47,24 +47,24 @@
             </a>
         </c:if>
 
-        <c:if test="${sessionScope.user ne null}">
-            <a class="btn btn-primary" href="${pageContext.request.contextPath}/logout">
-                <fmt:message key="navbar.logout"/>
-            </a>
-        </c:if>
-
-        <c:if test="${sessionScope.user == null}">
-            <div style="margin-left: 20px; margin-right: 3px;">
-                <a class="btn btn-success" href="${pageContext.request.contextPath}/login">
-                    <fmt:message key="login.button"/>
+        <c:choose>
+            <c:when test="${sessionScope.user ne null}">
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/logout">
+                    <fmt:message key="navbar.logout"/>
                 </a>
-            </div>
-            <div style="margin-left: 3px; margin-right: 5px;">
-                <a class="btn btn-primary" href="${pageContext.request.contextPath}/register">
-                    <fmt:message key="registration.button"/>
-                </a>
-            </div>
-        </c:if>
-
+            </c:when>
+            <c:otherwise>
+                <div style="margin-left: 20px; margin-right: 3px;">
+                    <a class="btn btn-success" href="${pageContext.request.contextPath}/login">
+                        <fmt:message key="login.button"/>
+                    </a>
+                </div>
+                <div style="margin-left: 3px; margin-right: 5px;">
+                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/register">
+                        <fmt:message key="registration.button"/>
+                    </a>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </nav>

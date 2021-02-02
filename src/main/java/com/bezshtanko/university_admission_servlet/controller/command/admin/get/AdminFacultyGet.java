@@ -21,7 +21,7 @@ public class AdminFacultyGet implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing admin faculty get command");
         Long facultyId = Long.parseLong(request.getParameter("facultyId"));
-        request.setAttribute("faculty", facultyService.getFacultyWithEnrollments(facultyId));
+        request.setAttribute("faculty", facultyService.getWithEnrollments(facultyId));
         return "admin/faculty";
     }
 }

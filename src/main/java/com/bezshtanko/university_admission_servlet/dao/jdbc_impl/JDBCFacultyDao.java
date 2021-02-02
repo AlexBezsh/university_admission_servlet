@@ -110,6 +110,15 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
 
     @Override
     public void deleteById(Long id) {
+        log.info("Deleting faculty with id '{}'", id);
+        String query = "DELETE FROM faculty WHERE faculty.id = ?";
+        try(PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            log.error("SQLException occurred during deleting faculty with id {}'", id);
+            throw new RuntimeException(e);
+        }
     }
 
 }

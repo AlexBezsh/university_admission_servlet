@@ -15,7 +15,6 @@ public class LogoutGet implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         log.info("Executing logout get command");
-
         HttpSession session = request.getSession();
         log.info("User {} is logging out", session.getAttribute("user"));
         session.removeAttribute("user");

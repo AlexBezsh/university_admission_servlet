@@ -21,7 +21,7 @@ public class EntrantFacultyGet implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing entrant faculty get command");
         Long facultyId = Long.parseLong(request.getParameter("facultyId"));
-        request.setAttribute("faculty", facultyService.getFacultyWithEnrollments(facultyId));
+        request.setAttribute("faculty", facultyService.getWithEnrollments(facultyId));
         return "entrant/faculty";
     }
 

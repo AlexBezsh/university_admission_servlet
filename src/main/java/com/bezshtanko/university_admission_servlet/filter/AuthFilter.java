@@ -24,6 +24,9 @@ public class AuthFilter implements Filter {
         log.info("Request received");
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
+        servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        servletResponse.setHeader("Pragma", "no-cache");
+        servletResponse.setDateHeader("Expires", 0);
 
         String requestURI = servletRequest.getRequestURI();
         HttpSession session = servletRequest.getSession(false);

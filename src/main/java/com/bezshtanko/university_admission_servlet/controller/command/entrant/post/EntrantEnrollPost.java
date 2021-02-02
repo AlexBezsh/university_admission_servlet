@@ -47,6 +47,7 @@ public class EntrantEnrollPost implements Command {
                         .setMark(new BigDecimal(request.getParameter(subject.getNameEn() + " " + subject.getType()))
                                 .setScale(2, RoundingMode.DOWN))
                         .build()));
+        //todo check for positive values in marks
 
         enrollmentService.save(enrollment);
 

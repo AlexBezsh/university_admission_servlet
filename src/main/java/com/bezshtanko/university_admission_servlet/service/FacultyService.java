@@ -26,7 +26,7 @@ public class FacultyService extends Service {
         }
     }
 
-    public Faculty getFacultyWithEnrollments(Long id) {
+    public Faculty getWithEnrollments(Long id) {
         log.info("Getting faculty with id: '{}' with enrollments", id);
         try (FacultyDao facultyDao = daoFactory.createFacultyDao();
              EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
@@ -34,6 +34,14 @@ public class FacultyService extends Service {
             List<Enrollment> enrollments = enrollmentDao.findAllByFacultyId(id);
             faculty.setEnrollments(enrollments);
             return faculty;
+        }
+    }
+
+    public void deleteById(Long id) {
+        log.info("Deleting faculty with id '{}'", id);
+        try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
+            facultyDao.deleteById(id);
+            log.info("Faculty with id '{}' was successfully deleted", id);
         }
     }
 

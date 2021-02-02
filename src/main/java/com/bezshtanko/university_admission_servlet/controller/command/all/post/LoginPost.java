@@ -33,6 +33,8 @@ public class LoginPost implements Command {
             UserDTO user = userService.login(email, password);
             log.info("User {} was found in database", user);
 
+            //todo if user blocked - redirect to login page with error
+
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
 
