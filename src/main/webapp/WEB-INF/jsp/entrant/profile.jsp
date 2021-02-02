@@ -56,10 +56,10 @@
                     <th scope="row">${enrollment.id}</th>
                     <td>
                         <c:if test="${sessionScope.lang.equals('en')}">
-                            <a href="/entrant/faculty?facultyId=${faculty.id}">${faculty.nameEn}</a>
+                            <a href="${pageContext.request.contextPath}/entrant/faculty?facultyId=${enrollment.faculty.id}">${enrollment.faculty.nameEn}</a>
                         </c:if>
                         <c:if test="${sessionScope.lang.equals('ua')}">
-                            <a href="/entrant/faculty?facultyId=${faculty.id}">${faculty.nameUa}</a>
+                            <a href="${pageContext.request.contextPath}/entrant/faculty?facultyId=${enrollment.faculty.id}">${enrollment.faculty.nameUa}</a>
                         </c:if>
                     </td>
                     <td>${enrollment.faculty.status}</td>

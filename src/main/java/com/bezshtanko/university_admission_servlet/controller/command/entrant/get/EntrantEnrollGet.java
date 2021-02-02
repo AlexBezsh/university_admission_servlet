@@ -26,8 +26,10 @@ public class EntrantEnrollGet implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing entrant enroll get command");
         Long facultyId = Long.parseLong(request.getParameter("facultyId"));
-        Enrollment enrollment = new Enrollment();
         Faculty faculty = facultyService.findById(facultyId);
+        request.getSession().setAttribute("faculty", faculty);
+
+        Enrollment enrollment = new Enrollment();
         enrollment.setFaculty(faculty);
         enrollment.setMarks(faculty.getSubjects().stream()
                 .map(s -> new Mark(null, enrollment, s, new BigDecimal("0")))

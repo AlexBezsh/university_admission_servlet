@@ -140,7 +140,8 @@ public class Faculty extends AbstractEntity {
                 ", descriptionUa='" + descriptionUa + '\'' +
                 ", stateFundedPlaces=" + stateFundedPlaces +
                 ", contractPlaces=" + contractPlaces +
-                ", totalPlaces=" + getTotalPlaces() +
+                ", totalPlaces=" + totalPlaces +
+                ", subjects=" + subjects +
                 '}';
     }
 

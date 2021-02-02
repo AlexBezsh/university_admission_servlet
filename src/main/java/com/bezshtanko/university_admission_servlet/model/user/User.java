@@ -2,6 +2,7 @@ package com.bezshtanko.university_admission_servlet.model.user;
 
 import com.bezshtanko.university_admission_servlet.model.AbstractEntity;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
+import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -13,30 +13,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 public class EntrantEnrollPost implements Command {
 
     private static final Logger log = LoggerFactory.getLogger(EntrantEnrollPost.class);
 
-    private final FacultyService facultyService;
     private final EnrollmentService enrollmentService;
 
-    public EntrantEnrollPost(FacultyService facultyService, EnrollmentService enrollmentService) {
-        this.facultyService = facultyService;
+    public EntrantEnrollPost(EnrollmentService enrollmentService) {
         this.enrollmentService = enrollmentService;
     }
 
     @Override
     public String execute(HttpServletRequest request) {
         log.info("Executing entrant enroll post command");
-        Long facultyId = Long.parseLong(request.getParameter("facultyId"));
+        HttpSession session = request.getSession();
+        Faculty faculty = (Faculty) session.getAttribute("faculty");
+        session.removeAttribute("faculty");
 
-        System.out.println(request.getParameter("faculty"));
-
-        Faculty faculty = facultyService.findById(facultyId);
         Enrollment enrollment = new Enrollment();
         enrollment.setFaculty(faculty);
         enrollment.setStatus(EnrollmentStatus.NEW);

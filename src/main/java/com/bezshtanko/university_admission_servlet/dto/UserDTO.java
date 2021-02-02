@@ -1,6 +1,7 @@
 package com.bezshtanko.university_admission_servlet.dto;
 
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
+import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import com.bezshtanko.university_admission_servlet.model.user.User;
 import com.bezshtanko.university_admission_servlet.model.user.UserRole;
 import com.bezshtanko.university_admission_servlet.model.user.UserStatus;
@@ -246,6 +247,15 @@ public class UserDTO {
 
     public List<Enrollment> getEnrollments() {
         return enrollments;
+    }
+
+    public boolean isEnrolled(Faculty faculty) {
+        for (Enrollment enrollment : enrollments) {
+            if (enrollment.getFaculty().getNameEn().equals(faculty.getNameEn())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setEnrollments(List<Enrollment> enrollments) {

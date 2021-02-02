@@ -32,12 +32,6 @@
             <form style="margin-bottom: 30px" name="form" autocomplete="off"
                   action="${pageContext.request.contextPath}/entrant/enroll"
                   method="post">
-                <label>
-                    <input hidden
-                           name="facultyId"
-                           value="${enrollment.faculty.id}"
-                    />
-                </label>
                 <c:forEach items="${enrollment.marks}" var="mark">
                     <c:if test="${sessionScope.lang.equals('en')}">
                         <p> ${mark.subject.nameEn} (${mark.subject.type})</p>
