@@ -30,14 +30,14 @@ public class LoginPost implements Command {
             String password = request.getParameter("password");
             String email = request.getParameter("email");
 
-            User userFromDB = userService.login(email, password);
-            log.info("User {} was found in database", userFromDB);
+            UserDTO user = userService.login(email, password);
+            log.info("User {} was found in database", user);
 
             HttpSession session = request.getSession();
-            session.setAttribute("user", new UserDTO(userFromDB));
+            session.setAttribute("user", user);
 
             log.info("redirecting to faculties");
-            return userFromDB.hasRole(UserRole.ADMIN)
+            return user.hasRole(UserRole.ADMIN)
                     ? "redirect:/admin/faculties"
                     : "redirect:/entrant/faculties";
         } catch (AuthenticationException e) {

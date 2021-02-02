@@ -23,6 +23,13 @@ public class EnrollmentService extends Service {
         }
     }
 
+    public void setApproved(Long id) {
+        try (EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
+            log.info("Setting  status 'APPROVED' in enrollment with id '{}'", id);
+            enrollmentDao.setApproved(id);
+        }
+    }
+
     public List<Enrollment> findAllByUserId(Long id) {
         try (EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
             log.info("Getting enrollments for user with id '{}' from database", id);

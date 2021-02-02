@@ -7,4 +7,8 @@ import java.util.Optional;
 public interface UserDao extends Dao<User> {
 
     Optional<User> findByEmail(String email);
+    boolean blockUser(Long id);
+    boolean unblockUser(Long id);
+    boolean setEnrolledContract(Long id);
+    boolean setEnrolledStateFunded(Long id);
 }

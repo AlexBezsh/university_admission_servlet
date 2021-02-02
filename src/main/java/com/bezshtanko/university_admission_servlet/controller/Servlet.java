@@ -57,11 +57,11 @@ public class Servlet extends HttpServlet {
         commands.put("/admin/faculty/edit get", new AdminFacultyEditGet());
         commands.put("/admin/faculty/edit post", new AdminFacultyEditPost());
         commands.put("/admin/faculty/delete get", new AdminFacultyDeleteGet());
-        commands.put("/admin/enrollment/approve get", new AdminEnrollmentApproveGet());
+        commands.put("/admin/enrollment/approve get", new AdminEnrollmentApproveGet((EnrollmentService) Services.ENROLLMENT_SERVICE.get()));
         commands.put("/admin/faculty/finalize get", new AdminFacultyFinalizeGet());
-        commands.put("/admin/user get", new AdminUserGet());
-        commands.put("admin/user/block get", new AdminUserBlockGet());
-        commands.put("admin/user/unblock get", new AdminUserUnblockGet());
+        commands.put("/admin/user get", new AdminUserGet((UserService) Services.USER_SERVICE.get()));
+        commands.put("/admin/user/block get", new AdminUserBlockGet((UserService) Services.USER_SERVICE.get()));
+        commands.put("/admin/user/unblock get", new AdminUserUnblockGet((UserService) Services.USER_SERVICE.get()));
     }
 
     @Override

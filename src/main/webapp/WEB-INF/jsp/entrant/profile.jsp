@@ -18,7 +18,7 @@
 <jsp:include page="../fragments/bodyHeader.jsp"/>
 
 <div style="margin-left: 30px; margin-right: 30px;">
-    <div class="card" style="margin-bottom: 10px; margin-top: 10px">
+    <div class="card" style="margin-bottom: 20px; margin-top: 20px">
         <a class="card-header">${sessionScope.user.fullName}</a>
         <div class="card-body">
             <div class="list-view" style="width: 30rem">

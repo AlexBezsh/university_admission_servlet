@@ -2,7 +2,9 @@ package com.bezshtanko.university_admission_servlet.service;
 
 import com.bezshtanko.university_admission_servlet.dao.interfaces.EnrollmentDao;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.UserDao;
+import com.bezshtanko.university_admission_servlet.dto.UserDTO;
 import com.bezshtanko.university_admission_servlet.exception.AuthenticationException;
+import com.bezshtanko.university_admission_servlet.exception.UserNotExistException;
 import com.bezshtanko.university_admission_servlet.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,7 @@ public class UserService extends Service {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    public User login(String email, String password) {
+    public UserDTO login(String email, String password) {
         log.info("Creating user dao");
         try (UserDao userDao = daoFactory.createUserDao();
              EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
@@ -26,7 +28,7 @@ public class UserService extends Service {
             }
             User userFromDB = user.get();
             userFromDB.setEnrollments(enrollmentDao.findAllByUserId(userFromDB.getId()));
-            return user.get();
+            return new UserDTO(userFromDB);
         }
     }
 
@@ -34,7 +36,33 @@ public class UserService extends Service {
         log.info("Saving new user: {}", user);
         user.setPassword(encodePassword(user.getPassword()));
         try (UserDao userDao = daoFactory.createUserDao()) {
-           userDao.save(user);
+            userDao.save(user);
+        }
+    }
+
+    public User getUserWithEnrollments(Long userId) {
+        log.info("Getting user with id '{}' with enrollments", userId);
+        try (UserDao userDao = daoFactory.createUserDao();
+             EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
+            User user = userDao.findById(userId).orElseThrow(UserNotExistException::new);
+            user.setPassword(null);
+            user.setEnrollments(enrollmentDao.findAllByUserId(userId));
+            user.getEnrollments().forEach(e -> e.setUser(user));
+            return user;
+        }
+    }
+
+    public void blockUser(Long userId) {
+        log.info("Blocking user with id '{}'", userId);
+        try (UserDao userDao = daoFactory.createUserDao()) {
+            userDao.blockUser(userId);
+        }
+    }
+
+    public void unblockUser(Long userId) {
+        log.info("Unblocking user with id '{}'", userId);
+        try (UserDao userDao = daoFactory.createUserDao()) {
+            userDao.unblockUser(userId);
         }
     }
 

@@ -6,7 +6,6 @@
 <fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="i18n.messages"/>
 
-
 <c:choose>
     <c:when test="${empty enrollments}">
         <p style="text-align: center">
@@ -38,7 +37,7 @@
                         <c:choose>
                             <c:when test="${enrollment.isNew() && enrollment.user.active}">
                                 <a class="btn btn-success"
-                                   href="${pageContext.request.contextPath}/admin/enrollment/approve?enrollmentId=${enrollment.id}">
+                                   href="${pageContext.request.contextPath}/admin/enrollment/approve?enrollmentId=${enrollment.id}&facultyId=${faculty.id}">
                                     <fmt:message key="enrollment.approve"/>
                                 </a>
                             </c:when>

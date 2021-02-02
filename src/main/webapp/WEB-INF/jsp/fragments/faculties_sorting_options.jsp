@@ -13,7 +13,7 @@
         <fmt:message key="faculties.sort.a-z"/>
     </a>
     <a class="btn btn-default" style="margin-bottom: 5px;"
-       href="?sort=name_${sessionScope.lang},desc'}">
+       href="?sort=name_${sessionScope.lang},desc">
         <fmt:message key="faculties.sort.z-a"/>
     </a>
     <a class="btn btn-default" style="margin-bottom: 5px;"

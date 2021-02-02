@@ -18,62 +18,85 @@
 <jsp:include page="../fragments/bodyHeader.jsp"/>
 
 <div style="margin-left: 30px; margin-right: 30px;">
-    <div class="card" style="margin-bottom: 10px; margin-top: 10px">
-        <a class="card-header" th:text="${user.fullName}"></a>
+
+    <div class="card" style="margin-bottom: 20px; margin-top: 20px">
+        <a class="card-header">${user.fullName}</a>
         <div class="card-body">
             <div class="list-view" style="width: 30rem">
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.status} + ${': ' + user.status}"></p>
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.email} + ${': ' + user.email}"></p>
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.city} + ${': ' + user.city}"></p>
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.region} + ${': ' + user.region}"></p>
-                <p class="card-text" style="margin-right: 10px"
-                   th:text="#{user.education} + ${': ' + user.education}"></p>
-                <div>
-                    <div class="row" sec:authorize="hasAuthority('ADMIN')">
-                        <a class="btn btn-danger" style="margin-right: 5px; margin-left: 20px;"
-                           th:if="${user.status == user.status.ACTIVE}"
-                           th:href="@{'/user/' + ${user.id} + '/block'}">
-                            <fmt:message key="user.block"/>
-                        </a>
-                        <a class="btn btn-warning" style="margin-right: 5px; margin-left: 20px;"
-                           th:if="${user.status == user.status.BLOCKED}"
-                           th:href="@{'/user/' + ${user.id} + '/unblock'}">
-                            <fmt:message key="user.unblock"/>
-                        </a>
-                    </div>
-                </div>
+                <p class="card-text" style="margin-right: 10px"><fmt:message key="user.status"/>: ${user.status}</p>
+                <p class="card-text" style="margin-right: 10px"><fmt:message key="user.email"/>: ${user.email}</p>
+                <p class="card-text" style="margin-right: 10px"><fmt:message key="user.city"/>: ${user.city}</p>
+                <p class="card-text" style="margin-right: 10px"><fmt:message key="user.region"/>: ${user.region}</p>
+                <p class="card-text" style="margin-right: 10px"><fmt:message key="user.education"/>: ${user.education}</p>
+                <c:if test="${user.active}">
+                    <a class="btn btn-danger" style="margin-right: 5px; margin-left: 20px;"
+                       href="/admin/user/block?userId=${user.id}">
+                    <fmt:message key="user.block"/>
+                    </a>
+                </c:if>
+                <c:if test="${user.blocked}">
+                    <a class="btn btn-warning" style="margin-right: 5px; margin-left: 20px;"
+                       href="/admin/user/unblock?userId=${user.id}">
+                        <fmt:message key="user.unblock"/>
+                    </a>
+                </c:if>
             </div>
         </div>
     </div>
 
-    <h3 th:if="${!user.enrollments.empty}" class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px"><fmt:message key="user.enrollments"/></h3>
-
-    <table class="table" th:if="${!user.enrollments.empty}">
-        <thead>
-        <tr>
-            <th scope="col"><fmt:message key="enrollment.id"/></th>
-            <th scope="col"><fmt:message key="enrollment.faculty"/></th>
-            <th scope="col"><fmt:message key="enrollment.marksSum"/></th>
-            <th scope="col"><fmt:message key="enrollment.status"/></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:class="${enrollment.status == enrollment.status.FINALIZED} ? 'table-success' : ''"
-            th:each="enrollment : ${user.enrollments}">
-            <th scope="row" th:text="${enrollment.id}"></th>
-            <td>
-                <a th:href="@{'/faculty/' + ${enrollment.faculty.id}}" th:text="${enrollment.faculty.nameEn}">
-                </a>
-            </td>
-            <td th:text="${enrollment.marksSum}"></td>
-            <td th:text="${enrollment.status}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <c:choose>
+        <c:when test="${empty user.enrollments}">
+            <p style="text-align: center">
+                <fmt:message key="enrollments.empty.message"/>
+            </p>
+        </c:when>
+        <c:otherwise>
+            <h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px"><fmt:message key="enrollments.header"/></h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col"><fmt:message key="enrollment.id"/></th>
+                    <th scope="col"><fmt:message key="enrollment.faculty"/></th>
+                    <th scope="col"><fmt:message key="enrollment.faculty.status"/></th>
+                    <th scope="col"><fmt:message key="enrollment.marksSum"/></th>
+                    <th scope="col"><fmt:message key="enrollment.status"/></th>
+                    <th scope="col"><fmt:message key="enrollment.approve"/></th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${user.enrollments}" var="enrollment">
+                    <tr>
+                        <th scope="row">${enrollment.id}</th>
+                        <td>
+                            <c:if test="${sessionScope.lang.equals('en')}">
+                                <a href="${pageContext.request.contextPath}/admin/faculty?facultyId=${enrollment.faculty.id}">${enrollment.faculty.nameEn}</a>
+                            </c:if>
+                            <c:if test="${sessionScope.lang.equals('ua')}">
+                                <a href="${pageContext.request.contextPath}/admin/faculty?facultyId=${enrollment.faculty.id}">${enrollment.faculty.nameUa}</a>
+                            </c:if>
+                        </td>
+                        <td>${enrollment.faculty.status}</td>
+                        <td>${enrollment.marksSum}</td>
+                        <td>${enrollment.status}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${enrollment.isNew() && enrollment.user.active}">
+                                    <a class="btn btn-success"
+                                       href="${pageContext.request.contextPath}/admin/enrollment/approve?enrollmentId=${enrollment.id}&facultyId=${enrollment.faculty.id}">
+                                        <fmt:message key="enrollment.approve"/>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <b>-</b>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </c:otherwise>
+    </c:choose>
 </div>
 </body>
 </html>

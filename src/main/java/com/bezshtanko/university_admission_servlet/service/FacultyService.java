@@ -2,7 +2,7 @@ package com.bezshtanko.university_admission_servlet.service;
 
 import com.bezshtanko.university_admission_servlet.dao.interfaces.EnrollmentDao;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.FacultyDao;
-import com.bezshtanko.university_admission_servlet.exception.FacultyNotExistsException;
+import com.bezshtanko.university_admission_servlet.exception.FacultyNotExistException;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
 import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ public class FacultyService extends Service {
 
     public Faculty findById(Long id) {
         try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
-            return facultyDao.findById(id).orElseThrow(FacultyNotExistsException::new);
+            return facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
         }
     }
 
@@ -30,7 +30,7 @@ public class FacultyService extends Service {
         log.info("Getting faculty with id: '{}' with enrollments", id);
         try (FacultyDao facultyDao = daoFactory.createFacultyDao();
              EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
-            Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistsException::new);
+            Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
             List<Enrollment> enrollments = enrollmentDao.findAllByFacultyId(id);
             faculty.setEnrollments(enrollments);
             return faculty;

@@ -6,6 +6,7 @@ import com.bezshtanko.university_admission_servlet.dao.mapper.FacultyMapper;
 import com.bezshtanko.university_admission_servlet.dao.mapper.MarkMapper;
 import com.bezshtanko.university_admission_servlet.dao.mapper.UserMapper;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
+import com.bezshtanko.university_admission_servlet.model.enrollment.EnrollmentStatus;
 import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import com.bezshtanko.university_admission_servlet.model.mark.Mark;
 import com.bezshtanko.university_admission_servlet.model.user.User;
@@ -79,6 +80,16 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
     }
 
     @Override
+    public boolean setApproved(Long id) {
+        return updateStatus(id, EnrollmentStatus.APPROVED);
+    }
+
+    @Override
+    public boolean setFinalized(Long id) {
+        return updateStatus(id, EnrollmentStatus.FINALIZED);
+    }
+
+    @Override
     public Optional<Enrollment> findById(Long id) {
         return Optional.empty();
     }
@@ -139,6 +150,7 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
             }
             return new ArrayList<>(enrollments.values());
         } catch (SQLException e) {
+            log.error("SQLException occurred during getting all enrollments of user with id '{}'", id);
             throw new RuntimeException(e);
         }
     }
@@ -196,6 +208,7 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
             }
             return new ArrayList<>(enrollments.values());
         } catch (SQLException e) {
+            log.error("SQLException occurred during getting all enrollments of faculty with id '{}'", id);
             throw new RuntimeException(e);
         }
     }
@@ -208,4 +221,16 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
     public void deleteById(Long id) {
     }
 
+    private boolean updateStatus(Long enrollmentId, EnrollmentStatus status) {
+        log.info("Setting status '{}' to enrollment with id '{}'", status, enrollmentId);
+        String query = "UPDATE enrollment SET status = '" + status + "' WHERE id = ?";
+        try(PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setLong(1, enrollmentId);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            log.error("SQLException occurred during setting status " + status + " to enrollment with id '{}'", enrollmentId);
+            throw new RuntimeException(e);
+        }
+    }
 }
