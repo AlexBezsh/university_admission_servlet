@@ -5,6 +5,7 @@ import com.bezshtanko.university_admission_servlet.model.user.User;
 import com.bezshtanko.university_admission_servlet.model.user.UserRole;
 import com.bezshtanko.university_admission_servlet.model.user.UserStatus;
 import com.bezshtanko.university_admission_servlet.service.UserService;
+import com.bezshtanko.university_admission_servlet.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,55 +27,24 @@ public class RegisterPost implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing register post command");
 
-        String errors = "?";
-
-        String fullName = request.getParameter("fullName");
-        if (fullName == null || fullName.length() < 5 || fullName.length() > 120) {
-            errors += "fullNameError&";
-        }
-
-        String email = request.getParameter("email");
-        if (!email.matches(".+@.+")) {
-            errors += "emailError&";
-
-        }
-
-        String password = request.getParameter("password");
-        if (!password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+).{6,}")) {
-            errors += "passwordError&";
-        }
-
-        String city = request.getParameter("city");
-        if (city == null || city.length() < 2 || city.length() > 100) {
-            errors += "cityError&";
-        }
-
-        String region = request.getParameter("region");
-        if (region == null || region.length() < 2 || region.length() > 100) {
-            errors += "regionError&";
-        }
-
-        String education = request.getParameter("education");
-        if (education == null || education.length() < 2 || education.length() > 100) {
-            errors += "educationError&";
-        }
-
-        if (!errors.equals("?")) {
-            log.info("There are errors in received data");
-            return "redirect:register" + errors;
-        }
-
-        userService.saveNewUser(User.builder()
-                .setFullName(fullName)
-                .setEmail(email)
-                .setPassword(password)
+        User user = User.builder()
+                .setFullName(request.getParameter("fullName"))
+                .setEmail(request.getParameter("email"))
+                .setPassword(request.getParameter("password"))
                 .setStatus(UserStatus.ACTIVE)
                 .setRoles(new HashSet<>(Collections.singletonList(UserRole.ENTRANT)))
-                .setCity(city)
-                .setRegion(region)
-                .setEducation(education)
-                .build());
+                .setCity(request.getParameter("city"))
+                .setRegion(request.getParameter("region"))
+                .setEducation(request.getParameter("education"))
+                .build();
 
+        String errors = ValidationUtil.getUserErrors(user);
+        if (!errors.isEmpty()) {
+            log.info("There are errors in received data");
+            return "redirect:register?" + errors;
+        }
+
+        userService.saveNewUser(user);
         return "redirect:/login?registrationSuccess";
     }
 }

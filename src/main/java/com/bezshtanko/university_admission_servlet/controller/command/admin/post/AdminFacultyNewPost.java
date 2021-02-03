@@ -5,6 +5,7 @@ import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import com.bezshtanko.university_admission_servlet.model.faculty.FacultyStatus;
 import com.bezshtanko.university_admission_servlet.model.subject.Subject;
 import com.bezshtanko.university_admission_servlet.service.FacultyService;
+import com.bezshtanko.university_admission_servlet.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,41 +28,20 @@ public class AdminFacultyNewPost implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing admin faculty new post command");
 
-        String errors = "?";
+        Faculty faculty = Faculty.builder()
+                .setNameEn(request.getParameter("nameEn"))
+                .setNameUa(request.getParameter("nameUa"))
+                .setStatus(FacultyStatus.ACTIVE)
+                .setDescriptionEn(request.getParameter("descriptionEn"))
+                .setDescriptionUa(request.getParameter("descriptionUa"))
+                .setStateFundedPlaces(Integer.parseInt(request.getParameter("stateFundedPlaces")))
+                .setContractPlaces(Integer.parseInt(request.getParameter("contractPlaces")))
+                .build();
 
-        String nameEn = request.getParameter("nameEn");
-        if (nameEn == null || nameEn.length() < 2 || nameEn.length() > 250) {
-            errors += "nameEnError&";
-        }
-
-        String nameUa = request.getParameter("nameUa");
-        if (nameUa == null || nameUa.length() < 2 || nameUa.length() > 250) {
-            errors += "nameUaError&";
-        }
-
-        String descriptionEn = request.getParameter("descriptionEn");
-        if (descriptionEn == null || descriptionEn.length() < 10) {
-            errors += "descriptionEnError&";
-        }
-
-        String descriptionUa = request.getParameter("descriptionUa");
-        if (descriptionUa == null || descriptionUa.length() < 10) {
-            errors += "descriptionUaError&";
-        }
-
-        int stateFundedPlaces = Integer.parseInt(request.getParameter("stateFundedPlaces"));
-        if (stateFundedPlaces < 0) {
-            errors += "stateFundedPlacesError&";
-        }
-
-        int contractPlaces = Integer.parseInt(request.getParameter("contractPlaces"));
-        if (contractPlaces < 0) {
-            errors += "contractPlacesError&";
-        }
-
-        if (!errors.equals("?")) {
+        String errors = ValidationUtil.getFacultyErrors(faculty);
+        if (!errors.isEmpty()) {
             log.info("There are errors in received data");
-            return "redirect:/admin/faculty/new" + errors;
+            return "redirect:/admin/faculty/new?" + errors;
         }
 
         HttpSession session = request.getSession();
@@ -70,17 +50,9 @@ public class AdminFacultyNewPost implements Command {
         List<Subject> chosenSubjects = allSubjects.stream()
                 .filter(subject -> request.getParameter((subject.getNameEn() + " " + subject.getType())) != null)
                 .collect(Collectors.toList());
+        faculty.setSubjects(chosenSubjects);
 
-        facultyService.save(Faculty.builder()
-                .setNameEn(nameEn)
-                .setNameUa(nameUa)
-                .setStatus(FacultyStatus.ACTIVE)
-                .setDescriptionEn(descriptionEn)
-                .setDescriptionUa(descriptionUa)
-                .setStateFundedPlaces(stateFundedPlaces)
-                .setContractPlaces(contractPlaces)
-                .setSubjects(chosenSubjects)
-                .build());
+        facultyService.save(faculty);
 
         return "redirect:/admin/faculties";
     }

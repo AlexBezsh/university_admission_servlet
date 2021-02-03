@@ -51,11 +51,11 @@ public class Servlet extends HttpServlet {
         commands.put("/admin/faculty get", new AdminFacultyGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/admin/faculty/new get", new AdminFacultyNewGet((SubjectService) Services.SUBJECT_SERVICE.get()));
         commands.put("/admin/faculty/new post", new AdminFacultyNewPost((FacultyService) Services.FACULTY_SERVICE.get()));
-        commands.put("/admin/faculty/edit get", new AdminFacultyEditGet());
-        commands.put("/admin/faculty/edit post", new AdminFacultyEditPost());
+        commands.put("/admin/faculty/edit get", new AdminFacultyEditGet((FacultyService) Services.FACULTY_SERVICE.get()));
+        commands.put("/admin/faculty/edit post", new AdminFacultyEditPost((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/admin/faculty/delete get", new AdminFacultyDeleteGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/admin/enrollment/approve get", new AdminEnrollmentApproveGet((EnrollmentService) Services.ENROLLMENT_SERVICE.get()));
-        commands.put("/admin/faculty/finalize get", new AdminFacultyFinalizeGet());
+        commands.put("/admin/faculty/finalize get", new AdminFacultyFinalizeGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/admin/user get", new AdminUserGet((UserService) Services.USER_SERVICE.get()));
         commands.put("/admin/user/block get", new AdminUserBlockGet((UserService) Services.USER_SERVICE.get()));
         commands.put("/admin/user/unblock get", new AdminUserUnblockGet((UserService) Services.USER_SERVICE.get()));

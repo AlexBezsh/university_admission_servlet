@@ -106,32 +106,24 @@
                 </div>
                 <div>
                     <p><b><fmt:message key="faculty.subjects"/> </b></p>
-                    <c:choose>
-                        <c:when test="${sessionScope.lang.equals('ua')}">
-                            <c:forEach items="${subjects}" var="subject">
-                                <input id="${subject.nameEn} ${subject.type}"
-                                       type="checkbox"
-                                       name="${subject.nameEn} ${subject.type}"
-                                       class="check-box"
-                                />
+                    <c:forEach items="${subjects}" var="subject">
+                        <input id="${subject.nameEn} ${subject.type}"
+                               type="checkbox"
+                               name="${subject.nameEn} ${subject.type}"
+                               class="check-box"
+                        />
+                        <c:choose>
+                            <c:when test="${sessionScope.lang.equals('ua')}">
                                 <label for="${subject.nameEn} ${subject.type}">${subject.nameUa}
                                     (${subject.type})</label>
-                                <br/>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <c:forEach items="${subjects}" var="subject">
-                                <input id="${subject.nameEn} ${subject.type}"
-                                       type="checkbox"
-                                       name="${subject.nameEn} ${subject.type}"
-                                       class="check-box"
-                                />
+                            </c:when>
+                            <c:otherwise>
                                 <label for="${subject.nameEn} ${subject.type}">${subject.nameEn}
                                     (${subject.type})</label>
-                                <br/>
-                            </c:forEach>
-                        </c:otherwise>
-                    </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                        <br/>
+                    </c:forEach>
                 </div>
                 <button type="submit" class="btn btn-default" style="margin-top:30px">
                     <fmt:message key="submit"/>

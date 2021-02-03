@@ -32,6 +32,11 @@
                     <span><fmt:message key="registration.success"/></span>
                 </div>
             </c:if>
+            <c:if test="${param.userBlocked ne null}">
+                <div class="alert alert-danger">
+                    <span><fmt:message key="login.userBlocked.message"/></span>
+                </div>
+            </c:if>
             <form style="margin-bottom: 30px" autocomplete="off" action="${pageContext.request.contextPath}/login"
                   method="post">
                 <div class="form-group">

@@ -159,7 +159,24 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
 
 
     @Override
-    public void update(Faculty entity) {
+    public void update(Faculty faculty) {
+        log.info("Updating faculty with id '{}'", faculty.getId());
+        String query = "UPDATE faculty " +
+                "SET name_en = ?, name_ua = ?, description_en = ?, description_ua = ?, state_funded_places = ?, contract_places = ? " +
+                "WHERE id = ?";
+        try(PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, faculty.getNameEn());
+            ps.setString(2, faculty.getNameUa());
+            ps.setString(3, faculty.getDescriptionEn());
+            ps.setString(4, faculty.getDescriptionUa());
+            ps.setInt(5, faculty.getStateFundedPlaces());
+            ps.setInt(6, faculty.getContractPlaces());
+            ps.setLong(7, faculty.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            log.error("SQLException occurred during updating faculty with id {}'", faculty.getId());
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

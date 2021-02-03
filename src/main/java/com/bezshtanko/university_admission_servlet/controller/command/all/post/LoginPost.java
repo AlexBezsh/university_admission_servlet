@@ -24,27 +24,35 @@ public class LoginPost implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        log.info("Executing login post command");
+
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+
+        UserDTO user;
         try {
-            log.info("Executing login post command");
-
-            String password = request.getParameter("password");
-            String email = request.getParameter("email");
-
-            UserDTO user = userService.login(email, password);
+            user = userService.login(email, password);
             log.info("User {} was found in database", user);
-
-            //todo if user blocked - redirect to login page with error
-
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-
-            log.info("redirecting to faculties");
-            return user.hasRole(UserRole.ADMIN)
-                    ? "redirect:/admin/faculties"
-                    : "redirect:/entrant/faculties";
         } catch (AuthenticationException e) {
-            log.info("User with email \"{}\" was not found", request.getParameter("email"));
+            log.info("User with email \"{}\" was not found", email);
             return "redirect:/login?error";
         }
+
+        if (user.isBlocked()) {
+            log.info("User {} is blocked", user);
+            return "redirect:/login?userBlocked";
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+        if (user.hasRole(UserRole.ENTRANT) && (user.isEnrolledContract() || user.isEnrolledStateFunded())) {
+            return "entrant/congratulation";
+        }
+
+        log.info("redirecting to faculties");
+        return user.hasRole(UserRole.ADMIN)
+                ? "redirect:/admin/faculties"
+                : "redirect:/entrant/faculties";
+
     }
 }

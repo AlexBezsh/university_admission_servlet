@@ -45,6 +45,13 @@ public class FacultyService extends Service {
         }
     }
 
+    public void update(Faculty faculty) {
+        log.info("Updating faculty with id '{}'", faculty.getId());
+        try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
+            facultyDao.update(faculty);
+        }
+    }
+
     public void deleteById(Long id) {
         log.info("Deleting faculty with id '{}'", id);
         try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
