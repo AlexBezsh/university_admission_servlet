@@ -24,7 +24,7 @@
 
   <servlet-mapping>
     <servlet-name>MainServlet</servlet-name>
-    <url-pattern>/user/*</url-pattern>
+    <url-pattern>/entrant/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

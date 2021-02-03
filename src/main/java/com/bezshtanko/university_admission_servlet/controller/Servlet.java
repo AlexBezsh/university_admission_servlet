@@ -12,10 +12,7 @@ import com.bezshtanko.university_admission_servlet.controller.command.entrant.ge
 import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantFacultyGet;
 import com.bezshtanko.university_admission_servlet.controller.command.entrant.get.EntrantProfileGet;
 import com.bezshtanko.university_admission_servlet.controller.command.entrant.post.EntrantEnrollPost;
-import com.bezshtanko.university_admission_servlet.service.EnrollmentService;
-import com.bezshtanko.university_admission_servlet.service.FacultyService;
-import com.bezshtanko.university_admission_servlet.service.Services;
-import com.bezshtanko.university_admission_servlet.service.UserService;
+import com.bezshtanko.university_admission_servlet.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +49,8 @@ public class Servlet extends HttpServlet {
 
         commands.put("/admin/faculties get", new AdminFacultiesGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/admin/faculty get", new AdminFacultyGet((FacultyService) Services.FACULTY_SERVICE.get()));
-        commands.put("/admin/faculty/new get", new AdminFacultyNewGet());
-        commands.put("/admin/faculty/new post", new AdminFacultyNewPost());
+        commands.put("/admin/faculty/new get", new AdminFacultyNewGet((SubjectService) Services.SUBJECT_SERVICE.get()));
+        commands.put("/admin/faculty/new post", new AdminFacultyNewPost((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/admin/faculty/edit get", new AdminFacultyEditGet());
         commands.put("/admin/faculty/edit post", new AdminFacultyEditPost());
         commands.put("/admin/faculty/delete get", new AdminFacultyDeleteGet((FacultyService) Services.FACULTY_SERVICE.get()));

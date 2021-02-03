@@ -6,7 +6,7 @@
 <fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="i18n.messages"/>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title><fmt:message key="faculty.create.title"/></title>
@@ -22,80 +22,116 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <h2 class="page-header"><fmt:message key="faculty.create.header"/></h2>
-            <form style="margin-bottom: 30px" name="form" autocomplete="off" th:action="@{/faculty/new}"
-                  th:object="${faculty}" method="post">
+            <form style="margin-bottom: 30px" name="form" autocomplete="off"
+                  action="${pageContext.request.contextPath}/admin/faculty/new" method="post">
                 <div class="form-group">
                     <label for="nameUa"><fmt:message key="faculty.nameUa"/></label>
-                    <br/><span class="error" style="color:red" th:if="${#fields.hasErrors('nameUa')}"
-                               th:errors="*{nameUa}"></span>
+                    <c:if test="${param.nameUaError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Size.faculty.nameUa"/></span>
+                        </div>
+                    </c:if>
                     <input id="nameUa"
+                           name="nameUa"
                            type="text"
                            class="form-control"
-                           th:field="*{nameUa}"
                            required>
                 </div>
                 <div class="form-group">
                     <label for="nameEn"><fmt:message key="faculty.nameEn"/></label>
-                    <br/><span class="error" style="color:red" th:if="${#fields.hasErrors('nameEn')}"
-                               th:errors="*{nameEn}"></span>
+                    <c:if test="${param.nameEnError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Size.faculty.nameEn"/></span>
+                        </div>
+                    </c:if>
                     <input id="nameEn"
+                           name="nameEn"
                            type="text"
                            class="form-control"
-                           th:field="*{nameEn}"
                            required>
                 </div>
                 <div class="form-group">
                     <label for="descriptionUa"><fmt:message key="faculty.descriptionUa"/></label>
-                    <br/><span class="error" style="color:red" th:if="${#fields.hasErrors('descriptionUa')}"
-                               th:errors="*{descriptionUa}"></span>
+                    <c:if test="${param.descriptionUaError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Size.faculty.descriptionUa"/></span>
+                        </div>
+                    </c:if>
                     <input id="descriptionUa"
+                           name="descriptionUa"
                            type="text"
                            class="form-control"
-                           th:field="*{descriptionUa}"
                            required>
                 </div>
                 <div class="form-group">
                     <label for="descriptionEn"><fmt:message key="faculty.descriptionEn"/></label>
-                    <br/><span class="error" style="color:red" th:if="${#fields.hasErrors('descriptionEn')}"
-                               th:errors="*{descriptionEn}"></span>
+                    <c:if test="${param.descriptionEnError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Size.faculty.descriptionEn"/></span>
+                        </div>
+                    </c:if>
                     <input id="descriptionEn"
+                           name="descriptionEn"
                            type="text"
                            class="form-control"
-                           th:field="*{descriptionEn}"
                            required>
                 </div>
                 <div class="form-group">
                     <label for="stateFundedPlaces"><fmt:message key="faculty.stateFundedPlaces"/></label>
-                    <br/><span class="error" style="color:red" th:if="${#fields.hasErrors('stateFundedPlaces')}"
-                               th:errors="*{stateFundedPlaces}"></span>
+                    <c:if test="${param.stateFundedPlacesError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Min.faculty.stateFundedPlaces"/></span>
+                        </div>
+                    </c:if>
                     <input id="stateFundedPlaces"
+                           name="stateFundedPlaces"
                            type="number"
+                           min="0"
                            class="form-control"
-                           th:field="*{stateFundedPlaces}"
                            required>
                 </div>
                 <div class="form-group">
                     <label for="contractPlaces"><fmt:message key="faculty.contractPlaces"/></label>
-                    <br/><span class="error" style="color:red" th:if="${#fields.hasErrors('contractPlaces')}"
-                               th:errors="*{contractPlaces}"></span>
+                    <c:if test="${param.contractPlacesError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="Min.faculty.contractPlaces"/></span>
+                        </div>
+                    </c:if>
                     <input id="contractPlaces"
+                           name="contractPlaces"
                            type="number"
+                           min="0"
                            class="form-control"
-                           th:field="*{contractPlaces}"
                            required>
                 </div>
                 <div>
                     <p><b><fmt:message key="faculty.subjects"/> </b></p>
-                    <label>
-                        <input type="checkbox"
-                               name="subjects"
-                               class="check-box"
-                               th:each="subject : ${faculty.subjects}"
-                               th:utext="${' ' + subject.nameEn + ' (' + subject.type + ')'} + '<br />'"
-                               th:value="${subject.id}"
-                               th:field="*{subjects}"
-                        />
-                    </label>
+                    <c:choose>
+                        <c:when test="${sessionScope.lang.equals('ua')}">
+                            <c:forEach items="${subjects}" var="subject">
+                                <input id="${subject.nameEn} ${subject.type}"
+                                       type="checkbox"
+                                       name="${subject.nameEn} ${subject.type}"
+                                       class="check-box"
+                                />
+                                <label for="${subject.nameEn} ${subject.type}">${subject.nameUa}
+                                    (${subject.type})</label>
+                                <br/>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach items="${subjects}" var="subject">
+                                <input id="${subject.nameEn} ${subject.type}"
+                                       type="checkbox"
+                                       name="${subject.nameEn} ${subject.type}"
+                                       class="check-box"
+                                />
+                                <label for="${subject.nameEn} ${subject.type}">${subject.nameEn}
+                                    (${subject.type})</label>
+                                <br/>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
                 <button type="submit" class="btn btn-default" style="margin-top:30px">
                     <fmt:message key="submit"/>

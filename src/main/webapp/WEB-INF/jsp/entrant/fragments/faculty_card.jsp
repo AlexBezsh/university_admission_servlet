@@ -31,13 +31,13 @@
                 <p class="card-text" style="margin-right: 10px"><fmt:message
                         key="faculty.totalPlaces"/>: ${faculty.totalPlaces}</p>
 
-                <c:if test="${faculty.active && sessionScope.user.active && !sessionScope.user.isEnrolled(faculty)}">
+                <c:if test="${faculty.active && sessionScope.user.active && !sessionScope.user.hasEnrolled(faculty)}">
                     <a class="btn btn-success" style="margin-right: 5px; margin-left: 15px; margin-bottom: 5px;"
                        href="${pageContext.request.contextPath}/entrant/enroll?facultyId=${faculty.id}">
                         <fmt:message key="faculty.enroll"/>
                     </a>
                 </c:if>
-                <c:if test="${sessionScope.user.isEnrolled(faculty) && faculty.active}">
+                <c:if test="${sessionScope.user.hasEnrolled(faculty) && faculty.active}">
                     <div class="alert alert-primary" role="alert">
                         <fmt:message key="faculty.message.alreadyRegistered"/>
                     </div>

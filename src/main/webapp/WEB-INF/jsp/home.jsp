@@ -6,7 +6,7 @@
 <fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="i18n.messages"/>
 
-<html >
+<html>
 <head>
     <meta charset="UTF-8">
     <title><fmt:message key="home.header"/></title>

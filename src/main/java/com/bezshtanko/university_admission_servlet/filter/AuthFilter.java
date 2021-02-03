@@ -24,6 +24,7 @@ public class AuthFilter implements Filter {
         log.info("Request received");
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
+
         servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         servletResponse.setHeader("Pragma", "no-cache");
         servletResponse.setDateHeader("Expires", 0);
@@ -42,6 +43,11 @@ public class AuthFilter implements Filter {
                 if (user.hasRole(UserRole.ENTRANT) && !requestURI.startsWith("/entrant")) {
                     log.error("User {} has no access to page \"{}\"", user, requestURI);
                     servletResponse.sendRedirect("/entrant/faculties");
+                    return;
+                }
+                if (user.getRoles().isEmpty()) {
+                    log.error("User {} has no roles. Access denied", user);
+                    servletResponse.sendRedirect("/logout");
                     return;
                 }
             }

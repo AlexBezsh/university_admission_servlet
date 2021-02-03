@@ -8,10 +8,7 @@ import com.bezshtanko.university_admission_servlet.model.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
@@ -23,7 +20,64 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
     }
 
     @Override
-    public void save(Faculty entity) {
+    public void save(Faculty faculty) {
+        String saveFacultyQuery =
+                "INSERT INTO faculty(name_en, name_ua, status, description_en, description_ua, state_funded_places, contract_places) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement saveFacultyStmt = connection.prepareStatement(saveFacultyQuery, Statement.RETURN_GENERATED_KEYS)) {
+            saveFacultyStmt.setString(1, faculty.getNameEn());
+            saveFacultyStmt.setString(2, faculty.getNameUa());
+            saveFacultyStmt.setString(3, faculty.getStatus().toString());
+            saveFacultyStmt.setString(4, faculty.getDescriptionEn());
+            saveFacultyStmt.setString(5, faculty.getDescriptionUa());
+            saveFacultyStmt.setInt(6, faculty.getStateFundedPlaces());
+            saveFacultyStmt.setInt(7, faculty.getContractPlaces());
+            log.info("Prepared statement created for new faculty: {}", faculty);
+
+            connection.setAutoCommit(false);
+            log.info("Transaction has been opened");
+            int affectedRows = saveFacultyStmt.executeUpdate();
+            log.info("Insert new faculty query successfully executed.");
+            if (affectedRows == 0) {
+                log.error("Saving faculty failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = saveFacultyStmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    faculty.setId(generatedKeys.getLong(1));
+                }
+                else {
+                    log.error("Saving faculty failed, no ID obtained.");
+                }
+            }
+
+            StringBuilder insertFacultySubjectsRelation = new StringBuilder("INSERT INTO faculty_subjects(faculty_id, subjects_id) VALUES");
+            faculty.getSubjects().forEach(s ->
+                    insertFacultySubjectsRelation
+                            .append('(').append(faculty.getId()).append(',').append(' ')
+                            .append(s.getId()).append("), "));
+            insertFacultySubjectsRelation.setLength(insertFacultySubjectsRelation.length() - 2);
+
+            try (PreparedStatement saveFacultySubjectsRelationStmt = connection.prepareStatement(insertFacultySubjectsRelation.toString())) {
+                log.info("Saving faculty-subjects relation");
+                saveFacultySubjectsRelationStmt.execute();
+                connection.commit();
+            }
+            log.info("Faculty {} have been successfully saved", faculty);
+        } catch (SQLException e) {
+            log.error("Exception occurred during saving new faculty");
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                log.error("Exception occurred during connection rollback execution");
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                log.error("An attempt to set connection in auto commit mode failed");
+            }
+        }
     }
 
     @Override

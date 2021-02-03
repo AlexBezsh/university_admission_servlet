@@ -14,13 +14,21 @@ public class FacultyService extends Service {
 
     private static final Logger log = LoggerFactory.getLogger(FacultyService.class);
 
+    public void save(Faculty faculty) {
+        try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
+            facultyDao.save(faculty);
+        }
+    }
+
     public Faculty findById(Long id) {
+        log.info("Getting faculty with id '{}'", id);
         try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
             return facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
         }
     }
 
     public List<Faculty> findAll() {
+        log.info("Getting all faculties");
         try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
             return facultyDao.findAll();
         }
