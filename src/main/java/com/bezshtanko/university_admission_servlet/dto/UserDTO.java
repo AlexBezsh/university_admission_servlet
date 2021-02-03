@@ -6,6 +6,8 @@ import com.bezshtanko.university_admission_servlet.model.user.User;
 import com.bezshtanko.university_admission_servlet.model.user.UserRole;
 import com.bezshtanko.university_admission_servlet.model.user.UserStatus;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -197,6 +199,9 @@ public class UserDTO {
     }
 
     public Set<UserRole> getRoles() {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
         return roles;
     }
 
@@ -246,6 +251,9 @@ public class UserDTO {
     }
 
     public List<Enrollment> getEnrollments() {
+        if (enrollments == null) {
+            enrollments = new ArrayList<>();
+        }
         return enrollments;
     }
 

@@ -60,6 +60,12 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <listener>
+    <listener-class>
+      com.bezshtanko.university_admission_servlet.listener.SessionListener
+    </listener-class>
+  </listener>
+
   <welcome-file-list>
     <welcome-file>/WEB-INF/jsp/home.jsp</welcome-file>
   </welcome-file-list>

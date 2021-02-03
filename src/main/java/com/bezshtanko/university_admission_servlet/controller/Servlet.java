@@ -16,13 +16,16 @@ import com.bezshtanko.university_admission_servlet.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Servlet extends HttpServlet {
 
@@ -32,7 +35,9 @@ public class Servlet extends HttpServlet {
     private static final String TEMPLATES_PATH = "/WEB-INF/jsp/";
 
     @Override
-    public void init() {
+    public void init(ServletConfig servletConfig) {
+        servletConfig.getServletContext().setAttribute("loggedUsers", ConcurrentHashMap.newKeySet());
+
         commands.put("/ get", new HomeGet());
         commands.put("/login get", new LoginGet());
         commands.put("/login post", new LoginPost((UserService) Services.USER_SERVICE.get()));

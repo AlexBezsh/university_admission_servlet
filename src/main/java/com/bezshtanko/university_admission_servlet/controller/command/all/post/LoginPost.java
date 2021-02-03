@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Set;
 
 public class LoginPost implements Command {
 
@@ -44,6 +45,10 @@ public class LoginPost implements Command {
         }
 
         HttpSession session = request.getSession();
+        if (checkUserIsLogged(session, user)) {
+            return "redirect:/login?userIsLogged";
+        }
+
         session.setAttribute("user", user);
         if (user.hasRole(UserRole.ENTRANT) && (user.isEnrolledContract() || user.isEnrolledStateFunded())) {
             return "entrant/congratulation";
@@ -55,4 +60,15 @@ public class LoginPost implements Command {
                 : "redirect:/entrant/faculties";
 
     }
+
+    private boolean checkUserIsLogged(HttpSession session, UserDTO user) {
+        Set<String> loggedUsers = (Set<String>) session.getServletContext().getAttribute("loggedUsers");
+        if (loggedUsers.contains(user.getEmail())) {
+            log.info("User {} is already logged in", user);
+            return true;
+        }
+        loggedUsers.add(user.getEmail());
+        return false;
+    }
+
 }
