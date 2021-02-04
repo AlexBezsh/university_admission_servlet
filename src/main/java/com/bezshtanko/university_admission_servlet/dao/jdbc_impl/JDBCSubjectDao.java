@@ -50,6 +50,7 @@ public class JDBCSubjectDao extends JDBCDao implements SubjectDao {
             }
             return subjects;
         } catch (SQLException e) {
+            log.error("Exception occurred during find all subjects query execution");
             throw new RuntimeException(e);
         }
     }

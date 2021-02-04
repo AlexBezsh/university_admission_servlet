@@ -61,21 +61,13 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
                 log.info("Saving enrollment marks");
                 insertMarksStmt.execute();
                 connection.commit();
+                connection.setAutoCommit(true);
             }
             log.info("Enrollment {} have been successfully saved", enrollment);
         } catch (SQLException e) {
             log.error("Exception occurred during saving new enrollment");
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                log.error("Exception occurred during connection rollback execution");
-            }
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                log.error("An attempt to set connection in auto commit mode failed");
-            }
+            handleConnectionAfterException(connection);
+            throw new RuntimeException(e);
         }
     }
 
@@ -224,13 +216,6 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
     private boolean updateStatus(Long enrollmentId, EnrollmentStatus status) {
         log.info("Setting status '{}' to enrollment with id '{}'", status, enrollmentId);
         String query = "UPDATE enrollment SET status = '" + status + "' WHERE id = ?";
-        try(PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setLong(1, enrollmentId);
-            int affectedRows = ps.executeUpdate();
-            return affectedRows == 1;
-        } catch (SQLException e) {
-            log.error("SQLException occurred during setting status " + status + " to enrollment with id '{}'", enrollmentId);
-            throw new RuntimeException(e);
-        }
+        return updateEntityStatus(enrollmentId, query);
     }
 }

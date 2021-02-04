@@ -44,20 +44,12 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
             saveUserStmt.execute();
             saveRolesStmt.execute();
             connection.commit();
+            connection.setAutoCommit(true);
             log.info("Queries successfully executed for user: {}", user);
         } catch (SQLException e) {
             log.error("Exception occurred during saving new user: {}", user);
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                log.error("Exception occurred during connection rollback execution");
-            }
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                log.error("An attempt to set connection in auto commit mode failed");
-            }
+            handleConnectionAfterException(connection);
+            throw new RuntimeException(e);
         }
     }
 
@@ -129,14 +121,7 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
     private boolean updateStatus(Long userId, UserStatus status) {
         log.info("Setting status '{}' to user with id '{}'", status, userId);
         String query = "UPDATE user SET status = '" + status + "' WHERE id = ?";
-        try(PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setLong(1, userId);
-            int affectedRows = ps.executeUpdate();
-            return affectedRows == 1;
-        } catch (SQLException e) {
-            log.error("SQLException occurred during setting status " + status + " to enrollment with id '{}'", userId);
-            throw new RuntimeException(e);
-        }
+        return updateEntityStatus(userId, query);
     }
 
     private List<User> executeFindUsersQuery(PreparedStatement ps) throws SQLException {

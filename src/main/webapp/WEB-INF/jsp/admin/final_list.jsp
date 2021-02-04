@@ -17,37 +17,41 @@
 
 <jsp:include page="../fragments/bodyHeader.jsp"/>
 
-<h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px">
-    <fmt:message key="faculty.finalList"/>
-</h3>
+<h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px">${faculty.nameEn} (<fmt:message key="faculty.finalList"/>)</h3>
 
 <div style="margin-left: 30px; margin-right: 30px;">
-
-    <div th:if="${enrollments.empty}">
-        <p style="text-align: center">
-            <fmt:message key="faculties.empty.message"/>
-        </p>
-    </div>
-
-    <table class="table" th:if="${!enrollments.empty}">
-        <thead>
-        <tr>
-            <th scope="col"><fmt:message key="enrollment.id"/></th>
-            <th scope="col"><fmt:message key="enrollment.user"/></th>
-            <th scope="col"><fmt:message key="enrollment.marksSum"/></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="enrollment : ${enrollments}">
-            <th scope="row" th:text="${enrollment.id}"></th>
-            <td>
-                <a th:href="@{'/user/' + ${enrollment.user.id}}" th:text="${enrollment.user.fullName}">
-                </a>
-            </td>
-            <td th:text="${enrollment.marksSum}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <c:set value="${faculty.enrollments}" var="enrollments"/>
+    <c:choose>
+        <c:when test="${empty enrollments}">
+            <p style="text-align: center"><fmt:message key="enrollments.empty.message"/></p>
+        </c:when>
+        <c:otherwise>
+            <h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px"><fmt:message
+                    key="enrollments.header"/></h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col"><fmt:message key="enrollment.id"/></th>
+                    <th scope="col"><fmt:message key="enrollment.user"/></th>
+                    <th scope="col"><fmt:message key="enrollment.user.status"/></th>
+                    <th scope="col"><fmt:message key="enrollment.marksSum"/></th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${enrollments}" var="enrollment">
+                    <tr>
+                        <th scope="row">${enrollment.id}</th>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/admin/user?userId=${enrollment.user.id}">${enrollment.user.fullName}</a>
+                        </td>
+                        <td>${enrollment.user.status}</td>
+                        <td>${enrollment.marksSum}</td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </c:otherwise>
+    </c:choose>
 </div>
 </body>
 </html>

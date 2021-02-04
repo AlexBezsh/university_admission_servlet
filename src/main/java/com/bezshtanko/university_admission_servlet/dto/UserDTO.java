@@ -257,7 +257,7 @@ public class UserDTO {
         return enrollments;
     }
 
-    public boolean hasEnrolled(Faculty faculty) {
+    public boolean hasAppliedFor(Faculty faculty) {
         for (Enrollment enrollment : enrollments) {
             if (enrollment.getFaculty().getNameEn().equals(faculty.getNameEn())) {
                 return true;

@@ -21,26 +21,30 @@
 <div class="container" style="margin-top: 60px">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <c:if test="${sessionScope.lang.equals('en')}">
-                <h3 class="special-text" style="margin-bottom: 30px;">${enrollment.faculty.nameEn}</h3>
-            </c:if>
-            <c:if test="${sessionScope.lang.equals('ua')}">
-                <h3 class="special-text" style="margin-bottom: 30px;">${enrollment.faculty.nameUa}</h3>
-
-            </c:if>
+            <c:choose>
+                <c:when test="${sessionScope.lang.equals('ua')}">
+                    <h3 class="special-text" style="margin-bottom: 30px;">${enrollment.faculty.nameUa}</h3>
+                </c:when>
+                <c:otherwise>
+                    <h3 class="special-text" style="margin-bottom: 30px;">${enrollment.faculty.nameEn}</h3>
+                </c:otherwise>
+            </c:choose>
             <p><b><fmt:message key="faculty.enrollment.marks"/></b></p>
             <form style="margin-bottom: 30px" name="form" autocomplete="off"
                   action="${pageContext.request.contextPath}/entrant/enroll"
                   method="post">
                 <c:forEach items="${enrollment.marks}" var="mark">
-                    <c:if test="${sessionScope.lang.equals('en')}">
-                        <p> ${mark.subject.nameEn} (${mark.subject.type})</p>
-                    </c:if>
-                    <c:if test="${sessionScope.lang.equals('ua')}">
-                        <p> ${mark.subject.nameUa} (${mark.subject.type})</p>
-                    </c:if>
+                    <c:choose>
+                        <c:when test="${sessionScope.lang.equals('ua')}">
+                            <p> ${mark.subject.nameUa} (${mark.subject.type})</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p> ${mark.subject.nameEn} (${mark.subject.type})</p>
+                        </c:otherwise>
+                    </c:choose>
                     <label>
-                        <input name="${mark.subject.nameEn} ${mark.subject.type}" type="number" min="0" step="0.01" required/>
+                        <input name="${mark.subject.nameEn} ${mark.subject.type}" type="number" min="0" step="0.01"
+                               required/>
                     </label>
                 </c:forEach>
                 <br/>

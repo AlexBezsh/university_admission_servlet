@@ -3,8 +3,11 @@ package com.bezshtanko.university_admission_servlet.dao.jdbc_impl;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.FacultyDao;
 import com.bezshtanko.university_admission_servlet.dao.mapper.FacultyMapper;
 import com.bezshtanko.university_admission_servlet.dao.mapper.SubjectMapper;
+import com.bezshtanko.university_admission_servlet.model.enrollment.EnrollmentStatus;
 import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
+import com.bezshtanko.university_admission_servlet.model.faculty.FacultyStatus;
 import com.bezshtanko.university_admission_servlet.model.subject.Subject;
+import com.bezshtanko.university_admission_servlet.model.user.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +26,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
     public void save(Faculty faculty) {
         String saveFacultyQuery =
                 "INSERT INTO faculty(name_en, name_ua, status, description_en, description_ua, state_funded_places, contract_places) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?)";
+                        "VALUES(?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement saveFacultyStmt = connection.prepareStatement(saveFacultyQuery, Statement.RETURN_GENERATED_KEYS)) {
             saveFacultyStmt.setString(1, faculty.getNameEn());
             saveFacultyStmt.setString(2, faculty.getNameUa());
@@ -45,8 +48,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
             try (ResultSet generatedKeys = saveFacultyStmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     faculty.setId(generatedKeys.getLong(1));
-                }
-                else {
+                } else {
                     log.error("Saving faculty failed, no ID obtained.");
                 }
             }
@@ -62,21 +64,13 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
                 log.info("Saving faculty-subjects relation");
                 saveFacultySubjectsRelationStmt.execute();
                 connection.commit();
+                connection.setAutoCommit(true);
             }
             log.info("Faculty {} have been successfully saved", faculty);
         } catch (SQLException e) {
             log.error("Exception occurred during saving new faculty");
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                log.error("Exception occurred during connection rollback execution");
-            }
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                log.error("An attempt to set connection in auto commit mode failed");
-            }
+            handleConnectionAfterException(connection);
+            throw new RuntimeException(e);
         }
     }
 
@@ -164,7 +158,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
         String query = "UPDATE faculty " +
                 "SET name_en = ?, name_ua = ?, description_en = ?, description_ua = ?, state_funded_places = ?, contract_places = ? " +
                 "WHERE id = ?";
-        try(PreparedStatement ps = connection.prepareStatement(query)) {
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, faculty.getNameEn());
             ps.setString(2, faculty.getNameUa());
             ps.setString(3, faculty.getDescriptionEn());
@@ -180,10 +174,113 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
     }
 
     @Override
+    public boolean setClosed(Long id) {
+        log.info("Closing faculty with id '{}'", id);
+        String query = "UPDATE faculty SET status = '" + FacultyStatus.CLOSED + "' WHERE id = ?";
+        return updateEntityStatus(id, query);
+    }
+
+    @Override
+    public void finalizeFaculty(Long facultyId) {
+        String closeFacultyQuery = "UPDATE faculty SET status = '" + FacultyStatus.CLOSED + "' WHERE id = ?";
+        String getFacultyPlacesQuery = "SELECT state_funded_places, contract_places FROM faculty WHERE id = ?";
+        String finalizeEnrollmentsQuery =
+                "UPDATE enrollment " +
+                        "SET status = '" + EnrollmentStatus.FINALIZED + "' " +
+                        "WHERE id in(" +
+                        "SELECT t.e_id from (" +
+                            "SELECT enrollment.id as e_id, sum(mark) AS total FROM enrollment " +
+                            "JOIN marks ON enrollment.id = marks.enrollment_id " +
+                            "JOIN user ON enrollment.user_id = user.id " +
+                            "WHERE enrollment.faculty_id = ? " +
+                            "AND user.status = '" + UserStatus.ACTIVE + "' " +
+                            "AND enrollment.status = '" + EnrollmentStatus.APPROVED + "' " +
+                            "GROUP BY enrollment.id " +
+                            "ORDER BY total DESC " +
+                            "LIMIT ?) t)";
+        String setEnrolledStateFundedQuery =
+                "UPDATE user " +
+                        "SET status = '" + UserStatus.ENROLLED_STATE_FUNDED + "' " +
+                        "WHERE id in(" +
+                            "SELECT t.u_id from (" +
+                                "SELECT user.id as u_id, sum(mark) AS total FROM enrollment " +
+                                "JOIN marks ON enrollment.id = marks.enrollment_id " +
+                                "JOIN user ON enrollment.user_id = user.id " +
+                                "WHERE enrollment.faculty_id = ? " +
+                                "AND user.status = '" + UserStatus.ACTIVE + "' " +
+                                "AND enrollment.status = '" + EnrollmentStatus.FINALIZED + "' " +
+                                "GROUP BY enrollment.id " +
+                                "ORDER BY total DESC " +
+                                "LIMIT ?) t)";
+        String setEnrolledContractQuery =
+                "UPDATE user " +
+                        "SET status = '" + UserStatus.ENROLLED_CONTRACT + "' " +
+                        "WHERE id in(" +
+                            "SELECT t.u_id from (" +
+                                "SELECT user.id as u_id, sum(mark) AS total FROM enrollment " +
+                                "JOIN marks ON enrollment.id = marks.enrollment_id " +
+                                "JOIN user ON enrollment.user_id = user.id " +
+                                "WHERE enrollment.faculty_id = ? " +
+                                "AND user.status = '" + UserStatus.ACTIVE + "' " +
+                                "AND enrollment.status = '" + EnrollmentStatus.FINALIZED + "' " +
+                                "GROUP BY enrollment.id " +
+                                "ORDER BY total DESC " +
+                                "LIMIT ?) t)";
+
+        try (PreparedStatement closeFacultyStmt = connection.prepareStatement(closeFacultyQuery);
+             PreparedStatement getFacultyPlacesStmt = connection.prepareStatement(getFacultyPlacesQuery);
+             PreparedStatement finalizeEnrollmentsStmt = connection.prepareStatement(finalizeEnrollmentsQuery);
+             PreparedStatement setEnrolledStateFundedStmt = connection.prepareStatement(setEnrolledStateFundedQuery);
+             PreparedStatement setEnrolledContractStmt = connection.prepareStatement(setEnrolledContractQuery)) {
+            log.info("All prepared statements for finalization are created");
+
+            connection.setAutoCommit(false);
+            log.info("Transaction opened");
+
+            closeFacultyStmt.setLong(1, facultyId);
+            closeFacultyStmt.executeUpdate();
+            log.info("Faculty was successfully closed");
+
+            getFacultyPlacesStmt.setLong(1, facultyId);
+            ResultSet facultyPlaces = getFacultyPlacesStmt.executeQuery();
+            if (!facultyPlaces.next()) {
+                log.error("Faculty places not found");
+                throw new SQLException();
+            }
+            int stateFundedPlaces = facultyPlaces.getInt("state_funded_places");
+            int contractPlaces = facultyPlaces.getInt("contract_places");
+            log.info("State funded and contract places quantity received");
+
+            finalizeEnrollmentsStmt.setLong(1, facultyId);
+            finalizeEnrollmentsStmt.setInt(2, stateFundedPlaces + contractPlaces);
+            finalizeEnrollmentsStmt.executeUpdate();
+            log.info("Enrollments were finalized");
+
+            setEnrolledStateFundedStmt.setLong(1, facultyId);
+            setEnrolledStateFundedStmt.setInt(2, stateFundedPlaces);
+            setEnrolledStateFundedStmt.executeUpdate();
+            log.info("Users were enrolled on state funded places");
+
+            setEnrolledContractStmt.setLong(1, facultyId);
+            setEnrolledContractStmt.setInt(2, contractPlaces);
+            setEnrolledContractStmt.executeUpdate();
+            log.info("Users were enrolled on contract places");
+
+            connection.commit();
+            log.info("Transaction was successfully committed");
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            log.error("Exception occurred during faculty finalization");
+            handleConnectionAfterException(connection);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void deleteById(Long id) {
         log.info("Deleting faculty with id '{}'", id);
         String query = "DELETE FROM faculty WHERE faculty.id = ?";
-        try(PreparedStatement ps = connection.prepareStatement(query)) {
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setLong(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {

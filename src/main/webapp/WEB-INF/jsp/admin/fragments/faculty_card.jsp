@@ -7,12 +7,14 @@
 <fmt:setBundle basename="i18n.messages"/>
 
 <div class="card" style="margin-bottom: 20px; margin-top: 20px">
-    <c:if test="${sessionScope.lang.equals('en')}">
-        <a class="card-header" href="${pageContext.request.contextPath}/admin/faculty?facultyId=${faculty.id}">${faculty.nameEn}</a>
-    </c:if>
-    <c:if test="${sessionScope.lang.equals('ua')}">
-        <a class="card-header" href="${pageContext.request.contextPath}/admin/faculty?facultyId=${faculty.id}">${faculty.nameUa}</a>
-    </c:if>
+    <c:choose>
+        <c:when test="${sessionScope.lang.equals('ua')}">
+            <a class="card-header" href="${pageContext.request.contextPath}/admin/faculty?facultyId=${faculty.id}">${faculty.nameUa}</a>
+        </c:when>
+        <c:otherwise>
+            <a class="card-header" href="${pageContext.request.contextPath}/admin/faculty?facultyId=${faculty.id}">${faculty.nameEn}</a>
+        </c:otherwise>
+    </c:choose>
     <div class="card-body">
         <div class="row" style="justify-content: space-between">
             <div class="list-view" style="width: 30rem">
@@ -48,12 +50,14 @@
                     </h5>
                     <ul>
                         <c:forEach items="${faculty.subjects}" var="subject">
-                            <c:if test="${sessionScope.lang.equals('en')}">
-                                <li>${subject.nameEn} (${subject.type})</li>
-                            </c:if>
-                            <c:if test="${sessionScope.lang.equals('ua')}">
-                                <li>${subject.nameUa} (${subject.type})</li>
-                            </c:if>
+                            <c:choose>
+                                <c:when test="${sessionScope.lang.equals('ua')}">
+                                    <li>${subject.nameUa} (${subject.type})</li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li>${subject.nameEn} (${subject.type})</li>
+                                </c:otherwise>
+                            </c:choose>
                         </c:forEach>
                     </ul>
                 </div>

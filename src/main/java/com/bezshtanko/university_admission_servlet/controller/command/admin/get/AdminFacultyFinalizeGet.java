@@ -20,6 +20,7 @@ public class AdminFacultyFinalizeGet implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         log.info("Executing admin faculty finalize get command");
-        return null;
+        request.setAttribute("faculty", facultyService.finalizeFaculty(Long.parseLong(request.getParameter("facultyId"))));
+        return "admin/final_list";
     }
 }

@@ -27,6 +27,9 @@ public class EntrantEnrollGet implements Command {
         log.info("Executing entrant enroll get command");
         Long facultyId = Long.parseLong(request.getParameter("facultyId"));
         Faculty faculty = facultyService.findById(facultyId);
+        if (!faculty.isActive()) {
+            return "redirect:/entrant/faculties";
+        }
         request.getSession().setAttribute("faculty", faculty);
 
         Enrollment enrollment = new Enrollment();

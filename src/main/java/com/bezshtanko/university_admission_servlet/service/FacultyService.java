@@ -8,7 +8,9 @@ import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FacultyService extends Service {
 
@@ -49,6 +51,22 @@ public class FacultyService extends Service {
         log.info("Updating faculty with id '{}'", faculty.getId());
         try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
             facultyDao.update(faculty);
+        }
+    }
+
+    public Faculty finalizeFaculty(Long id) {
+        try (FacultyDao facultyDao = daoFactory.createFacultyDao();
+             EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
+            log.info("Finalization of faculty with id '{}' started", id);
+            facultyDao.finalizeFaculty(id);
+            log.info("Finalization finished successfully. Getting final list");
+
+            Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
+            faculty.setEnrollments(enrollmentDao.findAllByFacultyId(id)
+                    .stream()
+                    .filter(Enrollment::isFinalized)
+                    .collect(Collectors.toList()));
+            return faculty;
         }
     }
 

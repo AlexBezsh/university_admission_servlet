@@ -9,12 +9,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <c:if test="${sessionScope.lang.equals('en')}">
-        <title>${faculty.nameEn}</title>
-    </c:if>
-    <c:if test="${sessionScope.lang.equals('ua')}">
-        <title>${faculty.nameUa}</title>
-    </c:if>
+    <c:choose>
+        <c:when test="${sessionScope.lang.equals('ua')}">
+            <title>${faculty.nameUa}</title>
+        </c:when>
+        <c:otherwise>
+            <title>${faculty.nameEn}</title>
+        </c:otherwise>
+    </c:choose>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>

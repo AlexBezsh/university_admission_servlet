@@ -60,7 +60,6 @@
                     <th scope="col"><fmt:message key="enrollment.faculty.status"/></th>
                     <th scope="col"><fmt:message key="enrollment.marksSum"/></th>
                     <th scope="col"><fmt:message key="enrollment.status"/></th>
-                    <th scope="col"><fmt:message key="enrollment.approve"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -68,29 +67,18 @@
                     <tr>
                         <th scope="row">${enrollment.id}</th>
                         <td>
-                            <c:if test="${sessionScope.lang.equals('en')}">
-                                <a href="${pageContext.request.contextPath}/admin/faculty?facultyId=${enrollment.faculty.id}">${enrollment.faculty.nameEn}</a>
-                            </c:if>
-                            <c:if test="${sessionScope.lang.equals('ua')}">
-                                <a href="${pageContext.request.contextPath}/admin/faculty?facultyId=${enrollment.faculty.id}">${enrollment.faculty.nameUa}</a>
-                            </c:if>
+                            <c:choose>
+                                <c:when test="${sessionScope.lang.equals('ua')}">
+                                    <a href="${pageContext.request.contextPath}/admin/faculty?facultyId=${enrollment.faculty.id}">${enrollment.faculty.nameUa}</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/admin/faculty?facultyId=${enrollment.faculty.id}">${enrollment.faculty.nameEn}</a>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
                         <td>${enrollment.faculty.status}</td>
                         <td>${enrollment.marksSum}</td>
                         <td>${enrollment.status}</td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${enrollment.isNew() && enrollment.user.active}">
-                                    <a class="btn btn-success"
-                                       href="${pageContext.request.contextPath}/admin/enrollment/approve?enrollmentId=${enrollment.id}&facultyId=${enrollment.faculty.id}">
-                                        <fmt:message key="enrollment.approve"/>
-                                    </a>
-                                </c:when>
-                                <c:otherwise>
-                                    <b>-</b>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
                     </tr>
                 </c:forEach>
                 </tbody>
