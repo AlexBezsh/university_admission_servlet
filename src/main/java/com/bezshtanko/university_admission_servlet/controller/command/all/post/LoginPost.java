@@ -3,7 +3,6 @@ package com.bezshtanko.university_admission_servlet.controller.command.all.post;
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
 import com.bezshtanko.university_admission_servlet.dto.UserDTO;
 import com.bezshtanko.university_admission_servlet.exception.AuthenticationException;
-import com.bezshtanko.university_admission_servlet.model.user.User;
 import com.bezshtanko.university_admission_servlet.model.user.UserRole;
 import com.bezshtanko.university_admission_servlet.service.UserService;
 import org.slf4j.Logger;
@@ -58,7 +57,6 @@ public class LoginPost implements Command {
         return user.hasRole(UserRole.ADMIN)
                 ? "redirect:/admin/faculties"
                 : "redirect:/entrant/faculties";
-
     }
 
     private boolean checkUserIsLogged(HttpSession session, UserDTO user) {

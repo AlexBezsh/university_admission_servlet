@@ -1,6 +1,5 @@
 package com.bezshtanko.university_admission_servlet.dao.jdbc_impl;
 
-import com.bezshtanko.university_admission_servlet.model.user.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

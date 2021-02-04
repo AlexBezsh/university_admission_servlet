@@ -28,6 +28,17 @@
 
     <jsp:include page="../entrant/fragments/faculty_card.jsp"/>
 
+    <div class="row" style="justify-content: space-between">
+        <div>
+        </div>
+        <c:if test="${faculty.closed}">
+            <a class="btn btn-secondary" style="margin-right: 45px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"
+               href="/entrant/faculty/finalList?facultyId=${faculty.id}">
+                <fmt:message key="faculty.showFinalList"/>
+            </a>
+        </c:if>
+    </div>
+
     <c:set var="enrollments" value="${faculty.enrollments}" scope="request"/>
 
     <jsp:include page="../entrant/fragments/enrollments_list.jsp"/>

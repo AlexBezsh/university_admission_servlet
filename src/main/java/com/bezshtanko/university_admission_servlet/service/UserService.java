@@ -34,7 +34,7 @@ public class UserService extends Service {
 
     public UserDTO getByEmail(String email) {
         log.info("Getting user with email '{}'", email);
-        try(UserDao userDao = daoFactory.createUserDao()) {
+        try (UserDao userDao = daoFactory.createUserDao()) {
             return new UserDTO(userDao.findByEmail(email).orElseThrow(UserNotExistException::new));
         }
     }

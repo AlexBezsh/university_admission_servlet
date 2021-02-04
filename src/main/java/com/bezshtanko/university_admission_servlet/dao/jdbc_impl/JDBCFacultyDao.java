@@ -182,8 +182,8 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
 
     @Override
     public void finalizeFaculty(Long facultyId) {
+        String getFacultyInfoQuery = "SELECT status, state_funded_places, contract_places FROM faculty WHERE id = ?";
         String closeFacultyQuery = "UPDATE faculty SET status = '" + FacultyStatus.CLOSED + "' WHERE id = ?";
-        String getFacultyPlacesQuery = "SELECT state_funded_places, contract_places FROM faculty WHERE id = ?";
         String finalizeEnrollmentsQuery =
                 "UPDATE enrollment " +
                         "SET status = '" + EnrollmentStatus.FINALIZED + "' " +
@@ -227,8 +227,8 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
                                 "ORDER BY total DESC " +
                                 "LIMIT ?) t)";
 
-        try (PreparedStatement closeFacultyStmt = connection.prepareStatement(closeFacultyQuery);
-             PreparedStatement getFacultyPlacesStmt = connection.prepareStatement(getFacultyPlacesQuery);
+        try (PreparedStatement getFacultyInfoStmt = connection.prepareStatement(getFacultyInfoQuery);
+             PreparedStatement closeFacultyStmt = connection.prepareStatement(closeFacultyQuery);
              PreparedStatement finalizeEnrollmentsStmt = connection.prepareStatement(finalizeEnrollmentsQuery);
              PreparedStatement setEnrolledStateFundedStmt = connection.prepareStatement(setEnrolledStateFundedQuery);
              PreparedStatement setEnrolledContractStmt = connection.prepareStatement(setEnrolledContractQuery)) {
@@ -237,19 +237,19 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
             connection.setAutoCommit(false);
             log.info("Transaction opened");
 
+            getFacultyInfoStmt.setLong(1, facultyId);
+            ResultSet facultyInfo = getFacultyInfoStmt.executeQuery();
+            if (!facultyInfo.next() || FacultyStatus.valueOf(facultyInfo.getString("status")) == FacultyStatus.CLOSED) {
+                log.error("Faculty not found or it is closed already");
+                throw new SQLException();
+            }
+            int stateFundedPlaces = facultyInfo.getInt("state_funded_places");
+            int contractPlaces = facultyInfo.getInt("contract_places");
+            log.info("State funded and contract places quantity received");
+
             closeFacultyStmt.setLong(1, facultyId);
             closeFacultyStmt.executeUpdate();
             log.info("Faculty was successfully closed");
-
-            getFacultyPlacesStmt.setLong(1, facultyId);
-            ResultSet facultyPlaces = getFacultyPlacesStmt.executeQuery();
-            if (!facultyPlaces.next()) {
-                log.error("Faculty places not found");
-                throw new SQLException();
-            }
-            int stateFundedPlaces = facultyPlaces.getInt("state_funded_places");
-            int contractPlaces = facultyPlaces.getInt("contract_places");
-            log.info("State funded and contract places quantity received");
 
             finalizeEnrollmentsStmt.setLong(1, facultyId);
             finalizeEnrollmentsStmt.setInt(2, stateFundedPlaces + contractPlaces);

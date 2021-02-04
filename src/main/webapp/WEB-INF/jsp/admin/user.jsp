@@ -64,7 +64,7 @@
                 </thead>
                 <tbody>
                 <c:forEach items="${user.enrollments}" var="enrollment">
-                    <tr>
+                    <tr class="${enrollment.finalized ? 'table-success' : ''}">
                         <th scope="row">${enrollment.id}</th>
                         <td>
                             <c:choose>

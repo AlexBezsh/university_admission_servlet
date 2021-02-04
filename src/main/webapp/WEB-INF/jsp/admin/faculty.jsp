@@ -37,6 +37,12 @@
                 <fmt:message key="faculty.finalize"/>
             </a>
         </c:if>
+        <c:if test="${faculty.closed}">
+            <a class="btn btn-secondary" style="margin-right: 45px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"
+               href="/admin/faculty/finalList?facultyId=${faculty.id}">
+                <fmt:message key="faculty.showFinalList"/>
+            </a>
+        </c:if>
     </div>
 
     <c:set var="enrollments" value="${faculty.enrollments}" scope="request"/>

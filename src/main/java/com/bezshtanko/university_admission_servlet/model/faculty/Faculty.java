@@ -169,6 +169,10 @@ public class Faculty extends AbstractEntity {
         return status == FacultyStatus.ACTIVE;
     }
 
+    public boolean isClosed() {
+        return status == FacultyStatus.CLOSED;
+    }
+
     public void setStatus(FacultyStatus status) {
         this.status = status;
     }

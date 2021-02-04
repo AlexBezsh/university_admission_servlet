@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<jsp:include page="../fragments/bodyHeader.jsp"/>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 
 <h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px">${faculty.nameEn} (<fmt:message key="faculty.finalList"/>)</h3>
 
@@ -41,9 +41,16 @@
                 <c:forEach items="${enrollments}" var="enrollment">
                     <tr>
                         <th scope="row">${enrollment.id}</th>
-                        <td>
-                            <a href="${pageContext.request.contextPath}/admin/user?userId=${enrollment.user.id}">${enrollment.user.fullName}</a>
-                        </td>
+                        <c:choose>
+                            <c:when test="${sessionScope.user.admin}">
+                                <td>
+                                    <a href="${pageContext.request.contextPath}/admin/user?userId=${enrollment.user.id}">${enrollment.user.fullName}</a>
+                                </td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>${enrollment.user.fullName}</td>
+                            </c:otherwise>
+                        </c:choose>
                         <td>${enrollment.user.status}</td>
                         <td>${enrollment.marksSum}</td>
                     </tr>

@@ -148,7 +148,7 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
     }
 
     @Override
-    public List<Enrollment> findAllByFacultyId(Long id) {
+    public List<Enrollment> findAllByFacultyId(Long facultyId) {
         String query = "SELECT enrollment.id AS e_id, " +
                 "enrollment.status AS e_status, " +
                 "user.id AS u_id, " +
@@ -166,10 +166,49 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
                 "JOIN user ON enrollment.user_id = user.id " +
                 "JOIN marks ON enrollment.id = marks.enrollment_id " +
                 "WHERE enrollment.faculty_id = ?";
+        return findAllWithUsers(query, facultyId);
+    }
 
+    @Override
+    public List<Enrollment> findAllFinalizedByFacultyId(Long facultyId) {
+        String query = "SELECT enrollment.id AS e_id, " +
+                "enrollment.status AS e_status, " +
+                "user.id AS u_id, " +
+                "user.full_name, " +
+                "user.email, " +
+                "user.password, " +
+                "user.status AS u_status, " +
+                "user.city, " +
+                "user.region, " +
+                "user.education, " +
+                "'ENTRANT' AS ROLES, " +
+                "marks.id AS m_id, " +
+                "marks.mark " +
+                "FROM enrollment " +
+                "JOIN user ON enrollment.user_id = user.id " +
+                "JOIN marks ON enrollment.id = marks.enrollment_id " +
+                "WHERE enrollment.faculty_id = ? AND enrollment.status = '" + EnrollmentStatus.FINALIZED + "'";
+        return findAllWithUsers(query, facultyId);
+    }
+
+    @Override
+    public void update(Enrollment entity) {
+    }
+
+    @Override
+    public void deleteById(Long id) {
+    }
+
+    private boolean updateStatus(Long enrollmentId, EnrollmentStatus status) {
+        log.info("Setting status '{}' to enrollment with id '{}'", status, enrollmentId);
+        String query = "UPDATE enrollment SET status = '" + status + "' WHERE id = ?";
+        return updateEntityStatus(enrollmentId, query);
+    }
+
+    private List<Enrollment> findAllWithUsers(String query, Long facultyId) {
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setLong(1, id);
-            log.info("Prepared statement for finding all enrollments for faculty with id '{}' created", id);
+            ps.setLong(1, facultyId);
+            log.info("Prepared statement for finding enrollments for faculty with id '{}' created", facultyId);
 
             ResultSet resultSet = ps.executeQuery();
             log.info("Query successfully executed");
@@ -200,22 +239,8 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
             }
             return new ArrayList<>(enrollments.values());
         } catch (SQLException e) {
-            log.error("SQLException occurred during getting all enrollments of faculty with id '{}'", id);
+            log.error("SQLException occurred during getting enrollments of faculty with id '{}'", facultyId);
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void update(Enrollment entity) {
-    }
-
-    @Override
-    public void deleteById(Long id) {
-    }
-
-    private boolean updateStatus(Long enrollmentId, EnrollmentStatus status) {
-        log.info("Setting status '{}' to enrollment with id '{}'", status, enrollmentId);
-        String query = "UPDATE enrollment SET status = '" + status + "' WHERE id = ?";
-        return updateEntityStatus(enrollmentId, query);
     }
 }

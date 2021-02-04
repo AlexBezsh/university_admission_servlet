@@ -8,7 +8,6 @@ import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,12 +35,23 @@ public class FacultyService extends Service {
         }
     }
 
-    public Faculty getWithEnrollments(Long id) {
+    public Faculty findWithEnrollments(Long id) {
         log.info("Getting faculty with id: '{}' with enrollments", id);
         try (FacultyDao facultyDao = daoFactory.createFacultyDao();
              EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
             Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
             List<Enrollment> enrollments = enrollmentDao.findAllByFacultyId(id);
+            faculty.setEnrollments(enrollments);
+            return faculty;
+        }
+    }
+
+    public Faculty findWithFinalList(Long id) {
+        log.info("Getting faculty with id: '{}' with final list", id);
+        try (FacultyDao facultyDao = daoFactory.createFacultyDao();
+             EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
+            Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
+            List<Enrollment> enrollments = enrollmentDao.findAllFinalizedByFacultyId(id);
             faculty.setEnrollments(enrollments);
             return faculty;
         }

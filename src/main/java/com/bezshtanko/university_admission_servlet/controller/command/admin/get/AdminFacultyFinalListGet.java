@@ -7,21 +7,22 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class AdminFacultyGet implements Command {
+public class AdminFacultyFinalListGet implements Command {
 
-    private static final Logger log = LoggerFactory.getLogger(AdminFacultyGet.class);
+    private static final Logger log = LoggerFactory.getLogger(AdminFacultyFinalListGet.class);
 
     private final FacultyService facultyService;
 
-    public AdminFacultyGet(FacultyService facultyService) {
+    public AdminFacultyFinalListGet(FacultyService facultyService) {
         this.facultyService = facultyService;
     }
 
     @Override
     public String execute(HttpServletRequest request) {
-        log.info("Executing admin faculty get command");
+        log.info("Executing admin faculty final list get command");
         Long facultyId = Long.parseLong(request.getParameter("facultyId"));
-        request.setAttribute("faculty", facultyService.findWithEnrollments(facultyId));
-        return "admin/faculty";
+        request.setAttribute("faculty", facultyService.findWithFinalList(facultyId));
+        System.out.println("Yes, it was here");
+        return "final_list";
     }
 }
