@@ -2,6 +2,8 @@ package com.bezshtanko.university_admission_servlet.filter;
 
 import com.bezshtanko.university_admission_servlet.dto.UserDTO;
 import com.bezshtanko.university_admission_servlet.model.user.UserRole;
+import com.bezshtanko.university_admission_servlet.service.Services;
+import com.bezshtanko.university_admission_servlet.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,11 @@ public class AuthFilter implements Filter {
 
         if (session != null && (user = (UserDTO) session.getAttribute("user")) != null) {
             if (!requestURI.equals("/logout")) {
+                UserService userService = (UserService) Services.USER_SERVICE.get();
+                UserDTO auth = userService.getByEmail(user.getEmail());
+                auth.setEnrollments(user.getEnrollments());
+                session.setAttribute("user", user = auth);
+
                 if (user.hasRole(UserRole.ADMIN) && !requestURI.startsWith("/admin")) {
                     log.error("User {} has no access to page \"{}\"", user, requestURI);
                     servletResponse.sendRedirect("/admin/faculties");
@@ -45,8 +52,8 @@ public class AuthFilter implements Filter {
                     servletResponse.sendRedirect("/entrant/faculties");
                     return;
                 }
-                if (user.getRoles().isEmpty()) {
-                    log.error("User {} has no roles. Access denied", user);
+                if (user.getRoles().isEmpty() || user.isBlocked()) {
+                    log.error("User {} is blocked or has no roles. Access denied", user);
                     servletResponse.sendRedirect("/logout");
                     return;
                 }

@@ -32,6 +32,13 @@ public class UserService extends Service {
         }
     }
 
+    public UserDTO getByEmail(String email) {
+        log.info("Getting user with email '{}'", email);
+        try(UserDao userDao = daoFactory.createUserDao()) {
+            return new UserDTO(userDao.findByEmail(email).orElseThrow(UserNotExistException::new));
+        }
+    }
+
     public void saveNewUser(User user) {
         log.info("Saving new user: {}", user);
         user.setPassword(encodePassword(user.getPassword()));
