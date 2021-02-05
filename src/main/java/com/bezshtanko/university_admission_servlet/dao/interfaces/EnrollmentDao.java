@@ -9,7 +9,7 @@ public interface EnrollmentDao extends Dao<Enrollment> {
     boolean setApproved(Long id);
     boolean setFinalized(Long id);
     List<Enrollment> findAllByUserId(Long id);
-    List<Enrollment> findAllByFacultyId(Long id);
+    List<Enrollment> findAllRelevantByFacultyId(Long id);
     List<Enrollment> findAllFinalizedByFacultyId(Long id);
 
 }

@@ -22,6 +22,6 @@ public class AdminFacultyFinalizeGet implements Command {
         log.info("Executing admin faculty finalize get command");
         Long facultyId = Long.parseLong(request.getParameter("facultyId"));
         request.setAttribute("faculty", facultyService.finalizeFaculty(facultyId));
-        return "final_list";
+        return "redirect:/admin/faculty?facultyId=" + facultyId;
     }
 }

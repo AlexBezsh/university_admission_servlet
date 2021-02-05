@@ -13,7 +13,8 @@
         </p>
     </c:when>
     <c:otherwise>
-        <h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px"><fmt:message key="enrollments.header"/></h3>
+        <h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px"><fmt:message
+                key="enrollments.header"/></h3>
         <table class="table">
             <thead>
             <tr>
@@ -29,13 +30,15 @@
             <c:forEach items="${enrollments}" var="enrollment">
                 <tr>
                     <th scope="row">${enrollment.id}</th>
-                    <td><a href="${pageContext.request.contextPath}/admin/user?userId=${enrollment.user.id}">${enrollment.user.fullName}</a></td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/admin/user?userId=${enrollment.user.id}">${enrollment.user.fullName}</a>
+                    </td>
                     <td>${enrollment.user.status}</td>
                     <td>${enrollment.marksSum}</td>
                     <td>${enrollment.status}</td>
                     <td>
                         <c:choose>
-                            <c:when test="${enrollment.isNew() && enrollment.user.active}">
+                            <c:when test="${enrollment.isNew() && enrollment.user.active && faculty.active}">
                                 <a class="btn btn-success"
                                    href="${pageContext.request.contextPath}/admin/enrollment/approve?enrollmentId=${enrollment.id}&facultyId=${faculty.id}">
                                     <fmt:message key="enrollment.approve"/>

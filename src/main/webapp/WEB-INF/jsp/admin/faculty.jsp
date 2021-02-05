@@ -32,23 +32,26 @@
         <div>
         </div>
         <c:if test="${faculty.active}">
-            <a class="btn btn-secondary" style="margin-right: 45px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"
+            <a class="btn btn-secondary"
+               style="margin-right: 45px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"
                href="/admin/faculty/finalize?facultyId=${faculty.id}">
                 <fmt:message key="faculty.finalize"/>
-            </a>
-        </c:if>
-        <c:if test="${faculty.closed}">
-            <a class="btn btn-secondary" style="margin-right: 45px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"
-               href="/admin/faculty/finalList?facultyId=${faculty.id}">
-                <fmt:message key="faculty.showFinalList"/>
             </a>
         </c:if>
     </div>
 
     <c:set var="enrollments" value="${faculty.enrollments}" scope="request"/>
 
-    <jsp:include page="../admin/fragments/enrollments_list.jsp"/>
-</div>
+    <c:choose>
+        <c:when test="${faculty.active}">
+            <jsp:include page="../admin/fragments/enrollments_list.jsp"/>
+        </c:when>
+        <c:otherwise>
+            <jsp:include page="../fragments/final_list.jsp"/>
+        </c:otherwise>
+    </c:choose>
 
+
+</div>
 </body>
 </html>

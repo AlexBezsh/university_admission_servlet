@@ -45,7 +45,6 @@ public class Servlet extends HttpServlet {
         commands.put("/entrant/profile get", new EntrantProfileGet((EnrollmentService) Services.ENROLLMENT_SERVICE.get()));
         commands.put("/entrant/faculties get", new EntrantFacultiesGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/entrant/faculty get", new EntrantFacultyGet((FacultyService) Services.FACULTY_SERVICE.get()));
-        commands.put("/entrant/faculty/finalList get", new EntrantFacultyFinalListGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/entrant/enroll get", new EntrantEnrollGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/entrant/enroll post", new EntrantEnrollPost((EnrollmentService) Services.ENROLLMENT_SERVICE.get()));
 
@@ -58,7 +57,6 @@ public class Servlet extends HttpServlet {
         commands.put("/admin/faculty/delete get", new AdminFacultyDeleteGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/admin/enrollment/approve get", new AdminEnrollmentApproveGet((EnrollmentService) Services.ENROLLMENT_SERVICE.get()));
         commands.put("/admin/faculty/finalize get", new AdminFacultyFinalizeGet((FacultyService) Services.FACULTY_SERVICE.get()));
-        commands.put("/admin/faculty/finalList get", new AdminFacultyFinalListGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/admin/user get", new AdminUserGet((UserService) Services.USER_SERVICE.get()));
         commands.put("/admin/user/block get", new AdminUserBlockGet((UserService) Services.USER_SERVICE.get()));
         commands.put("/admin/user/unblock get", new AdminUserUnblockGet((UserService) Services.USER_SERVICE.get()));

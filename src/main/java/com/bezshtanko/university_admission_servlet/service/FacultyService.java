@@ -8,6 +8,7 @@ import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,17 @@ public class FacultyService extends Service {
 
     private static final Logger log = LoggerFactory.getLogger(FacultyService.class);
 
+    private static final Comparator<Enrollment> ACTIVE_FACULTY_ENROLLMENT_COMPARATOR = Comparator
+            .comparing((Enrollment e) -> e.getUser().getStatus())
+            .thenComparing(Enrollment::getStatus)
+            .thenComparing(Comparator.comparing(Enrollment::getMarksSum).reversed());
+
+    private static final Comparator<Enrollment> CLOSED_FACULTY_ENROLLMENT_COMPARATOR = Comparator
+            .comparing((Enrollment e) -> e.getUser().getStatus()).reversed()
+            .thenComparing(Comparator.comparing(Enrollment::getMarksSum).reversed());
+
     public void save(Faculty faculty) {
+        log.info("Saving new faculty {}", faculty);
         try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
             facultyDao.save(faculty);
         }
@@ -40,20 +51,9 @@ public class FacultyService extends Service {
         try (FacultyDao facultyDao = daoFactory.createFacultyDao();
              EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
             Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
-            List<Enrollment> enrollments = enrollmentDao.findAllByFacultyId(id);
-            faculty.setEnrollments(enrollments);
-            return faculty;
-        }
-    }
-
-    public Faculty findWithFinalList(Long id) {
-        log.info("Getting faculty with id: '{}' with final list", id);
-        try (FacultyDao facultyDao = daoFactory.createFacultyDao();
-             EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
-            Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
-            List<Enrollment> enrollments = enrollmentDao.findAllFinalizedByFacultyId(id);
-            faculty.setEnrollments(enrollments);
-            return faculty;
+            return faculty.isActive()
+                    ? initializeFaculty(faculty, enrollmentDao.findAllRelevantByFacultyId(id))
+                    : initializeFaculty(faculty, enrollmentDao.findAllFinalizedByFacultyId(id));
         }
     }
 
@@ -70,13 +70,8 @@ public class FacultyService extends Service {
             log.info("Finalization of faculty with id '{}' started", id);
             facultyDao.finalizeFaculty(id);
             log.info("Finalization finished successfully. Getting final list");
-
             Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
-            faculty.setEnrollments(enrollmentDao.findAllByFacultyId(id)
-                    .stream()
-                    .filter(Enrollment::isFinalized)
-                    .collect(Collectors.toList()));
-            return faculty;
+            return initializeFaculty(faculty, enrollmentDao.findAllFinalizedByFacultyId(id));
         }
     }
 
@@ -86,6 +81,15 @@ public class FacultyService extends Service {
             facultyDao.deleteById(id);
             log.info("Faculty with id '{}' was successfully deleted", id);
         }
+    }
+
+    private Faculty initializeFaculty(Faculty faculty, List<Enrollment> enrollments) {
+        faculty.setEnrollments(enrollments
+                .stream()
+                .peek(e -> e.setFaculty(faculty))
+                .sorted(faculty.isActive() ? ACTIVE_FACULTY_ENROLLMENT_COMPARATOR : CLOSED_FACULTY_ENROLLMENT_COMPARATOR)
+                .collect(Collectors.toList()));
+        return faculty;
     }
 
 }

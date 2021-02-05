@@ -6,19 +6,6 @@
 <fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="i18n.messages"/>
 
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title><fmt:message key="faculty.finalList"/></title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body>
-
-<jsp:include page="fragments/bodyHeader.jsp"/>
-
-<h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px">${faculty.nameEn} (<fmt:message key="faculty.finalList"/>)</h3>
-
 <div style="margin-left: 30px; margin-right: 30px;">
     <c:set value="${faculty.enrollments}" var="enrollments"/>
     <c:choose>
@@ -26,8 +13,8 @@
             <p style="text-align: center"><fmt:message key="enrollments.empty.message"/></p>
         </c:when>
         <c:otherwise>
-            <h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px"><fmt:message
-                    key="enrollments.header"/></h3>
+            <h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px">
+                <fmt:message key="enrollments.header"/> (<fmt:message key="faculty.finalList"/>)</h3>
             <table class="table">
                 <thead>
                 <tr>
@@ -60,5 +47,3 @@
         </c:otherwise>
     </c:choose>
 </div>
-</body>
-</html>

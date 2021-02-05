@@ -188,16 +188,16 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
                 "UPDATE enrollment " +
                         "SET status = '" + EnrollmentStatus.FINALIZED + "' " +
                         "WHERE id in(" +
-                        "SELECT t.e_id from (" +
-                            "SELECT enrollment.id as e_id, sum(mark) AS total FROM enrollment " +
-                            "JOIN marks ON enrollment.id = marks.enrollment_id " +
-                            "JOIN user ON enrollment.user_id = user.id " +
-                            "WHERE enrollment.faculty_id = ? " +
-                            "AND user.status = '" + UserStatus.ACTIVE + "' " +
-                            "AND enrollment.status = '" + EnrollmentStatus.APPROVED + "' " +
-                            "GROUP BY enrollment.id " +
-                            "ORDER BY total DESC " +
-                            "LIMIT ?) t)";
+                            "SELECT t.e_id from (" +
+                                "SELECT enrollment.id as e_id, sum(mark) AS total FROM enrollment " +
+                                "JOIN marks ON enrollment.id = marks.enrollment_id " +
+                                "JOIN user ON enrollment.user_id = user.id " +
+                                "WHERE enrollment.faculty_id = ? " +
+                                "AND user.status = '" + UserStatus.ACTIVE + "' " +
+                                "AND enrollment.status = '" + EnrollmentStatus.APPROVED + "' " +
+                                "GROUP BY enrollment.id " +
+                                "ORDER BY total DESC " +
+                                "LIMIT ?) t)";
         String setEnrolledStateFundedQuery =
                 "UPDATE user " +
                         "SET status = '" + UserStatus.ENROLLED_STATE_FUNDED + "' " +
@@ -240,7 +240,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
             getFacultyInfoStmt.setLong(1, facultyId);
             ResultSet facultyInfo = getFacultyInfoStmt.executeQuery();
             if (!facultyInfo.next() || FacultyStatus.valueOf(facultyInfo.getString("status")) == FacultyStatus.CLOSED) {
-                log.error("Faculty not found or it is closed already");
+                log.error("Faculty with id '{}' not found or it is closed already", facultyId);
                 throw new SQLException();
             }
             int stateFundedPlaces = facultyInfo.getInt("state_funded_places");

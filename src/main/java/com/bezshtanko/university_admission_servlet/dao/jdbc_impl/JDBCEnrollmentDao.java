@@ -10,6 +10,7 @@ import com.bezshtanko.university_admission_servlet.model.enrollment.EnrollmentSt
 import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import com.bezshtanko.university_admission_servlet.model.mark.Mark;
 import com.bezshtanko.university_admission_servlet.model.user.User;
+import com.bezshtanko.university_admission_servlet.model.user.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,24 +94,24 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
 
     @Override
     public List<Enrollment> findAllByUserId(Long id) {
-        String query = "SELECT enrollment.id AS e_id, " +
-                "enrollment.status AS e_status, " +
-                "faculty.id AS f_id, " +
-                "faculty.name_en AS f_name_en, " +
-                "faculty.name_ua AS f_name_ua, " +
-                "faculty.status AS f_status, " +
-                "description_en, " +
-                "description_ua, " +
-                "state_funded_places, " +
-                "contract_places, " +
-                "marks.id AS m_id, " +
-                "marks.mark " +
+        String query =
+                "SELECT enrollment.id AS e_id, " +
+                    "enrollment.status AS e_status, " +
+                    "faculty.id AS f_id, " +
+                    "faculty.name_en AS f_name_en, " +
+                    "faculty.name_ua AS f_name_ua, " +
+                    "faculty.status AS f_status, " +
+                    "description_en, " +
+                    "description_ua, " +
+                    "state_funded_places, " +
+                    "contract_places, " +
+                    "marks.id AS m_id, " +
+                    "marks.mark " +
                 "FROM enrollment " +
                 "JOIN faculty ON enrollment.faculty_id = faculty.id " +
                 "JOIN marks ON enrollment.id = marks.enrollment_id " +
-                "WHERE enrollment.user_id = ?";
+                "WHERE enrollment.user_id = " + id;
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setLong(1, id);
             log.info("Prepared statement for finding all enrollments for user with id '{}' created", id);
 
             ResultSet resultSet = ps.executeQuery();
@@ -148,47 +149,52 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
     }
 
     @Override
-    public List<Enrollment> findAllByFacultyId(Long facultyId) {
-        String query = "SELECT enrollment.id AS e_id, " +
-                "enrollment.status AS e_status, " +
-                "user.id AS u_id, " +
-                "user.full_name, " +
-                "user.email, " +
-                "user.password, " +
-                "user.status AS u_status, " +
-                "user.city, " +
-                "user.region, " +
-                "user.education, " +
-                "'ENTRANT' AS ROLES, " +
-                "marks.id AS m_id, " +
-                "marks.mark " +
+    public List<Enrollment> findAllRelevantByFacultyId(Long facultyId) {
+        String query =
+                "SELECT enrollment.id AS e_id, " +
+                    "enrollment.status AS e_status, " +
+                    "user.id AS u_id, " +
+                    "user.full_name, " +
+                    "user.email, " +
+                    "user.password, " +
+                    "user.status AS u_status, " +
+                    "user.city, " +
+                    "user.region, " +
+                    "user.education, " +
+                    "'ENTRANT' AS ROLES, " +
+                    "marks.id AS m_id, " +
+                    "marks.mark " +
                 "FROM enrollment " +
                 "JOIN user ON enrollment.user_id = user.id " +
                 "JOIN marks ON enrollment.id = marks.enrollment_id " +
-                "WHERE enrollment.faculty_id = ?";
-        return findAllWithUsers(query, facultyId);
+                "WHERE enrollment.faculty_id = " + facultyId + " " +
+                "AND (user.status = '" + UserStatus.ACTIVE + "' " +
+                        "OR user.status = '" + UserStatus.BLOCKED + "')";
+        return findAllWithUsers(query);
     }
 
     @Override
     public List<Enrollment> findAllFinalizedByFacultyId(Long facultyId) {
-        String query = "SELECT enrollment.id AS e_id, " +
-                "enrollment.status AS e_status, " +
-                "user.id AS u_id, " +
-                "user.full_name, " +
-                "user.email, " +
-                "user.password, " +
-                "user.status AS u_status, " +
-                "user.city, " +
-                "user.region, " +
-                "user.education, " +
-                "'ENTRANT' AS ROLES, " +
-                "marks.id AS m_id, " +
-                "marks.mark " +
+        String query =
+                "SELECT enrollment.id AS e_id, " +
+                    "enrollment.status AS e_status, " +
+                    "user.id AS u_id, " +
+                    "user.full_name, " +
+                    "user.email, " +
+                    "user.password, " +
+                    "user.status AS u_status, " +
+                    "user.city, " +
+                    "user.region, " +
+                    "user.education, " +
+                    "'ENTRANT' AS ROLES, " +
+                    "marks.id AS m_id, " +
+                    "marks.mark " +
                 "FROM enrollment " +
                 "JOIN user ON enrollment.user_id = user.id " +
                 "JOIN marks ON enrollment.id = marks.enrollment_id " +
-                "WHERE enrollment.faculty_id = ? AND enrollment.status = '" + EnrollmentStatus.FINALIZED + "'";
-        return findAllWithUsers(query, facultyId);
+                "WHERE enrollment.faculty_id = " + facultyId + " " +
+                "AND enrollment.status = '" + EnrollmentStatus.FINALIZED + "'";
+        return findAllWithUsers(query);
     }
 
     @Override
@@ -205,10 +211,9 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
         return updateEntityStatus(enrollmentId, query);
     }
 
-    private List<Enrollment> findAllWithUsers(String query, Long facultyId) {
+    private List<Enrollment> findAllWithUsers(String query) {
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setLong(1, facultyId);
-            log.info("Prepared statement for finding enrollments for faculty with id '{}' created", facultyId);
+            log.info("Prepared statement for finding enrollments created");
 
             ResultSet resultSet = ps.executeQuery();
             log.info("Query successfully executed");
@@ -239,7 +244,7 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
             }
             return new ArrayList<>(enrollments.values());
         } catch (SQLException e) {
-            log.error("SQLException occurred during getting enrollments of faculty with id '{}'", facultyId);
+            log.error("SQLException occurred during getting enrollments");
             throw new RuntimeException(e);
         }
     }
