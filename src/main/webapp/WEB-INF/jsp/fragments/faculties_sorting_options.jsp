@@ -17,11 +17,11 @@
         <fmt:message key="faculties.sort.z-a"/>
     </a>
     <a class="btn btn-default" style="margin-bottom: 5px;"
-       href="?sort=stateFundedPlaces,desc">
+       href="?sort=state_funded_places,desc">
         <fmt:message key="faculties.sort.stateFundedPlaces"/>
     </a>
     <a class="btn btn-default" style="margin-bottom: 5px;"
-       href="?sort=contractPlaces,desc">
+       href="?sort=contract_places,desc">
         <fmt:message key="faculties.sort.contractPlaces"/>
     </a>
 </div>

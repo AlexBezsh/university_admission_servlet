@@ -17,6 +17,8 @@ public class AuthFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(AuthFilter.class);
 
+    public static final String USER_SESSION_ATTRIBUTE_NAME = "user";
+
     @Override
     public void init(FilterConfig filterConfig) {
     }
@@ -35,12 +37,12 @@ public class AuthFilter implements Filter {
         HttpSession session = servletRequest.getSession(false);
         UserDTO user = null;
 
-        if (session != null && (user = (UserDTO) session.getAttribute("user")) != null) {
+        if (session != null && (user = (UserDTO) session.getAttribute(USER_SESSION_ATTRIBUTE_NAME)) != null) {
             if (!requestURI.equals("/logout")) {
                 UserService userService = (UserService) Services.USER_SERVICE.get();
                 UserDTO auth = userService.getByEmail(user.getEmail());
                 auth.setEnrollments(user.getEnrollments());
-                session.setAttribute("user", user = auth);
+                session.setAttribute(USER_SESSION_ATTRIBUTE_NAME, user = auth);
 
                 if (user.hasRole(UserRole.ADMIN) && !requestURI.startsWith("/admin")) {
                     log.error("User {} has no access to page \"{}\"", user, requestURI);

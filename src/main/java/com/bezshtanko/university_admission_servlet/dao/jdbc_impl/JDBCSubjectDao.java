@@ -24,11 +24,12 @@ public class JDBCSubjectDao extends JDBCDao implements SubjectDao {
 
     @Override
     public void save(Subject entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Optional<Subject> findById(Long id) {
-        return Optional.empty();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -57,10 +58,12 @@ public class JDBCSubjectDao extends JDBCDao implements SubjectDao {
 
     @Override
     public void update(Subject entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void deleteById(Long id) {
+        throw new UnsupportedOperationException();
     }
 
 }

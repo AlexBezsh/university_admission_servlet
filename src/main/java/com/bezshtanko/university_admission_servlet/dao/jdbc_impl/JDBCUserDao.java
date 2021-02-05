@@ -71,15 +71,17 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
 
     @Override
     public List<User> findAll() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void update(User entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void deleteById(Long id) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -106,16 +108,6 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
     @Override
     public boolean unblockUser(Long id) {
         return updateStatus(id, UserStatus.ACTIVE);
-    }
-
-    @Override
-    public boolean setEnrolledContract(Long id) {
-        return updateStatus(id, UserStatus.ENROLLED_CONTRACT);
-    }
-
-    @Override
-    public boolean setEnrolledStateFunded(Long id) {
-        return updateStatus(id, UserStatus.ENROLLED_STATE_FUNDED);
     }
 
     private boolean updateStatus(Long userId, UserStatus status) {

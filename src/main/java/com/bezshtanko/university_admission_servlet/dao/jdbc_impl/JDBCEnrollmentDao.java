@@ -78,18 +78,13 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
     }
 
     @Override
-    public boolean setFinalized(Long id) {
-        return updateStatus(id, EnrollmentStatus.FINALIZED);
-    }
-
-    @Override
     public Optional<Enrollment> findById(Long id) {
-        return Optional.empty();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Enrollment> findAll() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -199,10 +194,12 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
 
     @Override
     public void update(Enrollment entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void deleteById(Long id) {
+        throw new UnsupportedOperationException();
     }
 
     private boolean updateStatus(Long enrollmentId, EnrollmentStatus status) {

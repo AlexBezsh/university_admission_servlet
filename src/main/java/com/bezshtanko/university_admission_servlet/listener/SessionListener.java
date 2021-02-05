@@ -1,6 +1,7 @@
 package com.bezshtanko.university_admission_servlet.listener;
 
 import com.bezshtanko.university_admission_servlet.dto.UserDTO;
+import com.bezshtanko.university_admission_servlet.filter.AuthFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,8 @@ public class SessionListener implements HttpSessionListener {
 
     private static final Logger log = LoggerFactory.getLogger(SessionListener.class);
 
+    public static final String LOGGED_USERS_SET_NAME = "loggedUsers";
+
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
     }
@@ -22,8 +25,8 @@ public class SessionListener implements HttpSessionListener {
         HttpSession session = httpSessionEvent.getSession();
         Set<String> loggedUsers = (Set<String>) session
                 .getServletContext()
-                .getAttribute("loggedUsers");
-        loggedUsers.remove(((UserDTO) session.getAttribute("user")).getEmail());
+                .getAttribute(LOGGED_USERS_SET_NAME);
+        loggedUsers.remove(((UserDTO) session.getAttribute(AuthFilter.USER_SESSION_ATTRIBUTE_NAME)).getEmail());
         log.info("Session was destroyed");
     }
 }

@@ -19,24 +19,27 @@ public class JDBCMarkDao extends JDBCDao implements MarkDao {
 
     @Override
     public void save(Mark entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Optional<Mark> findById(Long id) {
-        return Optional.empty();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Mark> findAll() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void update(Mark entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void deleteById(Long id) {
+        throw new UnsupportedOperationException();
     }
 
 }

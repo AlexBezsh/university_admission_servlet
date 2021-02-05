@@ -11,6 +11,8 @@ public class LocaleFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(LocaleFilter.class);
 
+    public static final String LANG_ATTRIBUTE_NAME = "lang";
+
     @Override
     public void init(FilterConfig filterConfig) {
     }
@@ -20,18 +22,13 @@ public class LocaleFilter implements Filter {
         log.info("Request received");
         HttpServletRequest req = (HttpServletRequest) request;
 
-        String locale = req.getParameter("lang");
+        String locale = req.getParameter(LANG_ATTRIBUTE_NAME);
         if (locale != null) {
-            req.getSession().setAttribute("lang", locale);
+            req.getSession().setAttribute(LANG_ATTRIBUTE_NAME, locale);
             log.info("Locale has been changed to \"{}\"", locale);
-        } else {
-            if (req.getSession().getAttribute("lang") == null) {
-                req.getSession().setAttribute("lang", "en");
-            }
+        } else if (req.getSession().getAttribute(LANG_ATTRIBUTE_NAME) == null) {
+            req.getSession().setAttribute(LANG_ATTRIBUTE_NAME, "en");
         }
-        //TODO here we create session for unauthorized user - after adding listeners it is important to check
-        // whether everything works fine with two users from different browsers
-
         chain.doFilter(request, response);
     }
 

@@ -31,7 +31,7 @@
 <div style="margin-left: 30px; margin-right: 30px;">
 
     <c:if test="${empty faculties}">
-        <p style="text-align: center">
+        <p style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
             <fmt:message key="faculties.empty.message"/>
         </p>
     </c:if>

@@ -2,6 +2,7 @@ package com.bezshtanko.university_admission_servlet.controller.command.entrant.p
 
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
 import com.bezshtanko.university_admission_servlet.dto.UserDTO;
+import com.bezshtanko.university_admission_servlet.filter.AuthFilter;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
 import com.bezshtanko.university_admission_servlet.model.enrollment.EnrollmentStatus;
 import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
@@ -30,6 +31,8 @@ public class EntrantEnrollPost implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing entrant enroll post command");
         HttpSession session = request.getSession();
+        UserDTO user = (UserDTO) session.getAttribute(AuthFilter.USER_SESSION_ATTRIBUTE_NAME);
+
         Faculty faculty = (Faculty) session.getAttribute("faculty");
         session.removeAttribute("faculty");
 
@@ -37,16 +40,18 @@ public class EntrantEnrollPost implements Command {
         enrollment.setFaculty(faculty);
         enrollment.setStatus(EnrollmentStatus.NEW);
         enrollment.setUser(User.builder()
-                .setId(((UserDTO) request.getSession().getAttribute("user")).getId())
+                .setId(user.getId())
                 .build());
 
-        faculty.getSubjects().forEach(subject ->
-                enrollment.getMarks().add(Mark.builder()
-                        .setEnrollment(enrollment)
-                        .setSubject(subject)
-                        .setMark(new BigDecimal(request.getParameter(subject.getNameEn() + " " + subject.getType()))
-                                .setScale(2, RoundingMode.DOWN))
-                        .build()));
+        //todo refactor
+        faculty.getSubjects()
+                .forEach(subject -> enrollment.getMarks().add(
+                        Mark.builder()
+                                .setEnrollment(enrollment)
+                                .setSubject(subject)
+                                .setMark(new BigDecimal(request.getParameter(subject.getNameEn() + " " + subject.getType()))
+                                        .setScale(2, RoundingMode.DOWN))
+                                .build()));
 
         BigDecimal zero = new BigDecimal("0");
         enrollment.getMarks().forEach(mark -> {
@@ -56,10 +61,7 @@ public class EntrantEnrollPost implements Command {
         });
 
         enrollmentService.save(enrollment);
-
-        UserDTO user = (UserDTO) session.getAttribute("user");
         user.getEnrollments().add(enrollment);
-
         return "redirect:/entrant/faculty?facultyId=" + faculty.getId();
     }
 }

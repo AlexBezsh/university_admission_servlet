@@ -2,6 +2,7 @@ package com.bezshtanko.university_admission_servlet.controller.command.entrant.g
 
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
 import com.bezshtanko.university_admission_servlet.dto.UserDTO;
+import com.bezshtanko.university_admission_servlet.filter.AuthFilter;
 import com.bezshtanko.university_admission_servlet.service.EnrollmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class EntrantProfileGet implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         log.info("Executing entrant profile get command");
-        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
+        UserDTO user = (UserDTO) request.getSession().getAttribute(AuthFilter.USER_SESSION_ATTRIBUTE_NAME);
         request.setAttribute("enrollments", enrollmentService.findAllByUserId(user.getId()));
         return "entrant/profile";
     }

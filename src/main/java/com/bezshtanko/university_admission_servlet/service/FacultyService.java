@@ -2,6 +2,7 @@ package com.bezshtanko.university_admission_servlet.service;
 
 import com.bezshtanko.university_admission_servlet.dao.interfaces.EnrollmentDao;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.FacultyDao;
+import com.bezshtanko.university_admission_servlet.dto.PageInfoDTO;
 import com.bezshtanko.university_admission_servlet.exception.FacultyNotExistException;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
 import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
@@ -39,10 +40,10 @@ public class FacultyService extends Service {
         }
     }
 
-    public List<Faculty> findAll() {
+    public List<Faculty> findAll(PageInfoDTO pageInfo) {
         log.info("Getting all faculties");
         try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
-            return facultyDao.findAll();
+            return facultyDao.findAll(pageInfo);
         }
     }
 
@@ -52,8 +53,8 @@ public class FacultyService extends Service {
              EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
             Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
             return faculty.isActive()
-                    ? initializeFaculty(faculty, enrollmentDao.findAllRelevantByFacultyId(id))
-                    : initializeFaculty(faculty, enrollmentDao.findAllFinalizedByFacultyId(id));
+                    ? setEnrollments(faculty, enrollmentDao.findAllRelevantByFacultyId(id))
+                    : setEnrollments(faculty, enrollmentDao.findAllFinalizedByFacultyId(id));
         }
     }
 
@@ -71,7 +72,7 @@ public class FacultyService extends Service {
             facultyDao.finalizeFaculty(id);
             log.info("Finalization finished successfully. Getting final list");
             Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
-            return initializeFaculty(faculty, enrollmentDao.findAllFinalizedByFacultyId(id));
+            return setEnrollments(faculty, enrollmentDao.findAllFinalizedByFacultyId(id));
         }
     }
 
@@ -83,7 +84,7 @@ public class FacultyService extends Service {
         }
     }
 
-    private Faculty initializeFaculty(Faculty faculty, List<Enrollment> enrollments) {
+    private Faculty setEnrollments(Faculty faculty, List<Enrollment> enrollments) {
         faculty.setEnrollments(enrollments
                 .stream()
                 .peek(e -> e.setFaculty(faculty))

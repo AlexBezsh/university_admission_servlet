@@ -6,31 +6,31 @@
 <fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="i18n.messages"/>
 
-<h3>Pagination</h3>
+ <c:set var="pageInfo" value="${sessionScope.facultiesPageInfo}" scope="page"/>
 
-<%--<div th:if="${faculties.totalElements gt 0}">
+<c:if test="${pageInfo.totalPages != 0 && pageInfo.page <= pageInfo.totalPages}">
     <nav aria-label="Pagination">
         <ul class="pagination justify-content-center font-weight-medium">
 
-            <li class="page-item" th:classappend="${faculties.number eq 0} ? 'disabled'">
+            <li class="page-item ${pageInfo.page == 1 ? 'disabled' : ''}">
                 <a class="page-link"
-                   th:href="@{'?page=' + ${faculties.number - 1} + '&size=' + ${faculties.size} + '&sort=' + ${faculties.sort.toString().replace(': ', ',')}}">
+                   href="?page=${pageInfo.page - 1}">
                     <fmt:message key="pageable.previous"/>
                 </a>
             </li>
 
             <li class="page-item disabled">
                 <a class="page-link"
-                   th:href="@{'?page=' + ${faculties.number} + '&size=' + ${faculties.size} + '&sort=' + ${faculties.sort.toString().replace(': ', ',')}}"
-                   th:text="${faculties.number + 1} + ' / ' + ${faculties.totalPages}"></a>
+                   href="?page=${sessionScope.facultiesPageInfo.page}">${sessionScope.facultiesPageInfo.page}
+                    / ${sessionScope.facultiesPageInfo.totalPages}</a>
             </li>
 
-            <li class="page-item" th:classappend="${(faculties.number + 1) eq faculties.totalPages} ? 'disabled'">
+            <li class="${pageInfo.page == pageInfo.totalPages ? 'page-item disabled' : 'page-item'}">
                 <a class="page-link"
-                   th:href="@{'?page=' + ${faculties.number + 1} + '&size=' + ${faculties.size} + '&sort=' + ${faculties.sort.toString().replace(': ', ',')}}">
+                   href="?page=${pageInfo.page + 1}">
                     <fmt:message key="pageable.next"/>
                 </a>
             </li>
         </ul>
     </nav>
-</div>--%>
+</c:if>

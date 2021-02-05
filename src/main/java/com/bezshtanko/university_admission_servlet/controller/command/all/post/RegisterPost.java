@@ -41,7 +41,7 @@ public class RegisterPost implements Command {
         String errors = ValidationUtil.getUserErrors(user);
         if (!errors.isEmpty()) {
             log.info("There are errors in received data");
-            return "redirect:register?" + errors;
+            return "redirect:/register?" + errors;
         }
 
         userService.saveNewUser(user);

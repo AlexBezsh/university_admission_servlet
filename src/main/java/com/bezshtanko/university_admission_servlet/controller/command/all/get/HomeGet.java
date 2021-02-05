@@ -12,7 +12,6 @@ public class HomeGet implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-
         log.info("Executing home get command");
         return "home";
     }
