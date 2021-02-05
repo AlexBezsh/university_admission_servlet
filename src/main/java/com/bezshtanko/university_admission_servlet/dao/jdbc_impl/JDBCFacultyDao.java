@@ -159,7 +159,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
         log.info("Query successfully executed");
 
         log.info("Mapping started");
-        Map<Long, Faculty> faculties = new TreeMap<>(Comparator.reverseOrder());
+        Map<Long, Faculty> faculties = new LinkedHashMap<>();
         Map<Long, Subject> subjects = new HashMap<>();
 
         FacultyMapper facultyMapper = new FacultyMapper();

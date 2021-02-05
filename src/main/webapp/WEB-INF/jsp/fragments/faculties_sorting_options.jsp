@@ -9,7 +9,7 @@
 <div style="margin-left: 45px;">
     <b style="font-size: 18px;"><fmt:message key="faculties.sort.label"/></b>
     <a class="btn btn-default" style="margin-bottom: 5px;"
-       href="?sort=name_${sessionScope.lang}">
+       href="?sort=name_${sessionScope.lang},asc">
         <fmt:message key="faculties.sort.a-z"/>
     </a>
     <a class="btn btn-default" style="margin-bottom: 5px;"
