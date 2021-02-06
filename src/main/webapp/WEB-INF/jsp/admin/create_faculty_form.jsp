@@ -3,19 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="${sessionScope.lang}"/>
-<fmt:setBundle basename="i18n.messages"/>
-
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title><fmt:message key="faculty.create.title"/></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body>
+<jsp:include page="../fragments/headTag.jsp"/>
 
+<body>
 <jsp:include page="../fragments/bodyHeader.jsp"/>
 
 <div class="container" style="margin-top: 60px">
@@ -23,12 +14,12 @@
         <div class="col-md-8 col-md-offset-2">
             <h2 class="page-header"><fmt:message key="faculty.create.header"/></h2>
             <form style="margin-bottom: 30px" name="form" autocomplete="off"
-                  action="${pageContext.request.contextPath}/admin/faculty/new" method="post">
+                  action="${contextPath}/admin/faculty/new" method="post">
                 <div class="form-group">
                     <label for="nameUa"><fmt:message key="faculty.nameUa"/></label>
                     <c:if test="${param.nameUaError ne null}">
                         <div class="error" style="color: red;">
-                            <span><fmt:message key="Size.faculty.nameUa"/></span>
+                            <span><fmt:message key="faculty.nameUaError"/></span>
                         </div>
                     </c:if>
                     <input id="nameUa"
@@ -41,7 +32,7 @@
                     <label for="nameEn"><fmt:message key="faculty.nameEn"/></label>
                     <c:if test="${param.nameEnError ne null}">
                         <div class="error" style="color: red;">
-                            <span><fmt:message key="Size.faculty.nameEn"/></span>
+                            <span><fmt:message key="faculty.nameEnError"/></span>
                         </div>
                     </c:if>
                     <input id="nameEn"
@@ -54,7 +45,7 @@
                     <label for="descriptionUa"><fmt:message key="faculty.descriptionUa"/></label>
                     <c:if test="${param.descriptionUaError ne null}">
                         <div class="error" style="color: red;">
-                            <span><fmt:message key="Size.faculty.descriptionUa"/></span>
+                            <span><fmt:message key="faculty.descriptionUaError"/></span>
                         </div>
                     </c:if>
                     <input id="descriptionUa"
@@ -67,7 +58,7 @@
                     <label for="descriptionEn"><fmt:message key="faculty.descriptionEn"/></label>
                     <c:if test="${param.descriptionEnError ne null}">
                         <div class="error" style="color: red;">
-                            <span><fmt:message key="Size.faculty.descriptionEn"/></span>
+                            <span><fmt:message key="faculty.descriptionEnError"/></span>
                         </div>
                     </c:if>
                     <input id="descriptionEn"
@@ -80,7 +71,7 @@
                     <label for="stateFundedPlaces"><fmt:message key="faculty.stateFundedPlaces"/></label>
                     <c:if test="${param.stateFundedPlacesError ne null}">
                         <div class="error" style="color: red;">
-                            <span><fmt:message key="Min.faculty.stateFundedPlaces"/></span>
+                            <span><fmt:message key="faculty.stateFundedPlacesError"/></span>
                         </div>
                     </c:if>
                     <input id="stateFundedPlaces"
@@ -94,7 +85,7 @@
                     <label for="contractPlaces"><fmt:message key="faculty.contractPlaces"/></label>
                     <c:if test="${param.contractPlacesError ne null}">
                         <div class="error" style="color: red;">
-                            <span><fmt:message key="Min.faculty.contractPlaces"/></span>
+                            <span><fmt:message key="faculty.contractPlacesError"/></span>
                         </div>
                     </c:if>
                     <input id="contractPlaces"
@@ -112,16 +103,8 @@
                                name="${subject.nameEn} ${subject.type}"
                                class="check-box"
                         />
-                        <c:choose>
-                            <c:when test="${sessionScope.lang.equals('ua')}">
-                                <label for="${subject.nameEn} ${subject.type}">${subject.nameUa}
-                                    (${subject.type})</label>
-                            </c:when>
-                            <c:otherwise>
-                                <label for="${subject.nameEn} ${subject.type}">${subject.nameEn}
-                                    (${subject.type})</label>
-                            </c:otherwise>
-                        </c:choose>
+                        <label for="${subject.nameEn} ${subject.type}">${lang.equals('ua') ? subject.nameUa : subject.nameEn}
+                            (<fmt:message key="subject.type.${subject.type}"/>)</label>
                         <br/>
                     </c:forEach>
                 </div>

@@ -3,19 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="${sessionScope.lang}"/>
-<fmt:setBundle basename="i18n.messages"/>
-
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title><fmt:message key="login.title"/></title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
+<jsp:include page="fragments/headTag.jsp"/>
 
 <body>
-
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
 <div class="container" style="margin-top: 60px;">
@@ -42,15 +33,10 @@
                     <span><fmt:message key="login.userIsLogged.message"/></span>
                 </div>
             </c:if>
-            <form style="margin-bottom: 30px" autocomplete="off" action="${pageContext.request.contextPath}/login"
+            <form style="margin-bottom: 30px" autocomplete="off" action="${contextPath}/login"
                   method="post">
                 <div class="form-group">
                     <label for="email"><fmt:message key="user.email"/></label>
-                    <c:if test="${param.emailError ne null}">
-                        <div class="alert alert-danger">
-                            <span><fmt:message key="Email.user.email"/></span>
-                        </div>
-                    </c:if>
                     <input id="email"
                            name="email"
                            type="email"

@@ -3,12 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="${sessionScope.lang}"/>
-<fmt:setBundle basename="i18n.messages"/>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
-
-    <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+    <a class="navbar-brand" href="${contextPath}/">
         <fmt:message key="navbar.title"/>
     </a>
 
@@ -17,50 +13,38 @@
             <c:url var="params" value="">
                 <c:forEach items="${param}" var="entry">
                     <c:if test="${entry.key != 'lang'}">
-                        <c:param name="${entry.key}" value="${entry.value}" />
+                        <c:param name="${entry.key}" value="${entry.value}"/>
                     </c:if>
                 </c:forEach>
             </c:url>
 
-            <c:choose>
-                <c:when test="${not empty params}">
-                    <a class="btn btn-default" href="${params}&lang=ua"><fmt:message key="lang.ua.label"/></a>
-                </c:when>
-                <c:otherwise>
-                    <a class="btn btn-default" href="${params}?lang=ua"><fmt:message key="lang.ua.label"/></a>
-                </c:otherwise>
-            </c:choose>
-            <c:choose>
-                <c:when test="${not empty params}">
-                    <a class="btn btn-default" href="${params}&lang=en"><fmt:message key="lang.en.label"/></a>
-                </c:when>
-                <c:otherwise>
-                    <a class="btn btn-default" href="${params}?lang=en"><fmt:message key="lang.en.label"/></a>
-                </c:otherwise>
-            </c:choose>
+            <a class="btn btn-default" href="${params}${not empty params ? '&' : '?'}lang=ua"><fmt:message
+                    key="lang.ua.label"/></a>
+            <a class="btn btn-default" href="${params}${not empty params ? '&' : '?'}lang=en"><fmt:message
+                    key="lang.en.label"/></a>
         </div>
 
-        <c:if test="${sessionScope.user.entrant}">
+        <c:if test="${auth.entrant}">
             <a class="btn btn-success" style="margin-right: 5px; margin-left: 20px;"
-               href="${pageContext.request.contextPath}/entrant/profile">
+               href="${contextPath}/entrant/profile">
                 <fmt:message key="user.profile"/>
             </a>
         </c:if>
 
         <c:choose>
-            <c:when test="${sessionScope.user ne null}">
-                <a class="btn btn-primary" href="${pageContext.request.contextPath}/logout">
+            <c:when test="${auth ne null}">
+                <a class="btn btn-primary" href="${contextPath}/logout">
                     <fmt:message key="navbar.logout"/>
                 </a>
             </c:when>
             <c:otherwise>
-                <div style="margin-left: 20px; margin-right: 3px;">
-                    <a class="btn btn-success" href="${pageContext.request.contextPath}/login">
+                <div style="margin-left: 10px; margin-right: 3px;">
+                    <a class="btn btn-success" href="${contextPath}/login">
                         <fmt:message key="login.button"/>
                     </a>
                 </div>
                 <div style="margin-left: 3px; margin-right: 5px;">
-                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/register">
+                    <a class="btn btn-primary" href="${contextPath}/register">
                         <fmt:message key="registration.button"/>
                     </a>
                 </div>

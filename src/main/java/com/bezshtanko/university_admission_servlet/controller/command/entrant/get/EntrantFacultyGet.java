@@ -22,7 +22,7 @@ public class EntrantFacultyGet implements Command {
         log.info("Executing entrant faculty get command");
         Long facultyId = Long.parseLong(request.getParameter("facultyId"));
         request.setAttribute("faculty", facultyService.findWithEnrollments(facultyId));
-        return "entrant/faculty";
+        return "faculty";
     }
 
 }

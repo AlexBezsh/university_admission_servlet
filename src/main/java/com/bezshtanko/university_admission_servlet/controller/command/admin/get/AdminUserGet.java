@@ -24,6 +24,6 @@ public class AdminUserGet implements Command {
         log.info("Executing admin user get command");
         Long userId = Long.parseLong(request.getParameter("userId"));
         request.setAttribute("user", userService.getUserWithEnrollments(userId));
-        return "admin/user";
+        return "user_profile";
     }
 }

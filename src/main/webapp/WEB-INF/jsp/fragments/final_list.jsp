@@ -3,9 +3,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="${sessionScope.lang}"/>
-<fmt:setBundle basename="i18n.messages"/>
-
 <div style="margin-left: 30px; margin-right: 30px;">
     <c:set value="${faculty.enrollments}" var="enrollments"/>
     <c:choose>
@@ -14,7 +11,9 @@
         </c:when>
         <c:otherwise>
             <h3 class="page-header" style="text-align: center; margin-top: 30px; margin-bottom: 30px">
-                <fmt:message key="enrollments.header"/> (<fmt:message key="faculty.finalList"/>)</h3>
+                <fmt:message key="faculty.finalList"/>
+            </h3>
+
             <table class="table">
                 <thead>
                 <tr>
@@ -29,16 +28,14 @@
                     <tr>
                         <th scope="row">${enrollment.id}</th>
                         <c:choose>
-                            <c:when test="${sessionScope.user.admin}">
-                                <td>
-                                    <a href="${pageContext.request.contextPath}/admin/user?userId=${enrollment.user.id}">${enrollment.user.fullName}</a>
-                                </td>
+                            <c:when test="${auth.admin}">
+                                <td><a href="${contextPath}/admin/user?userId=${enrollment.user.id}">${enrollment.user.fullName}</a></td>
                             </c:when>
                             <c:otherwise>
                                 <td>${enrollment.user.fullName}</td>
                             </c:otherwise>
                         </c:choose>
-                        <td>${enrollment.user.status}</td>
+                        <td><fmt:message key="user.status.${enrollment.user.status}"/></td>
                         <td>${enrollment.marksSum}</td>
                     </tr>
                 </c:forEach>
