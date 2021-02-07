@@ -3,11 +3,8 @@ package com.bezshtanko.university_admission_servlet.controller.command.entrant.p
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
 import com.bezshtanko.university_admission_servlet.dto.UserDTO;
 import com.bezshtanko.university_admission_servlet.filter.AuthFilter;
-import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
-import com.bezshtanko.university_admission_servlet.model.enrollment.EnrollmentStatus;
 import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
 import com.bezshtanko.university_admission_servlet.model.mark.Mark;
-import com.bezshtanko.university_admission_servlet.model.user.User;
 import com.bezshtanko.university_admission_servlet.service.EnrollmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EntrantEnrollPost implements Command {
 
@@ -31,37 +30,26 @@ public class EntrantEnrollPost implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing entrant enroll post command");
         HttpSession session = request.getSession();
-        UserDTO user = (UserDTO) session.getAttribute(AuthFilter.USER_SESSION_ATTRIBUTE_NAME);
+        UserDTO user = (UserDTO) session.getAttribute(AuthFilter.AUTH_ATTRIBUTE_NAME);
 
         Faculty faculty = (Faculty) session.getAttribute("faculty");
         session.removeAttribute("faculty");
 
-        Enrollment enrollment = new Enrollment();
-        enrollment.setFaculty(faculty);
-        enrollment.setStatus(EnrollmentStatus.NEW);
-        enrollment.setUser(User.builder()
-                .setId(user.getId())
-                .build());
-
-        //todo refactor
-        faculty.getSubjects()
-                .forEach(subject -> enrollment.getMarks().add(
-                        Mark.builder()
-                                .setEnrollment(enrollment)
-                                .setSubject(subject)
-                                .setMark(new BigDecimal(request.getParameter(subject.getNameEn() + " " + subject.getType()))
-                                        .setScale(2, RoundingMode.DOWN))
-                                .build()));
-
         BigDecimal zero = new BigDecimal("0");
-        enrollment.getMarks().forEach(mark -> {
-            if (mark.getMark().compareTo(zero) < 0) {
-                throw new RuntimeException();
-            }
-        });
+        List<Mark> marks = faculty.getSubjects()
+                .stream()
+                .map(s -> Mark.builder()
+                        .setSubject(s)
+                        .setMark(new BigDecimal(request.getParameter(s.getNameEn() + " " + s.getType()))
+                                .setScale(2, RoundingMode.DOWN))
+                        .build())
+                .peek(m -> {
+                    if (m.getMark().compareTo(zero) < 0) {
+                        throw new RuntimeException("Mark must be equal or greater than 0");
+                    }
+                }).collect(Collectors.toList());
 
-        enrollmentService.save(enrollment);
-        user.getEnrollments().add(enrollment);
+        enrollmentService.save(user, faculty, marks);
         return "redirect:/entrant/faculty?facultyId=" + faculty.getId();
     }
 }

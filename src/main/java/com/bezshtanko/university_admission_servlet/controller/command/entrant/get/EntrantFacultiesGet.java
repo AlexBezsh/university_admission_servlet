@@ -28,7 +28,7 @@ public class EntrantFacultiesGet implements Command {
 
         HttpSession session = request.getSession();
 
-        UserDTO user = (UserDTO) session.getAttribute(AuthFilter.USER_SESSION_ATTRIBUTE_NAME);
+        UserDTO user = (UserDTO) session.getAttribute(AuthFilter.AUTH_ATTRIBUTE_NAME);
         if (user.isEnrolledContract() || user.isEnrolledStateFunded()) {
             return "redirect:/entrant/congratulation";
         }

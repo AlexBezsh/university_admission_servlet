@@ -4,10 +4,10 @@
 <%@ page isELIgnored="false" %>
 
 <html>
-<jsp:include page="../fragments/headTag.jsp"/>
+<jsp:include page="../fragments/head_tag.jsp"/>
 
 <body>
-<jsp:include page="../fragments/bodyHeader.jsp"/>
+<jsp:include page="../fragments/body_header.jsp"/>
 
 <div style="margin-top: 25px; margin-bottom: 25px; margin-left: 50px; margin-right: 50px;" class="alert alert-success">
     <c:if test="${auth.enrolledContract}">

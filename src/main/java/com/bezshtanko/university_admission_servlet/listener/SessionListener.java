@@ -26,7 +26,7 @@ public class SessionListener implements HttpSessionListener {
         Set<String> loggedUsers = (Set<String>) session
                 .getServletContext()
                 .getAttribute(LOGGED_USERS_SET_NAME);
-        loggedUsers.remove(((UserDTO) session.getAttribute(AuthFilter.USER_SESSION_ATTRIBUTE_NAME)).getEmail());
+        loggedUsers.remove(((UserDTO) session.getAttribute(AuthFilter.AUTH_ATTRIBUTE_NAME)).getEmail());
         log.info("Session was destroyed");
     }
 }

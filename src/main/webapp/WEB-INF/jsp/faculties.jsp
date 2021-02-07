@@ -4,10 +4,10 @@
 <%@ page isELIgnored="false" %>
 
 <html>
-<jsp:include page="fragments/headTag.jsp"/>
+<jsp:include page="fragments/head_tag.jsp"/>
 
 <body>
-<jsp:include page="fragments/bodyHeader.jsp"/>
+<jsp:include page="fragments/body_header.jsp"/>
 
 <c:set var="pageInfo" value="${sessionScope.facultiesPageInfo}" scope="request"/>
 <div style="margin-left: 30px; margin-right: 30px;">

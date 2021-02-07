@@ -16,7 +16,7 @@ public class LogoutGet implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing logout get command");
         HttpSession session = request.getSession();
-        log.info("User {} is logging out", session.getAttribute(AuthFilter.USER_SESSION_ATTRIBUTE_NAME));
+        log.info("User {} is logging out", session.getAttribute(AuthFilter.AUTH_ATTRIBUTE_NAME));
         session.invalidate();
         return "redirect:/";
     }

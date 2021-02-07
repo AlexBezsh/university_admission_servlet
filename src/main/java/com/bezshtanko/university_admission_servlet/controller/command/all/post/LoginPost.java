@@ -50,7 +50,7 @@ public class LoginPost implements Command {
             return "redirect:/login?userIsLogged";
         }
 
-        session.setAttribute(AuthFilter.USER_SESSION_ATTRIBUTE_NAME, user);
+        session.setAttribute(AuthFilter.AUTH_ATTRIBUTE_NAME, user);
         log.info("redirecting to faculties");
         return user.hasRole(UserRole.ADMIN)
                 ? "redirect:/admin/faculties"

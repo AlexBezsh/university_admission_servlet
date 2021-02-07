@@ -1,24 +1,36 @@
 package com.bezshtanko.university_admission_servlet.service;
 
 import com.bezshtanko.university_admission_servlet.dao.interfaces.EnrollmentDao;
-import com.bezshtanko.university_admission_servlet.dao.interfaces.MarkDao;
-import com.bezshtanko.university_admission_servlet.dao.interfaces.UserDao;
-import com.bezshtanko.university_admission_servlet.exception.AuthenticationException;
+import com.bezshtanko.university_admission_servlet.dto.UserDTO;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
+import com.bezshtanko.university_admission_servlet.model.enrollment.EnrollmentStatus;
+import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
+import com.bezshtanko.university_admission_servlet.model.mark.Mark;
 import com.bezshtanko.university_admission_servlet.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 
 public class EnrollmentService extends Service {
 
     private static final Logger log = LoggerFactory.getLogger(EnrollmentService.class);
 
-    public void save(Enrollment enrollment) {
+    public void save(UserDTO user, Faculty faculty, List<Mark> marks) {
+        Enrollment enrollment = Enrollment.builder()
+                .setFaculty(faculty)
+                .setStatus(EnrollmentStatus.NEW)
+                .setUser(User.builder()
+                        .setId(user.getId())
+                        .build())
+                .setMarks(marks)
+                .build();
+        marks.forEach(m -> m.setEnrollment(enrollment));
+        user.getEnrollments().add(enrollment);
+        faculty.getEnrollments().add(enrollment);
+
         try (EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
-            log.info("Saving new enrollment with faculty id '{}' and user id '{}'", enrollment.getFaculty().getId(), enrollment.getUser().getId());
+            log.info("Saving new enrollment with faculty id '{}' and user id '{}'", faculty.getId(), user.getId());
             enrollmentDao.save(enrollment);
         }
     }

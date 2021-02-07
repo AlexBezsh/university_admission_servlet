@@ -22,7 +22,7 @@ public class EntrantProfileGet implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         log.info("Executing entrant profile get command");
-        UserDTO user = (UserDTO) request.getSession().getAttribute(AuthFilter.USER_SESSION_ATTRIBUTE_NAME);
+        UserDTO user = (UserDTO) request.getSession().getAttribute(AuthFilter.AUTH_ATTRIBUTE_NAME);
         user.setEnrollments(enrollmentService.findAllByUserId(user.getId()));
         request.setAttribute("user", user);
         return "user_profile";
