@@ -1,5 +1,6 @@
 package com.bezshtanko.university_admission_servlet.service;
 
+import com.bezshtanko.university_admission_servlet.dao.interfaces.DaoFactory;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.EnrollmentDao;
 import com.bezshtanko.university_admission_servlet.dto.UserDTO;
 import com.bezshtanko.university_admission_servlet.model.enrollment.Enrollment;
@@ -15,6 +16,10 @@ import java.util.List;
 public class EnrollmentService extends Service {
 
     private static final Logger log = LoggerFactory.getLogger(EnrollmentService.class);
+
+    public EnrollmentService(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     public void save(UserDTO user, Faculty faculty, List<Mark> marks) {
         Enrollment enrollment = Enrollment.builder()
@@ -39,13 +44,6 @@ public class EnrollmentService extends Service {
         try (EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
             log.info("Setting  status 'APPROVED' in enrollment with id '{}'", id);
             enrollmentDao.setApproved(id);
-        }
-    }
-
-    public List<Enrollment> findAllByUserId(Long id) {
-        try (EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
-            log.info("Getting enrollments for user with id '{}' from database", id);
-            return enrollmentDao.findAllByUserId(id);
         }
     }
 

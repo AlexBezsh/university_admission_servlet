@@ -17,15 +17,18 @@ public abstract class JDBCDao {
         this.connection = connection;
     }
 
-    public void close() {
-        try {
-            connection.close();
+    protected boolean updateEntityStatus(Long entityId, String query) {
+        try(PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setLong(1, entityId);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows == 1;
         } catch (SQLException e) {
+            log.error("SQLException occurred during status update");
             throw new RuntimeException(e);
         }
     }
 
-    protected void handleConnectionAfterException(Connection connection) {
+    protected void handleConnectionAfterException() {
         try {
             connection.rollback();
         } catch (SQLException e) {
@@ -38,13 +41,10 @@ public abstract class JDBCDao {
         }
     }
 
-    protected boolean updateEntityStatus(Long entityId, String query) {
-        try(PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setLong(1, entityId);
-            int affectedRows = ps.executeUpdate();
-            return affectedRows == 1;
+    public void close() {
+        try {
+            connection.close();
         } catch (SQLException e) {
-            log.error("SQLException occurred during status update");
             throw new RuntimeException(e);
         }
     }

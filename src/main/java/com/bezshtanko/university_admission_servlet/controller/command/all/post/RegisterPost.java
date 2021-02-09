@@ -38,13 +38,13 @@ public class RegisterPost implements Command {
                 .setEducation(request.getParameter("education"))
                 .build();
 
-        String errors = ValidationUtil.getUserErrors(user);
+        String errors = ValidationUtil.getUserDataErrors(user);
         if (!errors.isEmpty()) {
             log.info("There are errors in received data");
             return "redirect:/register?" + errors;
         }
 
-        userService.saveNewUser(user);
+        userService.save(user);
         return "redirect:/login?registrationSuccess";
     }
 }

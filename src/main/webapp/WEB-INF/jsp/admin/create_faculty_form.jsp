@@ -97,6 +97,11 @@
                 </div>
                 <div>
                     <p><b><fmt:message key="faculty.subjects"/> </b></p>
+                    <c:if test="${param.subjectsError ne null}">
+                        <div class="error" style="color: red;">
+                            <span><fmt:message key="faculty.subjectsError"/></span>
+                        </div>
+                    </c:if>
                     <c:forEach items="${subjects}" var="subject">
                         <input id="${subject.nameEn} ${subject.type}"
                                type="checkbox"

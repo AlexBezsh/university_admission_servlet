@@ -28,7 +28,27 @@ public class AdminFacultyNewPost implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing admin faculty new post command");
 
-        Faculty faculty = Faculty.builder()
+        Faculty faculty = retrieveFaculty(request);
+        List<Subject> chosenSubjects = retrieveChosenSubjects(request);
+
+        String errors = ValidationUtil.getFacultyDataErrors(faculty);
+        if (chosenSubjects.isEmpty()) {
+            errors = "subjectsError&" + errors;
+        } else {
+            faculty.setSubjects(chosenSubjects);
+        }
+
+        if (!errors.isEmpty()) {
+            log.info("There are errors in received data");
+            return "redirect:/admin/faculty/new?" + errors;
+        }
+
+        facultyService.save(faculty);
+        return "redirect:/admin/faculties";
+    }
+
+    private Faculty retrieveFaculty(HttpServletRequest request) {
+        return Faculty.builder()
                 .setNameEn(request.getParameter("nameEn"))
                 .setNameUa(request.getParameter("nameUa"))
                 .setStatus(FacultyStatus.ACTIVE)
@@ -37,23 +57,16 @@ public class AdminFacultyNewPost implements Command {
                 .setStateFundedPlaces(Integer.parseInt(request.getParameter("stateFundedPlaces")))
                 .setContractPlaces(Integer.parseInt(request.getParameter("contractPlaces")))
                 .build();
+    }
 
-        String errors = ValidationUtil.getFacultyErrors(faculty);
-        if (!errors.isEmpty()) {
-            log.info("There are errors in received data");
-            return "redirect:/admin/faculty/new?" + errors;
-        }
-
+    private List<Subject> retrieveChosenSubjects(HttpServletRequest request) {
         HttpSession session = request.getSession();
         List<Subject> allSubjects = (List<Subject>) session.getAttribute("subjects");
         session.removeAttribute("subjects");
-        List<Subject> chosenSubjects = allSubjects.stream()
+
+        return allSubjects.stream()
                 .filter(subject -> request.getParameter((subject.getNameEn() + " " + subject.getType())) != null)
                 .collect(Collectors.toList());
-        faculty.setSubjects(chosenSubjects);
-
-        facultyService.save(faculty);
-
-        return "redirect:/admin/faculties";
     }
+
 }

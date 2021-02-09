@@ -2,7 +2,6 @@ package com.bezshtanko.university_admission_servlet.controller.command.admin.pos
 
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
 import com.bezshtanko.university_admission_servlet.model.faculty.Faculty;
-import com.bezshtanko.university_admission_servlet.model.faculty.FacultyStatus;
 import com.bezshtanko.university_admission_servlet.service.FacultyService;
 import com.bezshtanko.university_admission_servlet.util.ValidationUtil;
 import org.slf4j.Logger;
@@ -34,7 +33,7 @@ public class AdminFacultyEditPost implements Command {
                 .setContractPlaces(Integer.parseInt(request.getParameter("contractPlaces")))
                 .build();
 
-        String errors = ValidationUtil.getFacultyErrors(faculty);
+        String errors = ValidationUtil.getFacultyDataErrors(faculty);
         if (!errors.isEmpty()) {
             log.info("There are errors in received data");
             for (String error : errors.split("&")) {

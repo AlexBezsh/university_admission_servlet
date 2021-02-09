@@ -48,7 +48,7 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
             log.info("Queries successfully executed for user: {}", user);
         } catch (SQLException e) {
             log.error("Exception occurred during saving new user: {}", user);
-            handleConnectionAfterException(connection);
+            handleConnectionAfterException();
             throw new RuntimeException(e);
         }
     }

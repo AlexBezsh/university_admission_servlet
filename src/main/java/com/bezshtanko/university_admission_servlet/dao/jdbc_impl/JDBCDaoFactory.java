@@ -1,9 +1,6 @@
 package com.bezshtanko.university_admission_servlet.dao.jdbc_impl;
 
-import com.bezshtanko.university_admission_servlet.dao.DataSourceHolder;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -11,28 +8,10 @@ import java.sql.SQLException;
 
 public final class JDBCDaoFactory extends DaoFactory {
 
-    private static final Logger log = LoggerFactory.getLogger(JDBCDaoFactory.class);
+    private final DataSource dataSource;
 
-    private static volatile JDBCDaoFactory instance;
-
-    private final DataSource dataSource = DataSourceHolder.getDataSource();
-
-    private JDBCDaoFactory() {
-    }
-
-    public static DaoFactory getInstance() {
-        JDBCDaoFactory result = instance;
-        if (result != null) {
-            return result;
-        }
-
-        synchronized (JDBCDaoFactory.class) {
-            if (instance == null) {
-                log.info("Initializing JDBCDaoFactory");
-                instance = new JDBCDaoFactory();
-            }
-            return instance;
-        }
+    public JDBCDaoFactory(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override

@@ -5,72 +5,78 @@ import com.bezshtanko.university_admission_servlet.model.user.User;
 
 public class ValidationUtil {
 
-    public static String getUserErrors(User user) {
-        String errors = "";
+    public static String getUserDataErrors(User user) {
+        StringBuilder errors = new StringBuilder();
 
         String fullName = user.getFullName();
         if (fullName == null || fullName.length() < 5 || fullName.length() > 120) {
-            errors += "fullNameError&";
+            errors.append("fullNameError&");
         }
 
-        if (!user.getEmail().matches(".+@.+")) {
-            errors += "emailError&";
+        String email = user.getEmail();
+        if (email == null || !email.matches(".+@.+") || email.length() > 320) {
+            errors.append("emailError&");
         }
 
-        if (!user.getPassword().matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+).{6,}")) {
-            errors += "passwordError&";
+        String password = user.getPassword();
+        if (password == null || !password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+).{6,20}")) {
+            errors.append("passwordError&");
         }
 
         String city = user.getCity();
         if (city == null || city.length() < 2 || city.length() > 100) {
-            errors += "cityError&";
+            errors.append("cityError&");
         }
 
         String region = user.getRegion();
         if (region == null || region.length() < 2 || region.length() > 100) {
-            errors += "regionError&";
+            errors.append("regionError&");
         }
 
         String education = user.getEducation();
         if (education == null || education.length() < 2 || education.length() > 100) {
-            errors += "educationError&";
+            errors.append("educationError&");
         }
 
-        return errors;
+        String result = errors.toString();
+        return result.endsWith("&") ? result.substring(0, result.length() - 1) : result;
     }
 
-    public static String getFacultyErrors(Faculty faculty) {
-        String errors = "";
+    public static String getFacultyDataErrors(Faculty faculty) {
+        StringBuilder errors = new StringBuilder();
 
         String nameEn = faculty.getNameEn();
         if (nameEn == null || nameEn.length() < 2 || nameEn.length() > 250) {
-            errors += "nameEnError&";
+            errors.append("nameEnError&");
         }
 
         String nameUa = faculty.getNameUa();
         if (nameUa == null || nameUa.length() < 2 || nameUa.length() > 250) {
-            errors += "nameUaError&";
+            errors.append("nameUaError&");
         }
 
         String descriptionEn = faculty.getDescriptionEn();
         if (descriptionEn == null || descriptionEn.length() < 10) {
-            errors += "descriptionEnError&";
+            errors.append("descriptionEnError&");
         }
 
         String descriptionUa = faculty.getDescriptionUa();
         if (descriptionUa == null || descriptionUa.length() < 10) {
-            errors += "descriptionUaError&";
+            errors.append("descriptionUaError&");
         }
 
-        if (faculty.getStateFundedPlaces() < 0) {
-            errors += "stateFundedPlacesError&";
+        Integer stateFundedPlaces = faculty.getStateFundedPlaces();
+        if (stateFundedPlaces == null || stateFundedPlaces < 0) {
+            errors.append("stateFundedPlacesError&");
         }
 
-        if (faculty.getContractPlaces() < 0) {
-            errors += "contractPlacesError&";
+        Integer contractPlaces = faculty.getContractPlaces();
+        if (contractPlaces == null || contractPlaces < 0) {
+            errors.append("contractPlacesError&");
         }
 
-        return errors;
+        String result = errors.toString();
+        return result.endsWith("&") ? result.substring(0, result.length() - 1) : result;
     }
 
 }

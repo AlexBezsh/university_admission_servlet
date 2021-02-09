@@ -1,8 +1,6 @@
 package com.bezshtanko.university_admission_servlet.controller.command.admin.get;
 
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
-import com.bezshtanko.university_admission_servlet.dto.UserDTO;
-import com.bezshtanko.university_admission_servlet.service.EnrollmentService;
 import com.bezshtanko.university_admission_servlet.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,7 @@ public class AdminUserGet implements Command {
     public String execute(HttpServletRequest request) {
         log.info("Executing admin user get command");
         Long userId = Long.parseLong(request.getParameter("userId"));
-        request.setAttribute("user", userService.getUserWithEnrollments(userId));
+        request.setAttribute("user", userService.getWithEnrollments(userId));
         return "user_profile";
     }
 }

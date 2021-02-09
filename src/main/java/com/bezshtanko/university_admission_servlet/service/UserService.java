@@ -1,5 +1,6 @@
 package com.bezshtanko.university_admission_servlet.service;
 
+import com.bezshtanko.university_admission_servlet.dao.interfaces.DaoFactory;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.EnrollmentDao;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.UserDao;
 import com.bezshtanko.university_admission_servlet.dto.UserDTO;
@@ -16,6 +17,10 @@ import java.util.Optional;
 public class UserService extends Service {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
+    public UserService(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     public UserDTO login(String email, String password) {
         log.info("Creating user dao");
@@ -39,7 +44,7 @@ public class UserService extends Service {
         }
     }
 
-    public void saveNewUser(User user) {
+    public void save(User user) {
         log.info("Saving new user: {}", user);
         user.setPassword(encodePassword(user.getPassword()));
         try (UserDao userDao = daoFactory.createUserDao()) {
@@ -47,7 +52,7 @@ public class UserService extends Service {
         }
     }
 
-    public User getUserWithEnrollments(Long userId) {
+    public User getWithEnrollments(Long userId) {
         log.info("Getting user with id '{}' with enrollments", userId);
         try (UserDao userDao = daoFactory.createUserDao();
              EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {

@@ -70,7 +70,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
             log.info("Faculty {} have been successfully saved", faculty);
         } catch (SQLException e) {
             log.error("Exception occurred during saving new faculty");
-            handleConnectionAfterException(connection);
+            handleConnectionAfterException();
             throw new RuntimeException(e);
         }
     }
@@ -199,7 +199,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
     }
 
     @Override
-    public void finalizeFaculty(Long facultyId) {
+    public void finalize(Long facultyId) {
         String getFacultyInfoQuery = "SELECT status, state_funded_places, contract_places FROM faculty WHERE id = ?";
         String closeFacultyQuery = "UPDATE faculty SET status = '" + FacultyStatus.CLOSED + "' WHERE id = ?";
         String finalizeEnrollmentsQuery =
@@ -289,7 +289,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
             connection.setAutoCommit(true);
         } catch (SQLException e) {
             log.error("Exception occurred during faculty finalization");
-            handleConnectionAfterException(connection);
+            handleConnectionAfterException();
             throw new RuntimeException(e);
         }
     }

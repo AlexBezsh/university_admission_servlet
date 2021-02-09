@@ -8,6 +8,6 @@ import java.util.List;
 public interface FacultyDao extends Dao<Faculty> {
 
     List<Faculty> findAll(PageInfoDTO pageInfo);
-    void finalizeFaculty(Long id);
+    void finalize(Long id);
 
 }

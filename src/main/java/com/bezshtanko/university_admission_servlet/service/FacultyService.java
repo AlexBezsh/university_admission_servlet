@@ -1,5 +1,6 @@
 package com.bezshtanko.university_admission_servlet.service;
 
+import com.bezshtanko.university_admission_servlet.dao.interfaces.DaoFactory;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.EnrollmentDao;
 import com.bezshtanko.university_admission_servlet.dao.interfaces.FacultyDao;
 import com.bezshtanko.university_admission_servlet.dto.PageInfoDTO;
@@ -17,14 +18,18 @@ public class FacultyService extends Service {
 
     private static final Logger log = LoggerFactory.getLogger(FacultyService.class);
 
-    private static final Comparator<Enrollment> ACTIVE_FACULTY_ENROLLMENT_COMPARATOR = Comparator
+    private static final Comparator<Enrollment> ACTIVE_FACULTY_ENROLLMENTS_COMPARATOR = Comparator
             .comparing((Enrollment e) -> e.getUser().getStatus())
             .thenComparing(Enrollment::getStatus)
             .thenComparing(Comparator.comparing(Enrollment::getMarksSum).reversed());
 
-    private static final Comparator<Enrollment> CLOSED_FACULTY_ENROLLMENT_COMPARATOR = Comparator
+    private static final Comparator<Enrollment> CLOSED_FACULTY_ENROLLMENTS_COMPARATOR = Comparator
             .comparing((Enrollment e) -> e.getUser().getStatus()).reversed()
             .thenComparing(Comparator.comparing(Enrollment::getMarksSum).reversed());
+
+    public FacultyService(DaoFactory daoFactory) {
+        super(daoFactory);
+    }
 
     public void save(Faculty faculty) {
         log.info("Saving new faculty {}", faculty);
@@ -65,14 +70,11 @@ public class FacultyService extends Service {
         }
     }
 
-    public Faculty finalizeFaculty(Long id) {
-        try (FacultyDao facultyDao = daoFactory.createFacultyDao();
-             EnrollmentDao enrollmentDao = daoFactory.createEnrollmentDao()) {
+    public void finalize(Long id) {
+        try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
             log.info("Finalization of faculty with id '{}' started", id);
-            facultyDao.finalizeFaculty(id);
-            log.info("Finalization finished successfully. Getting final list");
-            Faculty faculty = facultyDao.findById(id).orElseThrow(FacultyNotExistException::new);
-            return setEnrollments(faculty, enrollmentDao.findAllFinalizedByFacultyId(id));
+            facultyDao.finalize(id);
+            log.info("Finalization finished successfully");
         }
     }
 
@@ -88,7 +90,7 @@ public class FacultyService extends Service {
         faculty.setEnrollments(enrollments
                 .stream()
                 .peek(e -> e.setFaculty(faculty))
-                .sorted(faculty.isActive() ? ACTIVE_FACULTY_ENROLLMENT_COMPARATOR : CLOSED_FACULTY_ENROLLMENT_COMPARATOR)
+                .sorted(faculty.isActive() ? ACTIVE_FACULTY_ENROLLMENTS_COMPARATOR : CLOSED_FACULTY_ENROLLMENTS_COMPARATOR)
                 .collect(Collectors.toList()));
         return faculty;
     }

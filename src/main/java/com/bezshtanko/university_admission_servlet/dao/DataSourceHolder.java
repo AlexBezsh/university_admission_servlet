@@ -19,25 +19,22 @@ public final class DataSourceHolder {
     }
 
     public static DataSource getDataSource() {
-        DataSource result = dataSource;
-        if (dataSource != null) {
-            return result;
-        }
-
-        synchronized (DataSourceHolder.class) {
-            if (dataSource == null) {
-                log.info("Initializing data source");
-                Properties properties = getProperties();
-                BasicDataSource ds = new BasicDataSource();
-                ds.setDriverClassName(properties.getProperty("datasource.driverClassName"));
-                ds.setUrl(properties.getProperty("datasource.url"));
-                ds.setUsername(properties.getProperty("datasource.username"));
-                ds.setPassword(properties.getProperty("datasource.password"));
-                ds.setMinIdle(5);
-                ds.setMaxIdle(10);
-                ds.setMaxOpenPreparedStatements(100);
-                dataSource = ds;
-                log.info("Data source initialized");
+        if (dataSource == null) {
+            synchronized (DataSourceHolder.class) {
+                if (dataSource == null) {
+                    log.info("Initializing data source");
+                    Properties properties = getProperties();
+                    BasicDataSource ds = new BasicDataSource();
+                    ds.setDriverClassName(properties.getProperty("datasource.driverClassName"));
+                    ds.setUrl(properties.getProperty("datasource.url"));
+                    ds.setUsername(properties.getProperty("datasource.username"));
+                    ds.setPassword(properties.getProperty("datasource.password"));
+                    ds.setMinIdle(5);
+                    ds.setMaxIdle(10);
+                    ds.setMaxOpenPreparedStatements(100);
+                    dataSource = ds;
+                    log.info("Data source initialized");
+                }
             }
         }
         return dataSource;

@@ -42,7 +42,7 @@ public class Servlet extends HttpServlet {
         commands.put("/register post", new RegisterPost((UserService) Services.USER_SERVICE.get()));
         commands.put("/error get", new ErrorGet());
 
-        commands.put("/entrant/profile get", new EntrantProfileGet((EnrollmentService) Services.ENROLLMENT_SERVICE.get()));
+        commands.put("/entrant/profile get", new EntrantProfileGet((UserService) Services.USER_SERVICE.get()));
         commands.put("/entrant/faculties get", new EntrantFacultiesGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/entrant/faculty get", new EntrantFacultyGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/entrant/enroll get", new EntrantEnrollGet((FacultyService) Services.FACULTY_SERVICE.get()));

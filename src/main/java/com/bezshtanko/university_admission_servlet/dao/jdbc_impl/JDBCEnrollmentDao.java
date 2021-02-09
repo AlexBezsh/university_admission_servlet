@@ -67,7 +67,7 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
             log.info("Enrollment {} have been successfully saved", enrollment);
         } catch (SQLException e) {
             log.error("Exception occurred during saving new enrollment");
-            handleConnectionAfterException(connection);
+            handleConnectionAfterException();
             throw new RuntimeException(e);
         }
     }
