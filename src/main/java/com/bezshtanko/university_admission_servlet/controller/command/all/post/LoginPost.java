@@ -46,7 +46,7 @@ public class LoginPost implements Command {
         }
 
         HttpSession session = request.getSession();
-        if (checkUserIsLogged(session, user)) {
+        if (userIsLogged(session, user)) {
             return "redirect:/login?userIsLogged";
         }
 
@@ -57,7 +57,7 @@ public class LoginPost implements Command {
                 : "redirect:/entrant/faculties";
     }
 
-    private boolean checkUserIsLogged(HttpSession session, UserDTO user) {
+    private boolean userIsLogged(HttpSession session, UserDTO user) {
         Set<String> loggedUsers = (Set<String>) session.getServletContext().getAttribute(SessionListener.LOGGED_USERS_SET_NAME);
         if (loggedUsers.contains(user.getEmail())) {
             log.info("User {} is already logged in", user);

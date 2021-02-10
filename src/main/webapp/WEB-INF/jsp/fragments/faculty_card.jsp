@@ -12,7 +12,7 @@
         <div class="row" style="justify-content: space-between">
             <div class="list-view" style="width: 30rem">
                 <p class="card-text" style="margin-right: 10px; width: available">
-                    ${lang.equals('en') ? faculty.descriptionEn : faculty.descriptionUa}
+                    ${lang.equals('ua') ? faculty.descriptionUa : faculty.descriptionEn}
                 </p>
                 <p class="card-text" style="margin-right: 10px">
                     <fmt:message key="faculty.status"/>: <fmt:message key="faculty.status.${faculty.status}"/></p>
@@ -57,14 +57,9 @@
                     </h5>
                     <ul>
                         <c:forEach items="${faculty.subjects}" var="subject">
-                            <c:choose>
-                                <c:when test="${lang.equals('ua')}">
-                                    <li>${subject.nameUa} (<fmt:message key="subject.type.${subject.type}"/>)</li>
-                                </c:when>
-                                <c:otherwise>
-                                    <li>${subject.nameEn} (<fmt:message key="subject.type.${subject.type}"/>)</li>
-                                </c:otherwise>
-                            </c:choose>
+                            <li>${lang.equals('ua') ? subject.nameUa : subject.nameEn}
+                                (<fmt:message key="subject.type.${subject.type}"/>)
+                            </li>
                         </c:forEach>
                     </ul>
                 </div>

@@ -26,8 +26,6 @@ public class LocaleFilter implements Filter {
         if (locale != null) {
             req.getSession().setAttribute(LANG_ATTRIBUTE_NAME, locale);
             log.info("Locale has been changed to \"{}\"", locale);
-        } else if (req.getSession().getAttribute(LANG_ATTRIBUTE_NAME) == null) {
-            req.getSession().setAttribute(LANG_ATTRIBUTE_NAME, "en");
         }
         chain.doFilter(request, response);
     }

@@ -3,12 +3,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-<fmt:setLocale value="${sessionScope.lang}" scope="request"/>
-<fmt:setBundle basename="i18n.messages" scope="request"/>
-
 <c:set var="auth" value="${sessionScope.user}" scope="request"/>
-<c:set var="lang" value="${sessionScope.lang}" scope="request"/>
+<c:set var="lang" value="${sessionScope.lang ne null ? sessionScope.lang : 'en'}" scope="request"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}/app" scope="request"/>
+
+<fmt:setLocale value="${lang}" scope="request"/>
+<fmt:setBundle basename="i18n.messages" scope="request"/>
 
 <head>
     <meta charset="UTF-8">

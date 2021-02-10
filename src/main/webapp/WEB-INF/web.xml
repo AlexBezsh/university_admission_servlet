@@ -10,7 +10,6 @@
         <url-pattern>/app/*</url-pattern>
     </servlet-mapping>
 
-    <!--filters-->
     <filter>
         <filter-name>EncodingFilter</filter-name>
         <filter-class>com.bezshtanko.university_admission_servlet.filter.EncodingFilter</filter-class>
