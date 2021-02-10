@@ -199,7 +199,7 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
     }
 
     @Override
-    public void finalize(Long facultyId) {
+    public void finalizeFaculty(Long facultyId) {
         String getFacultyInfoQuery = "SELECT status, state_funded_places, contract_places FROM faculty WHERE id = ?";
         String closeFacultyQuery = "UPDATE faculty SET status = '" + FacultyStatus.CLOSED + "' WHERE id = ?";
         String finalizeEnrollmentsQuery =
@@ -252,8 +252,8 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
              PreparedStatement setEnrolledContractStmt = connection.prepareStatement(setEnrolledContractQuery)) {
             log.info("All prepared statements for finalization are created");
 
+            log.info("Opening transaction");
             connection.setAutoCommit(false);
-            log.info("Transaction opened");
 
             getFacultyInfoStmt.setLong(1, facultyId);
             ResultSet facultyInfo = getFacultyInfoStmt.executeQuery();

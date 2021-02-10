@@ -1,6 +1,7 @@
 package com.bezshtanko.university_admission_servlet.controller.command.all.post;
 
 import com.bezshtanko.university_admission_servlet.controller.command.Command;
+import com.bezshtanko.university_admission_servlet.exception.UserNotExistException;
 import com.bezshtanko.university_admission_servlet.model.user.User;
 import com.bezshtanko.university_admission_servlet.model.user.UserRole;
 import com.bezshtanko.university_admission_servlet.model.user.UserStatus;
@@ -39,8 +40,15 @@ public class RegisterPost implements Command {
                 .build();
 
         String errors = ValidationUtil.getUserDataErrors(user);
+        try {
+            userService.getByEmail(user.getEmail());
+            errors = "userAlreadyExistError&" + errors;
+        } catch (UserNotExistException ignore) {
+            //if user not exist, registration allowed
+        }
+
         if (!errors.isEmpty()) {
-            log.info("There are errors in received data");
+            log.info("Received data is not valid");
             return "redirect:/register?" + errors;
         }
 

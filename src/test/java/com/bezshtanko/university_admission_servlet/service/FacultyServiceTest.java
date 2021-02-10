@@ -134,11 +134,11 @@ public class FacultyServiceTest {
 
     @Test
     public void shouldInvokeFinalizeMethodInDaoWhenFinalizingFaculty() {
-        doNothing().when(FACULTY_DAO).finalize(testFaculty.getId());
+        doNothing().when(FACULTY_DAO).finalizeFaculty(testFaculty.getId());
 
-        testedInstance.finalize(testFaculty.getId());
+        testedInstance.finalizeFaculty(testFaculty.getId());
 
-        verify(FACULTY_DAO, times(1)).finalize(testFaculty.getId());
+        verify(FACULTY_DAO, times(1)).finalizeFaculty(testFaculty.getId());
     }
 
     @Test

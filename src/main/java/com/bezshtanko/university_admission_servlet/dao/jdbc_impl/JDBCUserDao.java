@@ -37,10 +37,10 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
             saveUserStmt.setString(5, user.getCity());
             saveUserStmt.setString(6, user.getRegion());
             saveUserStmt.setString(7, user.getEducation());
-            log.info("prepared statements created for new user: {}", user);
+            log.info("Prepared statements created for new user: {}", user);
 
+            log.info("Opening transaction");
             connection.setAutoCommit(false);
-            log.info("Transaction has been opened");
             saveUserStmt.execute();
             saveRolesStmt.execute();
             connection.commit();
@@ -93,7 +93,8 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, email);
             log.info("Prepared statement created for user with email {}", email);
-            result = Optional.of(executeFindUsersQuery(ps).get(0));
+            List<User> resultList = executeFindUsersQuery(ps);
+            result = resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -127,6 +128,7 @@ public class JDBCUserDao extends JDBCDao implements UserDao {
             user = mapper.get(resultSet);
             mapper.makeUnique(users, user);
         }
+        log.info("Mapping finished");
         return new ArrayList<>(users.values());
     }
 

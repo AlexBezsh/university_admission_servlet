@@ -13,7 +13,11 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <h2 class="page-header"><fmt:message key="registration.form.header"/></h2>
-
+            <c:if test="${param.userAlreadyExistError ne null}">
+                <div class="alert alert-danger">
+                    <span><fmt:message key="user.userAlreadyExistError"/></span>
+                </div>
+            </c:if>
             <form style="margin-bottom: 30px" name="form" autocomplete="off" action="${contextPath}/register" method="post">
                 <div class="form-group">
                     <label for="fullName"><fmt:message key="user.fullName"/></label>

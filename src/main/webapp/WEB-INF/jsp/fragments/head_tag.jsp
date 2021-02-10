@@ -8,7 +8,7 @@
 
 <c:set var="auth" value="${sessionScope.user}" scope="request"/>
 <c:set var="lang" value="${sessionScope.lang}" scope="request"/>
-<c:set var="contextPath" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="contextPath" value="${pageContext.request.contextPath}/app" scope="request"/>
 
 <head>
     <meta charset="UTF-8">

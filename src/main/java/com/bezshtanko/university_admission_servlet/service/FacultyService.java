@@ -70,10 +70,10 @@ public class FacultyService extends Service {
         }
     }
 
-    public void finalize(Long id) {
+    public void finalizeFaculty(Long id) {
         try (FacultyDao facultyDao = daoFactory.createFacultyDao()) {
             log.info("Finalization of faculty with id '{}' started", id);
-            facultyDao.finalize(id);
+            facultyDao.finalizeFaculty(id);
             log.info("Finalization finished successfully");
         }
     }

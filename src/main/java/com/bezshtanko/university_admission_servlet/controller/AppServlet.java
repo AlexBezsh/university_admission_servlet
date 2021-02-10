@@ -23,9 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Servlet extends HttpServlet {
+public class AppServlet extends HttpServlet {
 
-    private static final Logger log = LoggerFactory.getLogger(Servlet.class);
+    private static final Logger log = LoggerFactory.getLogger(AppServlet.class);
+
+    public static final String CONTEXT = "/app";
 
     private final Map<String, Command> commands = new HashMap<>();
     private static final String TEMPLATES_PATH = "/WEB-INF/jsp/";
@@ -76,15 +78,15 @@ public class Servlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response, String requestMethod) throws ServletException, IOException {
-        String page = commands.get(request.getRequestURI() + requestMethod).execute(request);
+        String page = commands.get(request.getRequestURI().replaceFirst(CONTEXT, "") + requestMethod).execute(request);
         log.info("Page \"{}\" was created", page);
 
         if (page.startsWith("redirect:")) {
             log.info("redirecting");
-            response.sendRedirect(page.replace("redirect:", ""));
+            response.sendRedirect(page.replace("redirect:", CONTEXT));
         } else {
             log.info("forwarding");
-            request.getRequestDispatcher( TEMPLATES_PATH + page + ".jsp").forward(request, response);
+            request.getRequestDispatcher(TEMPLATES_PATH + page + ".jsp").forward(request, response);
         }
     }
 
