@@ -42,7 +42,6 @@ public class AppServlet extends HttpServlet {
         commands.put("/logout get", new LogoutGet());
         commands.put("/register get", new RegisterGet());
         commands.put("/register post", new RegisterPost((UserService) Services.USER_SERVICE.get()));
-        commands.put("/error get", new ErrorGet());
 
         commands.put("/entrant/profile get", new EntrantProfileGet((UserService) Services.USER_SERVICE.get()));
         commands.put("/entrant/faculties get", new EntrantFacultiesGet((FacultyService) Services.FACULTY_SERVICE.get()));
