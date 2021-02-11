@@ -22,6 +22,6 @@ public class AdminUserBlockGet implements Command {
         log.info("Executing admin user block get command");
         Long userId = Long.parseLong(request.getParameter("userId"));
         userService.blockUser(userId);
-        return "redirect:/admin/user?userId=" + userId;
+        return "redirect:/admin/entrant?userId=" + userId;
     }
 }

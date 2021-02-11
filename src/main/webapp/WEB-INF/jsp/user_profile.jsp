@@ -24,13 +24,13 @@
                 <c:if test="${auth.admin}">
                     <c:if test="${user.active}">
                         <a class="btn btn-danger" style="margin-right: 5px; margin-left: 20px;"
-                           href="${contextPath}/admin/user/block?userId=${user.id}">
+                           href="${contextPath}/admin/entrant/block?userId=${user.id}">
                             <fmt:message key="user.block"/>
                         </a>
                     </c:if>
                     <c:if test="${user.blocked}">
                         <a class="btn btn-warning" style="margin-right: 5px; margin-left: 20px;"
-                           href="${contextPath}/admin/user/unblock?userId=${user.id}">
+                           href="${contextPath}/admin/entrant/unblock?userId=${user.id}">
                             <fmt:message key="user.unblock"/>
                         </a>
                     </c:if>

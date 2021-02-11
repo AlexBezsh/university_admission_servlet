@@ -60,9 +60,9 @@ public class AppServlet extends HttpServlet {
         commands.put("/admin/faculty/delete get", new AdminFacultyDeleteGet((FacultyService) Services.FACULTY_SERVICE.get()));
         commands.put("/admin/enrollment/approve get", new AdminEnrollmentApproveGet((EnrollmentService) Services.ENROLLMENT_SERVICE.get()));
         commands.put("/admin/faculty/finalize get", new AdminFacultyFinalizeGet((FacultyService) Services.FACULTY_SERVICE.get()));
-        commands.put("/admin/user get", new AdminUserGet((UserService) Services.USER_SERVICE.get()));
-        commands.put("/admin/user/block get", new AdminUserBlockGet((UserService) Services.USER_SERVICE.get()));
-        commands.put("/admin/user/unblock get", new AdminUserUnblockGet((UserService) Services.USER_SERVICE.get()));
+        commands.put("/admin/entrant get", new AdminUserGet((UserService) Services.USER_SERVICE.get()));
+        commands.put("/admin/entrant/block get", new AdminUserBlockGet((UserService) Services.USER_SERVICE.get()));
+        commands.put("/admin/entrant/unblock get", new AdminUserUnblockGet((UserService) Services.USER_SERVICE.get()));
     }
 
     @Override

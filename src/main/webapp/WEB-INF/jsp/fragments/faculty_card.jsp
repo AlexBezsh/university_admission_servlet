@@ -23,7 +23,7 @@
                 <p class="card-text" style="margin-right: 10px"><fmt:message
                         key="faculty.totalPlaces"/>: ${faculty.totalPlaces}</p>
                 <c:choose>
-                    <c:when test="${auth.admin}">
+                    <c:when test="${auth.admin && faculty.active}">
                         <div class="row">
                             <a class="btn btn-primary" style="margin-right: 5px; margin-left: 25px; margin-bottom: 5px;"
                                href="${contextPath}/admin/faculty/edit?facultyId=${faculty.id}">

@@ -22,6 +22,6 @@ public class AdminUserUnblockGet implements Command {
         log.info("Executing admin user unblock get command");
         Long userId = Long.parseLong(request.getParameter("userId"));
         userService.unblockUser(userId);
-        return "redirect:/admin/user?userId=" + userId;
+        return "redirect:/admin/entrant?userId=" + userId;
     }
 }

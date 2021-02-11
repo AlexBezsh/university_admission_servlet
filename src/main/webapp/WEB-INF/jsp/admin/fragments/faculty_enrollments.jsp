@@ -29,7 +29,7 @@
                 <tr>
                     <th scope="row">${enrollment.id}</th>
                     <td>
-                        <a href="${contextPath}/admin/user?userId=${enrollment.user.id}">${enrollment.user.fullName}</a>
+                        <a href="${contextPath}/admin/entrant?userId=${enrollment.user.id}">${enrollment.user.fullName}</a>
                     </td>
                     <td><fmt:message key="user.status.${enrollment.user.status}"/></td>
                     <td>${enrollment.marksSum}</td>

@@ -29,7 +29,7 @@
                         <th scope="row">${enrollment.id}</th>
                         <c:choose>
                             <c:when test="${auth.admin}">
-                                <td><a href="${contextPath}/admin/user?userId=${enrollment.user.id}">${enrollment.user.fullName}</a></td>
+                                <td><a href="${contextPath}/admin/entrant?userId=${enrollment.user.id}">${enrollment.user.fullName}</a></td>
                             </c:when>
                             <c:otherwise>
                                 <td>${enrollment.user.fullName}</td>
