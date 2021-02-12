@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/AlexBezsh/university_admission_servlet.svg?branch=master)](https://travis-ci.org/AlexBezsh/university_admission_servlet)
 
-##University Admission
+## University Admission
 
-###Task
+### Task
 The system has a list of faculties that can be sorted by various criteria:
  * by name (a-z, z-a);
  * by number of state funded places;
@@ -23,5 +23,5 @@ The system administrator can:
 After finalization, system calculates total points and determines entrants enrolled
   to the educational institution on state funded and contract places. 
 
-###Database diagram of developed web-application:
+### Database diagram of developed web-application:
 ![img.png](img.png)
