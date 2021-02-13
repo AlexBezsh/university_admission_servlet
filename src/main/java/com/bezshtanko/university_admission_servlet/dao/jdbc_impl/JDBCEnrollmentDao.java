@@ -96,10 +96,10 @@ public class JDBCEnrollmentDao extends JDBCDao implements EnrollmentDao {
                     "faculty.name_en AS f_name_en, " +
                     "faculty.name_ua AS f_name_ua, " +
                     "faculty.status AS f_status, " +
-                    "description_en, " +
-                    "description_ua, " +
-                    "state_funded_places, " +
-                    "contract_places, " +
+                    "description_en AS f_description_en, " +
+                    "description_ua AS f_description_ua, " +
+                    "state_funded_places AS f_state_funded_places, " +
+                    "contract_places AS f_contract_places, " +
                     "marks.id AS m_id, " +
                     "marks.mark " +
                 "FROM enrollment " +

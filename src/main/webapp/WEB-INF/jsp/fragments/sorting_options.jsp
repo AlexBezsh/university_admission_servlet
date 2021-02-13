@@ -22,9 +22,9 @@
        href="?sort=state_funded_places">
         <fmt:message key="sort.stateFundedPlaces"/>
     </a>
-    <a class="btn ${pageInfo.criteria.column.equals('contract_places') ? 'btn-light' : 'btn-default'}"
+    <a class="btn ${pageInfo.criteria.column.equals('total_places') ? 'btn-light' : 'btn-default'}"
        style="margin-bottom: 5px;"
-       href="?sort=contract_places">
-        <fmt:message key="sort.contractPlaces"/>
+       href="?sort=total_places">
+        <fmt:message key="sort.totalPlaces"/>
     </a>
 </div>

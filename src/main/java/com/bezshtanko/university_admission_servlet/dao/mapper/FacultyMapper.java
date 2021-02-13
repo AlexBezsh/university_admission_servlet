@@ -15,10 +15,10 @@ public class FacultyMapper extends AbstractMapper<Faculty> {
                 .setNameEn(resultSet.getString("f_name_en"))
                 .setNameUa(resultSet.getString("f_name_ua"))
                 .setStatus(FacultyStatus.valueOf(resultSet.getString("f_status")))
-                .setDescriptionEn(resultSet.getString("description_en"))
-                .setDescriptionUa(resultSet.getString("description_ua"))
-                .setStateFundedPlaces(resultSet.getInt("state_funded_places"))
-                .setContractPlaces(resultSet.getInt("contract_places"))
+                .setDescriptionEn(resultSet.getString("f_description_en"))
+                .setDescriptionUa(resultSet.getString("f_description_ua"))
+                .setStateFundedPlaces(resultSet.getInt("f_state_funded_places"))
+                .setContractPlaces(resultSet.getInt("f_contract_places"))
                 .build();
     }
 

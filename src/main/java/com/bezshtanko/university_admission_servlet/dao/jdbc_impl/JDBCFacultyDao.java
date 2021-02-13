@@ -82,10 +82,10 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
                     "faculty.name_en AS f_name_en, " +
                     "faculty.name_ua AS f_name_ua, " +
                     "faculty.status AS f_status, " +
-                    "description_en, " +
-                    "description_ua, " +
-                    "state_funded_places, " +
-                    "contract_places, " +
+                    "description_en AS f_description_en, " +
+                    "description_ua AS f_description_ua, " +
+                    "state_funded_places AS f_state_funded_places, " +
+                    "contract_places AS f_contract_places, " +
                     "subject.id AS s_id, " +
                     "subject.type AS s_type, " +
                     "subject.name_en AS s_name_en, " +
@@ -117,10 +117,11 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
                     "faculty.name_en AS f_name_en, " +
                     "faculty.name_ua AS f_name_ua, " +
                     "faculty.status AS f_status, " +
-                    "description_en, " +
-                    "description_ua, " +
-                    "state_funded_places, " +
-                    "contract_places, " +
+                    "description_en AS f_description_en, " +
+                    "description_ua AS f_description_ua, " +
+                    "state_funded_places AS f_state_funded_places, " +
+                    "contract_places AS f_contract_places, " +
+                    "state_funded_places + contract_places AS f_total_places, " +
                     "subject.id AS s_id, " +
                     "subject.type AS s_type, " +
                     "subject.name_en AS s_name_en, " +
@@ -129,12 +130,12 @@ public class JDBCFacultyDao extends JDBCDao implements FacultyDao {
                 "JOIN faculty_subjects ON faculty.id = faculty_subjects.faculty_id " +
                 "JOIN subject ON faculty_subjects.subjects_id = subject.id " +
                         "WHERE faculty.id IN(" +
-                            "SELECT * FROM (" +
-                                "SELECT faculty.id FROM faculty " +
+                            "SELECT id FROM (" +
+                                "SELECT faculty.id, state_funded_places + contract_places as total_places FROM faculty " +
                                 "ORDER BY " + pageInfo.getCriteria().toString() + " " +
                                 "LIMIT " + (pageInfo.getPage() - 1) * pageInfo.getSize() + ", " + pageInfo.getSize() + ") t) " +
-                        "ORDER BY faculty." + pageInfo.getCriteria().toString();
-
+                        "ORDER BY f_" + pageInfo.getCriteria().toString();
+        System.out.println(getFacultiesQuery);
         try (PreparedStatement getFacultiesStmt = connection.prepareStatement(getFacultiesQuery);
             PreparedStatement getFacultiesCountStmt = connection.prepareStatement(getFacultiesCountQuery)) {
             log.info("Prepared statement for finding all faculties created");
